@@ -7,7 +7,7 @@ namespace Blessings_ns {
   template <class OutputSymbol, class Color>
   class WriteStream;
 
-  template <class InputSymbol, class OutputSymbol, class Color>
+  template <class OutputSymbol, class Color>
   class Monitor {
   };
 }
