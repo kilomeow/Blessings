@@ -1,1 +1,1 @@
-# Blessings
+Ti pidor
