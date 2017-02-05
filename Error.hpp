@@ -2,11 +2,13 @@
 
 #include <iostream>
 
+#include "Monitor.hpp"
+
 namespace Blessings_ns {
   template <class InputSymbol, class OutputSymbol, class Property>
-  class Monitor::Error {
+  class Monitor<InputSymbol, OutputSymbol, Property>::Error {
   public:
-    MonitorError(const char* msg="Unknown monitor error", bool fullOutput=true) {
+    Error(const char* msg="Unknown monitor error", bool fullOutput=true) {
       std::cerr << "Blessings Monitor error: " << msg << std::endl;
 
       if(fullOutput) {

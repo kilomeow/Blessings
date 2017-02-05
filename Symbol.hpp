@@ -1,3 +1,3 @@
 #pragma once
 
-//Warning: symbol and property shold have static info field!
+//Warning: symbol and property shold have const static std::string info field!
