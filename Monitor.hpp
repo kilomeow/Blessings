@@ -28,6 +28,8 @@ namespace Blessings_ns {
 
     void printPage();
     InputSymbol getSym();
+
+    void printSpecialSymbol(OutputSymbol);
   };
 
 }
