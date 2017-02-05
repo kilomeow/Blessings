@@ -1,1 +1,1 @@
-Ti pidor
+Blessings lib, curses on c++
