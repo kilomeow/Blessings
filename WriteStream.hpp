@@ -1,33 +1,15 @@
 #pragma once
 
-<<<<<<< 21b2521866acb0504f36eb8b189da7744358d685
+#include "AdditionalStructs.hpp"
+
 namespace Blessings_ns {
-  template <class OutputSymbol, class Color>
+  template <class OutputSymbol, class Property>
   class WriteStream {
-    virtual write(OutputSymbol, Color)=0;
+  public:
+    virtual const static info;
+
+    virtual void write(OutputSymbol, Property)=0;
+
+    virtual MonitorResolution getResolution();
   };
 }
-=======
-#include "Symbol.hpp"
-
-
-
-
-class WriteStream
-{
-public:
-
-	WriteStream() {}
-
-	int print(Symbol S)               // Must return 0 if symbol was written and 1 if symbol is terminating.
-	{
-		if (S==Symbol("\0")) return 1;
-		return 0;
-	}
-
-	void newLine() {}                 // Printing '\n' symbol
-
-	void clearScreen() {}             // Clearing screen
-
-};
->>>>>>> First commit
