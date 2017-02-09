@@ -37,6 +37,9 @@ namespace Blessings_ns {
     friend SymbolUTF8 getSym<SymbolUTF8>(FILE*);
   };
 
+  template <>
+  SymbolUTF8 getSym<SymbolUTF8>(FILE*);
+
   std::ostream& operator<<(std::ostream& stream, const SymbolUTF8& sym);
   std::istream& operator>>(std::istream& stream, SymbolUTF8& sym);
 }
