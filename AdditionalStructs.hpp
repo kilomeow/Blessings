@@ -1,10 +1,13 @@
 #pragma once
 
-#include <cstdint>
-
 namespace Blessings_ns {
   struct MonitorResolution {
-    uint32_t x_size;
-    uint32_t y_size;
+    int x_size;
+    int y_size;
   };
+
+  struct CursorPos {
+    int x;
+    int y;
+  }
 }

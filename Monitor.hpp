@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstdint>
 #include <utility>
 
 #include "AdditionalStructs.hpp"
@@ -23,13 +22,26 @@ namespace Blessings_ns {
 
     class Error;
 
-    std::pair<OutputSymbol, Property>& operator()(uint32_t x, uint32_t y);
-    std::pair<OutputSymbol, Property> operator()(uint32_t x, uint32_t y) const;
+    std::pair<OutputSymbol, Property>& operator()(int x, int y);
+    std::pair<OutputSymbol, Property> operator()(int x, int y) const;
 
     void printPage();
     InputSymbol getSym();
 
     void printSpecialSymbol(OutputSymbol);
+
+    void moveCursor(int x, int y);
+    CursorPos getCursorPos();
+
+    void hideCursor();
+    void showCursor();
+
+    void saveCursorPos();
+    void restoreCursorPos();
+
+    void clearScreen();
+
+    MonitorResolution getResolution();
   };
 
 }

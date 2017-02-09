@@ -42,4 +42,6 @@ namespace Blessings_ns {
 
   std::ostream& operator<<(std::ostream& stream, const SymbolUTF8& sym);
   std::istream& operator>>(std::istream& stream, SymbolUTF8& sym);
+
+  enum class {BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BBLACK, BRED, BGREEN, BYELLOW, BBLUE, BMAGENTA, BCYAN, BWHITE};
 }
