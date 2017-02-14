@@ -20,16 +20,17 @@ namespace Blessings_ns {
   public:
     class Error;
 
-    explicit SymbolUTF8(char a=0);
     explicit SymbolUTF8(const char* sym);
     explicit SymbolUTF8(std::string sym);
 
-    std::string getString();
+    std::string getString() const;
 
     char& operator[](int pos);
     char operator[](int pos) const;
 
     int getSize() const;
+
+    void writeToFile(FILE*) const;
 
     friend std::ostream& operator<<(std::ostream&, const SymbolUTF8&);
     friend std::istream& operator>>(std::istream&, SymbolUTF8&);
@@ -43,5 +44,13 @@ namespace Blessings_ns {
   std::ostream& operator<<(std::ostream& stream, const SymbolUTF8& sym);
   std::istream& operator>>(std::istream& stream, SymbolUTF8& sym);
 
-  enum class {BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BBLACK, BRED, BGREEN, BYELLOW, BBLUE, BMAGENTA, BCYAN, BWHITE};
+  enum struct ColorANSI {BLACK=0, RED=1, GREEN=2, YELLOW=3, BLUE=4, MAGENTA=5, CYAN=6, WHITE=7};
+
+  struct PropertyANSI {
+    static const defaultProperty;
+
+    ColorANSI color;
+  };
+
+  const PropertyANSI::defaultProperty={ColorANSI::WHITE}
 }
