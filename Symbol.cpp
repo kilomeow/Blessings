@@ -7,12 +7,6 @@
 #include <cstdio>
 
 namespace Blessings_ns {
-  SymbolUTF8::SymbolUTF8(char a) {
-    if(a&0b10000000) throw Error("bad init char");
-
-    arr[0]=a;
-  }
-
   SymbolUTF8::SymbolUTF8(const char* sym) {
     if(sym==nullptr) throw Error("nullptr given as const char* string");
 
@@ -125,6 +119,16 @@ namespace Blessings_ns {
 
   std::string SymbolUTF8::getString() {
     return std::string(arr, getSize());
+  }
+
+  void SymbolUTF8::writeToFile(FILE* file) {
+    if(ferror(file)) throw Error("Bad file given in writeToFile");
+
+    int size=getSize();
+    for(int i=0; i<size; ++i) {
+      putc(static_cast<int>(arr[i]), file);
+      if(ferror(file)) throw Error("Bad file given in writeToFile");
+    }
   }
 
   template <>
