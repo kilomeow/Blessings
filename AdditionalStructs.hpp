@@ -6,8 +6,8 @@ namespace Blessings_ns {
     int y_size;
   };
 
-  struct CursorPos {
+  struct GridPos {
     int x;
     int y;
-  }
+  };
 }

@@ -5,13 +5,39 @@
 #include "AdditionalStructs.hpp"
 #include "ReadStream.hpp"
 #include "WriteStream.hpp"
+#include "Symbol.hpp"
 
 namespace Blessings_ns {
-  template <class InputSymbol, class OutputSymbol, class Property>
+  class MonitorGeneral {
+    virtual void printPage()=0;
+
+    //Cursor props
+    virtual void moveCursor(GridPos pos)=0;
+    virtual GridPos getCursorPos()=0;
+
+    virtual void hideCursor()=0;
+    virtual void showCursor()=0;
+
+    virtual void saveCursorPos()=0;
+    virtual void restoreCursorPos()=0;
+
+    //Screen props
+    virtual void clearScreen();
+
+    virtual MonitorResolution getResolution()=0;
+
+    //Avalability
+    virtual int boldSupported()=0;
+    virtual int italicsSupported()=0;
+
+    virtual ColorType getColorType()=0;
+  };
+
+  template <class InputSymbol, class OutputSymbol>
   class Monitor {
     //Ram fills realization.
   public:
-    Monitor(ReadStream<InputSymbol>* RS, WriteStream<OutputSymbol, Property>* WS, MonitorResolution res);
+    Monitor(ReadStream<InputSymbol>* RS, WriteStream<OutputSymbol>* WS, MonitorResolution res);
       //If res.x_size==0 and res.y_size==0 - Resolution=WS->getResolution()
       //If res.x_size==0 but res.y_size!=0 or res.x_size!=0 but res.y_size==0 - throw exception
 
@@ -22,16 +48,17 @@ namespace Blessings_ns {
 
     class Error;
 
-    std::pair<OutputSymbol, Property>& operator()(int x, int y);
-    std::pair<OutputSymbol, Property> operator()(int x, int y) const;
+    std::pair<OutputSymbol, PropertyGeneral*>& operator()(int x, int y);
+    std::pair<OutputSymbol, PropertyGeneral*> operator()(int x, int y) const;
 
     void printPage();
+
     InputSymbol getSym();
 
     void printSpecialSymbol(OutputSymbol);
 
     void moveCursor(int x, int y);
-    CursorPos getCursorPos();
+    GridPos getCursorPos();
 
     void hideCursor();
     void showCursor();
@@ -42,6 +69,12 @@ namespace Blessings_ns {
     void clearScreen();
 
     MonitorResolution getResolution();
+
+    //Avalability
+    int boldSupported();
+    int italicsSupported();
+
+    ColorType getColorType();
   };
 
 }

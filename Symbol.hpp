@@ -1,56 +1,69 @@
 #pragma once
 
-//Warning: symbol and property shold have const static std::string info field!
-
 #include <string>
-#include <iostream>
-#include <cstdio>
+#include <cstdint>
 
 namespace Blessings_ns {
   class Symbol {
   public:
-    virtual std::string getString()=0;
+    virtual std::string getString() const=0;
   };
 
   template <class SymbolType>
   SymbolType getSym(FILE*);
 
-  class SymbolUTF8 : public Symbol{
-    char arr[4]; //char in c++ is always 1 byte
-  public:
+  //Color
+  struct ColorANSI {
+    enum ColorName {BLACK=0, RED=1, GREEN=2, YELLOW=3, BLUE=4, MAGENTA=5, CYAN=6, WHITE=7};
+    ColorName color;
+
+    ColorANSI(ColorName col=BLACK) : color(col) {};
+
+    static ColorANSI DefaultColor;
+  };
+
+  struct ColorRGB {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+
     class Error;
 
-    explicit SymbolUTF8(const char* sym);
-    explicit SymbolUTF8(std::string sym);
+    ColorRGB(int red=0, int green=0, int blue=0);
 
-    std::string getString() const;
+    static const ColorRGB WHITE;
+    static const ColorRGB BLACK;
 
-    char& operator[](int pos);
-    char operator[](int pos) const;
-
-    int getSize() const;
-
-    void writeToFile(FILE*) const;
-
-    friend std::ostream& operator<<(std::ostream&, const SymbolUTF8&);
-    friend std::istream& operator>>(std::istream&, SymbolUTF8&);
-
-    friend SymbolUTF8 getSym<SymbolUTF8>(FILE*);
+    static ColorRGB DefaultColor;
   };
 
-  template <>
-  SymbolUTF8 getSym<SymbolUTF8>(FILE*);
+  //Property
+  struct PropertyGeneral {
+    bool bold;
+    bool italics;
 
-  std::ostream& operator<<(std::ostream& stream, const SymbolUTF8& sym);
-  std::istream& operator>>(std::istream& stream, SymbolUTF8& sym);
-
-  enum struct ColorANSI {BLACK=0, RED=1, GREEN=2, YELLOW=3, BLUE=4, MAGENTA=5, CYAN=6, WHITE=7};
-
-  struct PropertyANSI {
-    static const defaultProperty;
-
-    ColorANSI color;
+    PropertyGeneral() : bold(false), italics(false) {};
   };
 
-  const PropertyANSI::defaultProperty={ColorANSI::WHITE}
+  template <class Palette>
+  struct Property : public PropertyGeneral {
+    Palette color;
+
+    Property() : color(Palette::DefaultColor) {
+      PropertyGeneral::PropertyGeneral();
+    }
+  };
+
+  struct ColorType {
+    class Error;
+
+    enum Type {OTHER, RGB, ANSI};
+
+    int type;
+
+    ColorType(Type t);
+    ColorType(int t);
+
+    Type getType();
+  };
 }
