@@ -1,8 +1,5 @@
 #pragma once
 
-#include <string>
-#include <cstdint>
-
 #include "AdditionalStructs.hpp"
 #include "Symbol.hpp"
 
@@ -26,8 +23,10 @@ namespace Blessings_ns {
     virtual void restoreCursorPos()=0;
 
     virtual MonitorResolution getResolution()=0;
-  };
 
-  template <class OutputSymbol>
-  class WriteStreamLinux : public WriteStream<OutputSymbol> {};
+    virtual int boldSupported()=0;
+    virtual int italicsSupported()=0;
+
+    virtual ColorType getColorType()=0;
+  };
 }

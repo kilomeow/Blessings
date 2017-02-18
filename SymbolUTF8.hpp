@@ -6,6 +6,8 @@
 #include <iostream>
 #include <cstdio>
 
+#include "Symbol.hpp"
+
 namespace Blessings_ns {
   class SymbolUTF8 : public Symbol{
     char arr[4]; //char in c++ is always 1 byte

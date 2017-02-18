@@ -28,7 +28,7 @@ namespace Blessings_ns {
       if(((sym[1]&0b11000000)^0b10000000)) throw Error("non-UTF-8 symbol given");
     }
 
-    for(uint8_t i=0; i<size; ++i) arr[i]=sym[i];
+    for(int i=0; i<size; ++i) arr[i]=sym[i];
   }
 
   SymbolUTF8::SymbolUTF8(std::string sym) {
