@@ -1,7 +1,5 @@
 #pragma once
 
-//Warning: symbol and property shold have const static std::string info field!
-
 #include <string>
 #include <iostream>
 #include <cstdio>
@@ -14,6 +12,7 @@ namespace Blessings_ns {
   public:
     class Error;
 
+    SymbolUTF8() {arr[0]=static_cast<char>(0x20);};
     explicit SymbolUTF8(const char* sym);
     explicit SymbolUTF8(std::string sym);
 

@@ -80,16 +80,25 @@ namespace Blessings_ns {
     else if(!((sym.arr[0]&0b11111000)^0b11110000)) size=4;
 
     for(int i=0; i<size; ++i) {
-      if(stream) stream << sym.arr[i];
-      else throw SymbolUTF8::Error("bad output stream state");
+      try {
+        stream << sym.arr[i];
+      }
+      catch(...) {
+        throw SymbolUTF8::Error("bod uotput stream");
+      }
     }
 
     return stream;
   }
 
   std::istream& operator>>(std::istream& stream, SymbolUTF8& sym) {
-    SymbolUTF8 ret(std::string(1, static_cast<char>(0x20))); //UTF-8 space symbol, 1 byte
-    stream.get(ret.arr[0]);
+    SymbolUTF8 ret; //UTF-8 space symbol, 1 byte
+    try {
+      stream.get(ret.arr[0]);
+    }
+    catch(...) {
+      throw SymbolUTF8::Error("bad input stream");
+    }
 
     int size;
     if(!(ret.arr[0]&0b10000000)) size=1;
@@ -99,8 +108,12 @@ namespace Blessings_ns {
     else throw SymbolUTF8::Error("attempt to input non-UTF-8 symbol");
 
     for(int i=1; i<size; ++i) {
-      if(stream) stream.get(ret.arr[i]);
-      else throw SymbolUTF8::Error("bad input stream state");
+      try {
+        stream.get(ret.arr[i]);
+      }
+      catch(...) {
+        throw SymbolUTF8::Error("bad input stream");
+      }
     }
 
     switch(size) {
@@ -122,23 +135,19 @@ namespace Blessings_ns {
   }
 
   void SymbolUTF8::writeToFile(FILE* file) const {
-    if(ferror(file)) throw Error("Bad file given in writeToFile");
-
     int size=getSize();
     for(int i=0; i<size; ++i) {
-      putc(static_cast<int>(arr[i]), file);
-      if(ferror(file)) throw Error("Bad file given in writeToFile");
+      int temp=fputc(static_cast<int>(arr[i]), file);
+      if(temp==EOF) throw Error("Bad file given in writeToFile");
     }
   }
 
   template <>
   SymbolUTF8 getSym<SymbolUTF8>(FILE* file) {
-    if(feof(file) || ferror(file)) throw SymbolUTF8::Error("bad input file given");
-
     int temp=getc(file);
     if(temp==EOF) throw SymbolUTF8::Error("bad input file given");
 
-    SymbolUTF8 ret(std::string(1, static_cast<char>(0x20))); //UTF-8 space symbol, 1 byte
+    SymbolUTF8 ret; //UTF-8 space symbol, 1 byte
     ret.arr[0]=static_cast<char>(temp);
 
     int size;
@@ -149,8 +158,6 @@ namespace Blessings_ns {
     else throw SymbolUTF8::Error("non-UTF-8 symbol in input");
 
     for(int i=1; i<size; ++i) {
-      if(feof(file) || ferror(file)) throw SymbolUTF8::Error("input state unexpectly changed to bad");
-
       temp=getc(file);
       if(temp==EOF) throw SymbolUTF8::Error("input state unexpectly changed to bad");
 

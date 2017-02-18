@@ -50,7 +50,7 @@ namespace Blessings_ns {
     Palette color;
 
     Property() : color(Palette::DefaultColor) {
-      PropertyGeneral::PropertyGeneral();
+      PropertyGeneral();
     }
   };
 

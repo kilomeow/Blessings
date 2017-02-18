@@ -2,5 +2,5 @@
 
 namespace Blessings_ns {
   template <class OutputSymbol, class PropertyT>
-  class WriteStreamLinux;
+  class WriteStreamANSILinux;
 }

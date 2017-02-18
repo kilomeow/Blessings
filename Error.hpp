@@ -5,6 +5,7 @@
 #include "Monitor.hpp"
 #include "Symbol.hpp"
 #include "SymbolUTF8.hpp"
+#include "WSAL/WSAL_DefaultProp_SymbolUTF8.hpp"
 
 namespace Blessings_ns {
   template <class InputSymbol, class OutputSymbol>
@@ -33,6 +34,15 @@ namespace Blessings_ns {
   public:
     Error(const char* msg="unknown ColorRGB error") {
       std::cerr << "ColorRGB error: " << msg << std::endl;
+    }
+  };
+
+  class WriteStreamANSILinux<SymbolUTF8, Property<ColorANSI> >::Error {
+  public:
+    Error(const char* msg="unknown WriteStreamANSILinux<SymbolUTF8, \
+      Property<ColorANSI> > error") {
+      std::cerr << "WriteStreamANSILinux<SymbolUTF8, Property<ColorANSI> > \
+        error: " << msg << std::endl;
     }
   };
 }
