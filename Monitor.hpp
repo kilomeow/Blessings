@@ -5,9 +5,9 @@
 #include "AdditionalStructs.hpp"
 #include "ReadStream.hpp"
 #include "WriteStream.hpp"
-#include "Symbol.hpp"
+#include "Symbol/Symbol.hpp"
 
-namespace Blessings_ns {
+namespace Blessings {
 
   class MonitorGeneral {
 	public:
@@ -50,8 +50,8 @@ namespace Blessings_ns {
 
     class Error;
 
-    std::pair<OutputSymbol, PropertyGeneral*>& operator()(int x, int y);
-    std::pair<OutputSymbol, PropertyGeneral*> operator()(int x, int y) const;
+    std::pair<OutputSymbol, Property*>& operator()(int x, int y);
+    std::pair<OutputSymbol, Property*> operator()(int x, int y) const;
 
     void printPage();
 

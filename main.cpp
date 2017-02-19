@@ -1,41 +1,45 @@
 #include <iostream>
 #include <unistd.h>
+#include <string>
 
-#include "Blessings.hpp"
-#include "SymbolUTF8.hpp"
-#include "WSAL/WSAL_DefaultProp_SymbolUTF8.hpp"
+#include "Symbol/SymbolUTF8.hpp"
+#include "Symbol/Symbol.hpp"
+#include "ANSILinux/TerminalIOANSILinux.hpp"
 
 using namespace std;
-using namespace Blessings_ns;
+using namespace Blessings;
 
 void f(string s) {
-  Property<ColorANSI> prop;
+  TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI> term;
+
+  term.Init();
+  term.setDeviceReady();
+
+  term.clearScreen();
+
+  int colorNum=1;
+  PropertyANSI prop;
   prop.bold=true;
   prop.italics=true;
-  prop.color=ColorANSI::RED;
+  prop.color=static_cast<ColorANSI::ColorT>(1);
 
-  WriteStreamANSILinux<SymbolUTF8, Property<ColorANSI> > ws;
-  ws.setNonCanonTerminalMode();
+  term.moveCursor(6,7);
 
-  ws.clearScreen();
-  ws.moveCursor(5,6);
-
-  int colorPtr=1;
   for(int i=0; i<s.size(); ++i) {
     sleep(1);
-    ws.print(SymbolUTF8(string(1, s[i])), &prop);
-    colorPtr++;
-    if(colorPtr>=7) colorPtr=1;
-    prop.color=static_cast<ColorANSI::ColorName>(colorPtr);
+    term.print(SymbolUTF8(string(1, s[i])), &prop);
+
+    colorNum++;
+    if(colorNum==7) colorNum=1;
+    prop.color=static_cast<ColorANSI::ColorT>(colorNum);
   }
 
-  ws.moveCursor(-6-s.size(),-6);
+  term.newLine();
 
-  ws.resetTerminalMode();
+  term.resetDeviceMode();
 }
 
 int main() {
-  f(string("Roma pidor"));
-
+  f("Ram pidor");
   return 0;
 }

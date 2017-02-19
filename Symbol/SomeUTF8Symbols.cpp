@@ -1,7 +1,7 @@
 #include "SymbolUTF8.hpp"
 #include "SomeUTF8Symbols.hpp"
 
-namespace Blessings_ns::Some_UTF8_symbols {
+namespace Blessings::SomeUTF8Symbols {
   const char CSIInit[]={static_cast<char>(0xC2), static_cast<char>(0x9B), '\0'};
   const char newLineSymbolInit[]={static_cast<char>(0xA), '\0'};
 

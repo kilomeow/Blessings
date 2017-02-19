@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace Blessings_ns {
+namespace Blessings {
   template <class InputSymbol>
   class ReadStream {
     virtual InputSymbol getSymbol()=0;
