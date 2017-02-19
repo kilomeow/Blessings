@@ -11,6 +11,8 @@ namespace Blessings_ns {
     char arr[4]; //char in c++ is always 1 byte
   public:
     class Error;
+    class IOError;
+    class InitError;
 
     SymbolUTF8() {arr[0]=static_cast<char>(0x20);};
     explicit SymbolUTF8(const char* sym);
