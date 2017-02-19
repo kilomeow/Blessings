@@ -1,29 +1,17 @@
 #pragma once
 
-#include "AdditionalStructs.hpp"
-#include "Symbol.hpp"
+#include <string>
 
 namespace Blessings_ns {
   template <class OutputSymbol>
   class WriteStream {
   public:
-    virtual void print(OutputSymbol, PropertyGeneral*)=0;
+    virtual void write(OutputSymbol, PropertyGeneral*)=0;
+    virtual void write(OutputSymbol)=0;
+    virtual void write(char)=0;
+    virtual void write(const char*)=0;
+    virtual void write(std::string)=0;
 
-    virtual void clearScreen()=0;
-
-    virtual void newLine()=0;
-
-    virtual void moveCursor(int x, int y)=0;
-
-    virtual void hideCursor()=0;
-    virtual void showCursor()=0;
-
-    virtual void saveCursorPos()=0;
-    virtual void restoreCursorPos()=0;
-
-    virtual int boldSupported()=0;
-    virtual int italicsSupported()=0;
-
-    virtual PropertyType getPropertyType()=0;
+    virtual void flush()=0;
   };
 }
