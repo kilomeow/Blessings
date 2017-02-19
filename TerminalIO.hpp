@@ -6,7 +6,7 @@
 #include "AdditionalStructs.hpp"
 
 namespace Blessings_ns {
-  template <class InputSymbol, class OutputSymbol>
+  template <class InputSymbol, class OutputSymbol, class PropertyT>
   class TerminalIO {
   public:
     //Device info
@@ -39,7 +39,9 @@ namespace Blessings_ns {
     //Terminal state
     virtual void setDeviceReady()=0;
     virtual void resetDeviceMode()=0;
-
     virtual bool isDeviceReady()=0;
+
+    //Global state
+    virtual bool isReady()=0;
   };
 }

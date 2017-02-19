@@ -2,7 +2,7 @@
 #include <cstdio>
 #include "Termios.hpp"
 
-#include "WSAL_DefaultProp_SymbolUTF8.hpp"
+#include "WSAL_PropANSI_SymbolUTF8.hpp"
 #include "../Symbol.hpp"
 #include "../SomeUTF8Symbols.hpp"
 #include "../Error.hpp"
@@ -15,14 +15,6 @@ namespace Blessings_ns {
     file=stdout;
 
     resetSGR();
-  }
-
-  void WriteStreamANSILinux<SymbolUTF8, Property<ColorANSI> >::clearScreen() {
-    CSISymbol.writeToFile(file);
-    two.writeToFile(file);
-    JSym.writeToFile(file);
-
-    fflush(file);
   }
 
   void WriteStreamANSILinux<SymbolUTF8, Property<ColorANSI> >::newLine() {

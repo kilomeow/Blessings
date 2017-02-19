@@ -1,9 +1,7 @@
 #pragma once
 
 #include <cstdio>
-#include "Termios.hpp"
 
-#include "../AdditionalStructs.hpp"
 #include "../SymbolUTF8.hpp"
 #include "../WriteStream.hpp"
 #include "WriteStreamANSILinux.hpp"
@@ -13,29 +11,20 @@ namespace Blessings_ns {
   class WriteStreamANSILinux<SymbolUTF8, Property<ColorANSI> > :
     public WriteStream<SymbolUTF8> {
     FILE* file;
-
-    Termios_ns::termios storedSettings;
   public:
     class Error;
 
     WriteStreamANSILinux();
 
-    void print(SymbolUTF8, PropertyGeneral*);
+    virtual void write(OutputSymbol, PropertyGeneral*)=0;
+    virtual void write(OutputSymbol)=0;
+    virtual void write(char)=0;
+    virtual void write(const char*)=0;
+    virtual void write(std::string)=0;
 
-    void clearScreen();
+    virtual void flush()=0;
 
-    void newLine();
-
-    void moveCursor(int x, int y);
-
-    void hideCursor() {};
-    void showCursor() {};
-
-    void saveCursorPos() {};
-    void restoreCursorPos() {};
-
-    int boldSupported() {return 0;};
-    int italicsSupported() {return 0;};
+    virtual PropertyType getPropertyType()=0;
 
     PropertyType getPropertyType() {return ColorType::ANSI;};
 

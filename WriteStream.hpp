@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "Symbol.hpp"
+
 namespace Blessings_ns {
   template <class OutputSymbol>
   class WriteStream {
@@ -13,5 +15,7 @@ namespace Blessings_ns {
     virtual void write(std::string)=0;
 
     virtual void flush()=0;
+
+    virtual PropertyType getPropertyType()=0;
   };
 }
