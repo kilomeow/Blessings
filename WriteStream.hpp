@@ -4,7 +4,9 @@
 
 #include "Symbol.hpp"
 
+
 namespace Blessings_ns {
+
   template <class OutputSymbol>
   class WriteStream {
   public:
@@ -18,4 +20,5 @@ namespace Blessings_ns {
 
     virtual PropertyType getPropertyType()=0;
   };
+
 }

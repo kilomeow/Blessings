@@ -3,17 +3,30 @@
 #include <utility>
 
 #include "AdditionalStructs.hpp"
-#include "ReadStream.hpp"
-#include "WriteStream.hpp"
+#include "TerminalIO.hpp"
 #include "Symbol.hpp"
+
 
 namespace Blessings_ns {
 
+	template <class Symbol>
+  struct MonitorCell {
+  	Symbol symb;
+  	Property* prop;
+  };
+
+
   class MonitorGeneral {
 	public:
+
+		virtual void resetPointer()=0;
+    virtual MonitorCell slideCell()=0;
+    virtual void pushCell()=0;
+
+		virtual void update()=0;
+		virtual void clearScreen()=0;
     virtual void printPage()=0;
 
-    //Cursor props
     virtual void moveCursor(GridPos pos)=0;
     virtual GridPos getCursorPos()=0;
 
@@ -23,12 +36,8 @@ namespace Blessings_ns {
     virtual void saveCursorPos()=0;
     virtual void restoreCursorPos()=0;
 
-    //Screen props
-    virtual void clearScreen();
-
     virtual MonitorResolution getResolution()=0;
 
-    //Availability
     virtual int boldSupported()=0;
     virtual int italicsSupported()=0;
 
@@ -39,25 +48,30 @@ namespace Blessings_ns {
   template <class InputSymbol, class OutputSymbol>
   class Monitor : public MonitorGeneral {
   public:
-    Monitor(ReadStream<InputSymbol>* RS, WriteStream<OutputSymbol>* WS, MonitorResolution res);
-      //If res.x_size==0 and res.y_size==0 - Resolution=WS->getResolution()
-      //If res.x_size==0 but res.y_size!=0 or res.x_size!=0 but res.y_size==0 - throw exception
+    Monitor(TerminalIO Term, int MaxSize);
 
-    Monitor(const Monitor&); //If needed or remove
-    Monitor& operator=(const Monitor&); //If needed or remove
-
-    ~Monitor(); //If needed or remove
+    Monitor(const Monitor&);
+    Monitor& operator=(const Monitor&);
+    ~Monitor();
 
     class Error;
 
-    std::pair<OutputSymbol, PropertyGeneral*>& operator()(int x, int y);
-    std::pair<OutputSymbol, PropertyGeneral*> operator()(int x, int y) const;
+		MonitorCell& operator[] (int p);
+    MonitorCell operator[] (int p) const;
+    MonitorCell& operator()(int x, int y);
+    MonitorCell operator()(int x, int y) const;
 
+    void resetPointer();
+    MonitorCell slideCell();
+    void pushCell();
+
+    void update();
+		void clearScreen();
     void printPage();
 
     InputSymbol getSym();
 
-    void printSpecialSymbol(OutputSymbol);
+    void printSymbol(OutputSymbol);
 
     void moveCursor(int x, int y);
     GridPos getCursorPos();
@@ -68,17 +82,22 @@ namespace Blessings_ns {
     void saveCursorPos();
     void restoreCursorPos();
 
-    void clearScreen();
-
     MonitorResolution getResolution();
 
-    //Availability
-    int boldSupported();
+    int boldSupported();         // Must be rewrited
     int italicsSupported();
 
     PropertyType getPropertyType();
-  };
 
-  struct MonitorCell {};
+	protected:
+		MonitorCell * Monitor::grid;
+		TerminalIO Monitor::termIO;
+		int maxSize;
+		int stopPosition;
+		MonitorResolution res;
+		int pointer;
+		GlidPos cursorPos;
+		GridPos cursorSlot;
+  };
 
 }

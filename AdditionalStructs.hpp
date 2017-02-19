@@ -2,8 +2,8 @@
 
 namespace Blessings_ns {
   struct MonitorResolution {
-    int x_size;
-    int y_size;
+    int width;
+    int height;
   };
 
   struct GridPos {
