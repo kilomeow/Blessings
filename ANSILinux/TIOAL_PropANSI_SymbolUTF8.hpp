@@ -24,6 +24,8 @@ namespace Blessings_ns {
 
     FILE* file;
   public:
+    class Error;
+
     TerminalIOANSILinux();
 
     void Init(FILE* f=stdout);
@@ -52,10 +54,10 @@ namespace Blessings_ns {
     void resetSGR();
 
     //Terminal info
-    int boldSupported();
-    int italicsSupported();
+    int boldSupported() {return 0};
+    int italicsSupported() {return 0};
 
-    PropertyType getPropertyType();
+    PropertyType getPropertyType() {return PropertyType(PropertyType::ANSI)};
 
     //Terminal state
     void setDeviceReady();
