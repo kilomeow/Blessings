@@ -9,6 +9,7 @@
 
 namespace Blessings_ns {
   class MonitorGeneral {
+	public:
     virtual void printPage()=0;
 
     //Cursor props
@@ -26,7 +27,7 @@ namespace Blessings_ns {
 
     virtual MonitorResolution getResolution()=0;
 
-    //Avalability
+    //Availability
     virtual int boldSupported()=0;
     virtual int italicsSupported()=0;
 
@@ -34,7 +35,7 @@ namespace Blessings_ns {
   };
 
   template <class InputSymbol, class OutputSymbol>
-  class Monitor {
+  class Monitor : MonitorGeneral{
     //Ram fills realization.
   public:
     Monitor(ReadStream<InputSymbol>* RS, WriteStream<OutputSymbol>* WS, MonitorResolution res);
@@ -70,7 +71,7 @@ namespace Blessings_ns {
 
     MonitorResolution getResolution();
 
-    //Avalability
+    //Availability
     int boldSupported();
     int italicsSupported();
 
