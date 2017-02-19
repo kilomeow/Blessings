@@ -5,7 +5,9 @@
 #include "ReadStream.hpp"
 #include "AdditionalStructs.hpp"
 
+
 namespace Blessings_ns {
+
   template <class InputSymbol, class OutputSymbol, class PropertyT>
   class TerminalIO {
   public:
@@ -44,4 +46,5 @@ namespace Blessings_ns {
     //Global state
     virtual bool isReady()=0;
   };
+
 }
