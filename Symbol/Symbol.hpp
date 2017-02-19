@@ -4,13 +4,9 @@
 #include <cstdint>
 
 namespace Blessings_ns {
-  class Symbol {
-  public:
-    virtual std::string getString() const=0;
-  };
-
   template <class SymbolType>
   SymbolType getSym(FILE*);
+
 
   //Color
   struct ColorANSI {
@@ -22,12 +18,14 @@ namespace Blessings_ns {
     static ColorANSI DefaultColor;
   };
 
+
   struct ColorRGB {
     uint8_t r;
     uint8_t g;
     uint8_t b;
 
     class Error;
+    class InitError;
 
     ColorRGB(int red=0, int green=0, int blue=0);
 
@@ -36,6 +34,7 @@ namespace Blessings_ns {
 
     static ColorRGB DefaultColor;
   };
+
 
   //Property
   struct PropertyGeneral {};
@@ -52,8 +51,10 @@ namespace Blessings_ns {
     }
   };
 
+
   struct PropertyType {
     class Error;
+    class InitError;
 
     enum Type {OTHER, ANSI};
 

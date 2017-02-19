@@ -25,38 +25,63 @@ namespace Blessings_ns {
     int type;
 
     Error(int t, std::string m="unknown SymbolUTF8 error"s) : type(t), msg(m) {};
-    printError() {std::cerr << msg << std::endl};
+    void printError() {std::cerr << msg << std::endl};
   };
 
 
   class SymbolUTF8::IOError : public SymbolUTF8::Error {
   public:
-    Error(int t, std::string m="unknown SymbolUTF8 IO error"s) : type(t), msg(m) {};
-    printError() {std::cerr << msg << std::endl};
+    IOError(int t, std::string m="unknown SymbolUTF8 IO error"s) :\
+      type(t), msg(m) {};
   };
 
 
   class SymbolUTF8::InitError : public SymbolUTF8::Error {
   public:
-    Error(int t, std::string m="unknown SymbolUTF8 init error"s) : type(t), msg(m) {};
-    printError() {std::cerr << msg << std::endl};
+    InitError(int t, std::string m="unknown SymbolUTF8 init error"s) :\
+      type(t), msg(m) {};
   };
 
 
-  //ColoType
-  class ColorType::Error {
+  class SymbolUTF8::AccessError : public SymbolUTF8::Error {
   public:
-    Error(const char* msg="unknown ColorType error") {
-      std::cerr << "ColorType error: " << msg << std::endl;
-    }
+    AccessError(int t, std::string m="unknown SymbolUTF8 access error"s) :\
+      type(t), msg(m) {};
   };
 
 
+  //PropertyType
+  class PropertyType::Error {
+  public:
+    std::string msg;
+    int type;
+
+    Error(int t, std::string m="unknown PropertyType error"s) : type(t), msg(m) {};
+    void printError() {std::cerr << msg << std::endl};
+  };
+
+
+  class PropertyType::InitError : PropertyType::Error {
+  public:
+    InitError(int t, std::string m="unknown PropertyType init error"s) : type(t), msg(m) {};
+  };
+
+
+  //ColorRGB
   class ColorRGB::Error {
   public:
-    Error(const char* msg="unknown ColorRGB error") {
-      std::cerr << "ColorRGB error: " << msg << std::endl;
-    }
+    std::string msg;
+    int type;
+
+    Error(int t, std::string m="unknown ColorRGB error"s) : type(t), msg(m) {};
+    void printError() {std::cerr << msg << std::endl};
+  };
+
+
+  class ColorRGB::InitError : public ColorRGB::Error {
+  public:
+    InitError(int t, std::string m="unknown ColorRGB init error"s) :\
+      type(t), msg(m) {};
   };
 
 

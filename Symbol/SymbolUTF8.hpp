@@ -13,6 +13,7 @@ namespace Blessings_ns {
     class Error;
     class IOError;
     class InitError;
+    class AccessError;
 
     SymbolUTF8() {arr[0]=static_cast<char>(0x20);};
     explicit SymbolUTF8(const char* sym);

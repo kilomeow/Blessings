@@ -12,17 +12,17 @@ namespace Blessings_ns {
 
   ColorRGB::ColorRGB(int red, int green, int blue) : r(red), g(green), b(blue) {
     if(red<0 || red>255 || green<0 || green>255 || blue<0 || blue>255) {
-      throw Error("bad init values");
+      throw InitError(1, "bad init values");
     }
   }
 
   PropertyType::PropertyType(Type t) {
-    if(t==OTHER) throw Error("bad init Type");
+    if(t==OTHER) throw InitError(1, "bad init Type");
     type=t;
   }
 
   PropertyType::PropertyType(int t) {
-    if(t==static_cast<int>(OTHER)) throw Error("init int equals to OTHER");
+    if(t==static_cast<int>(OTHER)) throw InitError(2, "init int equals to OTHER");
     type=t;
   }
 
