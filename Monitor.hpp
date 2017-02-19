@@ -21,13 +21,13 @@ namespace Blessings_ns {
 
 		virtual void resetPointer()=0;
     virtual MonitorCell slideCell()=0;
-    virtual void pushCell()=0;
+    virtual void pushCell(MonitorCell)=0;
 
 		virtual void update()=0;
 		virtual void clearScreen()=0;
     virtual void printPage()=0;
 
-    virtual void moveCursor(GridPos pos)=0;
+    virtual void moveCursor(int x, int y)=0;
     virtual GridPos getCursorPos()=0;
 
     virtual void hideCursor()=0;
@@ -63,7 +63,7 @@ namespace Blessings_ns {
 
     void resetPointer();
     MonitorCell slideCell();
-    void pushCell();
+    void pushCell(MonitorCell);
 
     void update();
 		void clearScreen();
