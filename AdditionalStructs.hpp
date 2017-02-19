@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Blessings_ns {
+namespace Blessings {
   struct MonitorResolution {
     int width;
     int height;

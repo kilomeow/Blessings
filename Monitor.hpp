@@ -3,11 +3,19 @@
 #include <utility>
 
 #include "AdditionalStructs.hpp"
+<<<<<<< HEAD
 #include "TerminalIO.hpp"
 #include "Symbol.hpp"
 
 
 namespace Blessings_ns {
+=======
+#include "ReadStream.hpp"
+#include "WriteStream.hpp"
+#include "Symbol/Symbol.hpp"
+
+namespace Blessings {
+>>>>>>> Dinya
 
 	template <class Symbol>
   struct MonitorCell {
@@ -56,6 +64,7 @@ namespace Blessings_ns {
 
     class Error;
 
+<<<<<<< HEAD
 		MonitorCell& operator[] (int p);
     MonitorCell operator[] (int p) const;
     MonitorCell& operator()(int x, int y);
@@ -64,6 +73,10 @@ namespace Blessings_ns {
     void resetPointer();
     MonitorCell slideCell();
     void pushCell(MonitorCell);
+=======
+    std::pair<OutputSymbol, Property*>& operator()(int x, int y);
+    std::pair<OutputSymbol, Property*> operator()(int x, int y) const;
+>>>>>>> Dinya
 
     void update();
 		void clearScreen();
