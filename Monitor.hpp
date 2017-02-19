@@ -8,6 +8,7 @@
 #include "Symbol.hpp"
 
 namespace Blessings_ns {
+
   class MonitorGeneral {
 	public:
     virtual void printPage()=0;
@@ -34,9 +35,9 @@ namespace Blessings_ns {
     virtual PropertyType getPropertyType()=0;
   };
 
+
   template <class InputSymbol, class OutputSymbol>
-  class Monitor : MonitorGeneral{
-    //Ram fills realization.
+  class Monitor : public MonitorGeneral {
   public:
     Monitor(ReadStream<InputSymbol>* RS, WriteStream<OutputSymbol>* WS, MonitorResolution res);
       //If res.x_size==0 and res.y_size==0 - Resolution=WS->getResolution()
@@ -77,5 +78,7 @@ namespace Blessings_ns {
 
     PropertyType getPropertyType();
   };
+
+  struct MonitorCell {};
 
 }
