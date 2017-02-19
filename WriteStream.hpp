@@ -24,6 +24,6 @@ namespace Blessings_ns {
     virtual int boldSupported()=0;
     virtual int italicsSupported()=0;
 
-    virtual ColorType getColorType()=0;
+    virtual PropertyType getPropertyType()=0;
   };
 }

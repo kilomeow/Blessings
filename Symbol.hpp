@@ -14,8 +14,8 @@ namespace Blessings_ns {
 
   //Color
   struct ColorANSI {
-    enum ColorName {BLACK=0, RED=1, GREEN=2, YELLOW=3, BLUE=4, MAGENTA=5, CYAN=6, WHITE=7};
-    ColorName color;
+    enum ColorT {BLACK=0, RED=1, GREEN=2, YELLOW=3, BLUE=4, MAGENTA=5, CYAN=6, WHITE=7};
+    ColorT color;
 
     ColorANSI(ColorName col=BLACK) : color(col) {};
 
@@ -38,31 +38,29 @@ namespace Blessings_ns {
   };
 
   //Property
-  struct PropertyGeneral {
-    bool bold;
+  struct PropertyGeneral {};
+
+  struct PropertyANSI : public PropertyGeneral {
+    ColorANSI color;
     bool italics;
+    bool bold;
 
-    PropertyGeneral() : bold(false), italics(false) {};
-  };
+    static PropertyANSI DefaultProperty;
 
-  template <class Palette>
-  struct Property : public PropertyGeneral {
-    Palette color;
-
-    Property() : color(Palette::DefaultColor) {
-      PropertyGeneral();
+    Property() {
+      *this=DefaultProperty;
     }
   };
 
-  struct ColorType {
+  struct PropertyType {
     class Error;
 
-    enum Type {OTHER, RGB, ANSI};
+    enum Type {OTHER, ANSI};
 
     int type;
 
-    ColorType(Type t);
-    ColorType(int t);
+    PropertyType(Type t);
+    PropertyType(int t);
 
     Type getType();
   };

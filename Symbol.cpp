@@ -5,6 +5,8 @@ namespace Blessings_ns {
   ColorANSI ColorANSI::DefaultColor=ColorANSI(BLACK);
   ColorRGB ColorRGB::DefaultColor=ColorRGB::BLACK;
 
+  PropertyANSI::DefaultProperty={ColorRGB::GREEN, false, false};
+
   const ColorRGB ColorRGB::WHITE=ColorRGB(255,255,255);
   const ColorRGB ColorRGB::BLACK=ColorRGB(0,0,0);
 
@@ -14,18 +16,18 @@ namespace Blessings_ns {
     }
   }
 
-  ColorType::ColorType(Type t) {
+  PropertyType::PropertyType(Type t) {
     if(t==OTHER) throw Error("bad init Type");
     type=t;
   }
 
-  ColorType::ColorType(int t) {
+  PropertyType::PropertyType(int t) {
     if(t==static_cast<int>(OTHER)) throw Error("init int equals to OTHER");
     type=t;
   }
 
-  ColorType::Type ColorType::getType() {
-    if(static_cast<Type>(type)==RGB || static_cast<Type>(type)==ANSI) {
+  PropertyType::Type PropertyType::getType() {
+    if(static_cast<Type>(type)==ANSI) {
       return static_cast<Type>(type);
     }
     else return OTHER;

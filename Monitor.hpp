@@ -30,7 +30,7 @@ namespace Blessings_ns {
     virtual int boldSupported()=0;
     virtual int italicsSupported()=0;
 
-    virtual ColorType getColorType()=0;
+    virtual PropertyType getPropertyType()=0;
   };
 
   template <class InputSymbol, class OutputSymbol>
@@ -74,7 +74,7 @@ namespace Blessings_ns {
     int boldSupported();
     int italicsSupported();
 
-    ColorType getColorType();
+    PropertyType getPropertyType();
   };
 
 }

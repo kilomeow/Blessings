@@ -37,7 +37,7 @@ namespace Blessings_ns {
     int boldSupported() {return 0;};
     int italicsSupported() {return 0;};
 
-    ColorType getColorType() {return ColorType::ANSI;};
+    PropertyType getPropertyType() {return ColorType::ANSI;};
 
     //Pure ANSI/Linux methods
     void setNonCanonTerminalMode(); //rewrite!
