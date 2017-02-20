@@ -41,18 +41,20 @@ namespace Blessings {
   template <class InputSymbol, class OutputSymbol>
   class Monitor : public MonitorGeneral {
   public:
-    Monitor(TerminalIO Term, int MaxSize);
-
+    Monitor(TerminalIO <InputSymbol, OutputSymbol> Term, int MaxSize);
     Monitor(const Monitor&);
     Monitor& operator=(const Monitor&);
     ~Monitor();
 
     class Error;
 
-    MonitorCell& operator[] (int p);
-    MonitorCell operator[] (int p) const;
-    MonitorCell& operator()(int x, int y);
-    MonitorCell operator()(int x, int y) const;
+    GridPos positionOf(int) const;
+    int indexOf(GridPos) const;
+
+    MonitorCell <OutputSymbol> & operator[] (int p);
+    MonitorCell <OutputSymbol> operator[] (int p) const;
+    MonitorCell <OutputSymbol> & operator()(int x, int y);
+    MonitorCell <OutputSymbol> operator()(int x, int y) const;
 
     class Iterator {
     protected:
@@ -60,9 +62,12 @@ namespace Blessings {
       int stopPos;
     public:
       Iterator(int pnt, int bnd);
-      Iterator& operator++();
-      Iterator operator++(int);
-      MonitorCell& operator*();
+      MonitorCell <OutputSymbol> & operator*(Iterator);
+      Iterator& operator++(Iterator&);
+      Iterator operator++(Iterator&, int);
+
+      class Error;
+      class EndError;
 
       int currentIndex();
       GridPos currentPos();
@@ -96,12 +101,15 @@ namespace Blessings {
     PropertyType getPropertyType();
 
   protected:
+    void setResolution(MonitorResolution mr);
+
     MonitorCell * Monitor::grid;
     TerminalIO Monitor::termIO;
+
     int maxSize;
     MonitorResolution res;
+
     GlidPos cursorPos;
     GridPos cursorSlot;
   };
-
 }
