@@ -6,7 +6,7 @@
 #include "AdditionalStructs.hpp"
 
 namespace Blessings {
-  template <class InputSymbol, class OutputSymbol, class PropertyT>
+  template <class InputSymbol, class OutputSymbol>
   class TerminalIO {
   public:
     //Device info
