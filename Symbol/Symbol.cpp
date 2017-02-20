@@ -1,7 +1,7 @@
 #include "Symbol.hpp"
 #include "../Error.hpp"
 
-namespace Blessings {
+namespace blessings {
   ColorANSI ColorANSI::DefaultColor=ColorANSI(BLACK);
   ColorRGB ColorRGB::DefaultColor=ColorRGB::BLACK;
 

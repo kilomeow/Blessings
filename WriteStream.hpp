@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace Blessings {
+namespace blessings {
   template <class OutputSymbol>
   class WriteStream {
   public:
@@ -13,5 +13,4 @@ namespace Blessings {
 
     virtual void flush()=0;
   };
-
 }

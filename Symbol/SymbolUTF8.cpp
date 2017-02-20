@@ -6,7 +6,7 @@
 #include <cstring>
 #include <cstdio>
 
-namespace Blessings {
+namespace blessings {
   SymbolUTF8::SymbolUTF8(const char* sym) {
     if(sym==nullptr) throw InitError();
 

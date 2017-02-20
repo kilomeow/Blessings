@@ -6,8 +6,8 @@
 #include "TerminalIO.hpp"
 #include "Symbol/Symbol.hpp"
 
-namespace Blessings {
-  template <class Symbol>
+namespace blessings {
+	template <class Symbol>
   struct MonitorCell {
     Symbol symb;
     Property* prop;

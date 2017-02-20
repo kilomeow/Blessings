@@ -5,8 +5,8 @@
 #include "ReadStream.hpp"
 #include "AdditionalStructs.hpp"
 
-namespace Blessings {
-  template <class InputSymbol, class OutputSymbol, class PropertyT>
+namespace blessings {
+  template <class InputSymbol, class OutputSymbol>
   class TerminalIO {
   public:
     //Device info
@@ -15,6 +15,7 @@ namespace Blessings {
 
     //IO
     virtual void print(OutputSymbol, Property*)=0;
+    virtual void print(OutputSymbol)=0;
     virtual InputSymbol getSym()=0;
 
     //Screen state
@@ -23,6 +24,7 @@ namespace Blessings {
     virtual void newLine()=0;
 
     virtual void moveCursor(int x, int y)=0;
+    virtual void moveCursorTo(int x, int y)=0;
 
     virtual void hideCursor()=0;
     virtual void showCursor()=0;

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Blessings {
+namespace blessings {
   template <class OutputSymbol>
   class WriteStreamLinux;
 }

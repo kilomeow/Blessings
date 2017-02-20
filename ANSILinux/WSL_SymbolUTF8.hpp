@@ -7,7 +7,7 @@
 #include "WriteStreamLinux.hpp"
 #include "../Error.hpp"
 
-namespace Blessings {
+namespace blessings {
   template <>
   class WriteStreamLinux<SymbolUTF8> :
     public WriteStream<SymbolUTF8> {

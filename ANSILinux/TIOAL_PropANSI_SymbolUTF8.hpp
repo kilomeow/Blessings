@@ -1,5 +1,8 @@
 #pragma once
 
+// Gurantees: no other program works with that terminal (changes its mode, writes,
+// reads
+
 #include <termios.h>
 #include <cstdio>
 
@@ -11,10 +14,10 @@
 #include "TerminalIOANSILinux.hpp"
 #include "../TerminalIO.hpp"
 
-namespace Blessings {
+namespace blessings {
   template <>
   class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI> :
-    public TerminalIO<SymbolUTF8, SymbolUTF8, PropertyANSI> {
+    public TerminalIO<SymbolUTF8, SymbolUTF8> {
 
     bool inited;
     bool noncanonicalMode;
@@ -32,6 +35,7 @@ namespace Blessings {
     class ArgumentError;
     class IOError;
     class DeviceError;
+    class UninitedStateError;
 
     TerminalIOANSILinux();
 
@@ -45,6 +49,7 @@ namespace Blessings {
 
     //IO
     void print(SymbolUTF8, Property*);
+    void print(SymbolUTF8);
     SymbolUTF8 getSym() {};
 
     //Screen state
@@ -53,8 +58,9 @@ namespace Blessings {
     void newLine();
 
     void moveCursor(int x, int y);
+    void moveCursorTo(int x, int y);
 
-    void hideCursor() {};
+    void hideCursor();
     void showCursor() {};
 
     void saveCursorPos() {};
@@ -91,4 +97,6 @@ namespace Blessings {
     public TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::Error {};
   class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::DeviceError :\
     public TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::Error {};
+  class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::UninitedStateError :\
+    public TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::ReadinessError {};
 }
