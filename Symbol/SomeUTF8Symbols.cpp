@@ -4,6 +4,7 @@
 namespace blessings::SomeUTF8Symbols {
   const char CSIInit[]={static_cast<char>(0xC2), static_cast<char>(0x9B), '\0'};
   const char newLineSymbolInit[]={static_cast<char>(0xA), '\0'};
+  const char ESCInit[]={static_cast<char>(0x1B), '\0'};
 
   const char spaceInit[]={static_cast<char>(0x20), '\0'};
   const char openBracketInit[]={static_cast<char>(0x5B), '\0'};
@@ -30,9 +31,12 @@ namespace blessings::SomeUTF8Symbols {
   const char DSymInit[]={static_cast<char>(0x44), '\0'};
   const char HSymInit[]={static_cast<char>(0x48), '\0'};
   const char fSymInit[]={static_cast<char>(0x66), '\0'};
+  const char lSymInit[]={static_cast<char>(0x6C), '\0'};
+  const char hSymInit[]={static_cast<char>(0x68), '\0'};
 
   const SymbolUTF8 CSISymbol=SymbolUTF8(CSIInit);
   const SymbolUTF8 newLineSymbol=SymbolUTF8(newLineSymbolInit);
+  const SymbolUTF8 ESCSymbol=SymbolUTF8(ESCInit);
 
   const SymbolUTF8 spaceSymbol=SymbolUTF8(spaceInit);
   const SymbolUTF8 openBracket=SymbolUTF8(openBracketInit);
@@ -59,4 +63,6 @@ namespace blessings::SomeUTF8Symbols {
   const SymbolUTF8 DSym=SymbolUTF8(DSymInit);
   const SymbolUTF8 HSym=SymbolUTF8(HSymInit);
   const SymbolUTF8 fSym=SymbolUTF8(fSymInit);
+  const SymbolUTF8 lSym=SymbolUTF8(lSymInit);
+  const SymbolUTF8 hSym=SymbolUTF8(hSymInit);
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+// Gurantees: no other program works with that terminal (changes its mode, writes,
+// reads
+
 #include <termios.h>
 #include <cstdio>
 
@@ -14,7 +17,7 @@
 namespace blessings {
   template <>
   class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI> :
-    public TerminalIO<SymbolUTF8, SymbolUTF8, PropertyANSI> {
+    public TerminalIO<SymbolUTF8, SymbolUTF8> {
 
     bool inited;
     bool noncanonicalMode;
@@ -23,7 +26,6 @@ namespace blessings {
     //ReadStream<SymbolUTF8>* rs;
 
     termios storedSettings;
-    bool settingsStored;
 
     FILE* file;
   public:
@@ -34,7 +36,6 @@ namespace blessings {
     class IOError;
     class DeviceError;
     class UninitedStateError;
-    class NoStoredSettingsError;
 
     TerminalIOANSILinux();
 
@@ -59,7 +60,7 @@ namespace blessings {
     void moveCursor(int x, int y);
     void moveCursorTo(int x, int y);
 
-    void hideCursor() {};
+    void hideCursor();
     void showCursor() {};
 
     void saveCursorPos() {};
@@ -97,7 +98,5 @@ namespace blessings {
   class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::DeviceError :\
     public TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::Error {};
   class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::UninitedStateError :\
-    public TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::ReadinessError {};
-  class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::NoStoredSettingsError :\
     public TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::ReadinessError {};
 }

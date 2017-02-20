@@ -6,6 +6,7 @@ namespace blessings {
   namespace SomeUTF8Symbols{
     extern const char CSIInit[];
     extern const char newLineSymbolInit[];
+    extern const char ESCInit[];
 
     extern const char spaceInit[];
     extern const char openBracketInit[];
@@ -35,6 +36,7 @@ namespace blessings {
 
     extern const SymbolUTF8 CSISymbol;
     extern const SymbolUTF8 newLineSymbol;
+    extern const SymbolUTF8 ESCSymbol;
 
     extern const SymbolUTF8 spaceSymbol;
     extern const SymbolUTF8 openBracket;
@@ -61,5 +63,7 @@ namespace blessings {
     extern const SymbolUTF8 DSym;
     extern const SymbolUTF8 HSym;
     extern const SymbolUTF8 fSym;
+    extern const SymbolUTF8 lSym;
+    extern const SymbolUTF8 hSym;
   }
 }

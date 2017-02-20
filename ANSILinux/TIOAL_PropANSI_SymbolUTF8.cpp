@@ -12,11 +12,15 @@ namespace blessings {
   TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::TerminalIOANSILinux() {
     inited=false;
     noncanonicalMode=false;
-    settingsStored=false;
   }
 
   TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::~TerminalIOANSILinux() {
+    if(noncanonicalMode) {
+      int fd=fileno(file);
+      if(fd==-1) throw DeviceError();
 
+      tcsetattr(fd,TCSANOW,&storedSettings);
+    }
   }
 
   void TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::Init(FILE* f) {
@@ -31,7 +35,6 @@ namespace blessings {
 
     inited=true;
     noncanonicalMode=false;
-    settingsStored=false;
   }
 
   void TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::print(\
@@ -44,13 +47,15 @@ namespace blessings {
 
     try {
       if(prop->bold) {
-        ws->write(CSISymbol);
+        ws->write(ESCSymbol);
+        ws->write(openBracket);
         ws->write(one);
         ws->write(mSym);
       }
 
       if(prop->italics) {
-        ws->write(CSISymbol);
+        ws->write(ESCSymbol);
+        ws->write(openBracket);
         ws->write(three);
         ws->write(mSym);
       }
@@ -116,7 +121,8 @@ namespace blessings {
     if(!isReady()) throw ReadinessError();
 
     try {
-      ws->write(CSISymbol);
+      ws->write(ESCSymbol);
+      ws->write(openBracket);
       ws->write(two);
       ws->write(JSym);
 
@@ -153,7 +159,8 @@ namespace blessings {
       std::string yAbsStr=std::to_string(yAbs);
 
       if(x!=0) {
-        ws->write(CSISymbol);
+        ws->write(ESCSymbol);
+        ws->write(openBracket);
 
         for(int i=0; i<xAbsStr.size(); ++i) {
           ws->write(xAbsStr[i]);
@@ -164,7 +171,8 @@ namespace blessings {
       }
 
       if(y!=0) {
-        ws->write(CSISymbol);
+        ws->write(ESCSymbol);
+        ws->write(openBracket);
 
         for(int i=0; i<yAbsStr.size(); ++i) {
           ws->write(yAbsStr[i]);
@@ -190,7 +198,8 @@ namespace blessings {
       std::string xStr=std::to_string(x);
       std::string yStr=std::to_string(y);
 
-      ws->write(CSISymbol);
+      ws->write(ESCSymbol);
+      ws->write(openBracket);
 
       for(int i=0; i<yStr.size(); ++i) {
         ws->write(yStr[i]);
@@ -215,9 +224,28 @@ namespace blessings {
     if(!isReady()) throw ReadinessError();
 
     try {
-      ws->write(CSISymbol);
+      ws->write(ESCSymbol);
+      ws->write(openBracket);
       ws->write(zero);
       ws->write(mSym);
+
+      ws->flush();
+    }
+    catch(...) {
+      throw IOError();
+    }
+  }
+
+  void TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::hideCursor() {
+    if(!isReady()) throw ReadinessError();
+
+    try {
+      ws->write(ESCSymbol);
+      ws->write(openBracket);
+      ws->write(question);
+      ws->write(two);
+      ws->write(five);
+      ws->write(lSym);
 
       ws->flush();
     }
@@ -249,14 +277,12 @@ namespace blessings {
     tcsetattr(fd,TCSANOW,&newSettings); //Pray it works
 
     noncanonicalMode=true;
-    settingsStored=true;
 
     resetSGR();
   }
 
   void TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::resetDeviceMode() {
     if(!inited) throw UninitedStateError();
-    if(!settingsStored) throw NoStoredSettingsError();
 
     if(noncanonicalMode==false) return;
 
