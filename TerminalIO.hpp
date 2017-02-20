@@ -6,7 +6,7 @@
 #include "AdditionalStructs.hpp"
 
 namespace blessings {
-  template <class InputSymbol, class OutputSymbol>
+  template <class InS, class OutS>
   class TerminalIO {
   public:
     //Device info
@@ -14,9 +14,9 @@ namespace blessings {
     virtual GridPos getCursorPos()=0;
 
     //IO
-    virtual void print(OutputSymbol, Property*)=0;
-    virtual void print(OutputSymbol)=0;
-    virtual InputSymbol getSym()=0;
+    virtual void print(OutS, Property*)=0;
+    virtual void print(OutS)=0;
+    virtual InS getSym()=0;
 
     //Screen state
     virtual void clearScreen()=0;

@@ -38,10 +38,10 @@ namespace blessings {
   };
 
 
-  template <class InputSymbol, class OutputSymbol>
+  template <class InS, class OutS>
   class Monitor : public MonitorGeneral {
   public:
-    Monitor(TerminalIO <InputSymbol, OutputSymbol> Term, int MaxSize);
+    Monitor(TerminalIO <InS, OutS> Term, int MaxSize);
     Monitor(const Monitor&);
     Monitor& operator=(const Monitor&);
     ~Monitor();
@@ -51,10 +51,10 @@ namespace blessings {
     GridPos positionOf(int) const;
     int indexOf(GridPos) const;
 
-    MonitorCell <OutputSymbol> & operator[] (int p);
-    MonitorCell <OutputSymbol> operator[] (int p) const;
-    MonitorCell <OutputSymbol> & operator()(int x, int y);
-    MonitorCell <OutputSymbol> operator()(int x, int y) const;
+    MonitorCell <OutS> & operator[] (int p);
+    MonitorCell <OutS> operator[] (int p) const;
+    MonitorCell <OutS> & operator()(int x, int y);
+    MonitorCell <OutS> operator()(int x, int y) const;
 
     class Iterator {
     protected:
@@ -62,7 +62,7 @@ namespace blessings {
       int stopPos;
     public:
       Iterator(int pnt, int bnd);
-      MonitorCell <OutputSymbol> & operator*(Iterator);
+      MonitorCell <OutS> & operator*(Iterator);
       Iterator& operator++(Iterator&);
       Iterator operator++(Iterator&, int);
 
@@ -80,9 +80,9 @@ namespace blessings {
     void clearScreen();
     void printPage();
 
-    InputSymbol getSym();
+    InS getSym();
 
-    void printSymbol(OutputSymbol);
+    void printSymbol(OutS);
 
     void moveCursor(int x, int y);
     GridPos getCursorPos();

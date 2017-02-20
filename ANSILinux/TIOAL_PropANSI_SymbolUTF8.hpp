@@ -61,7 +61,7 @@ namespace blessings {
     void moveCursorTo(int x, int y);
 
     void hideCursor();
-    void showCursor() {};
+    void showCursor();
 
     void saveCursorPos() {};
     void restoreCursorPos() {};

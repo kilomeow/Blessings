@@ -1,7 +1,7 @@
 #pragma once
 
 namespace blessings {
-  template <class InputSymbol, class OutputSymbol, class PropertyT>
+  template <class InS, class OutS, class PropertyT>
   class TerminalIOANSILinux;
 }
 

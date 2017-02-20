@@ -3,8 +3,8 @@
 #include <string>
 
 namespace blessings {
-  template <class InputSymbol>
+  template <class InS>
   class ReadStream {
-    virtual InputSymbol getSymbol()=0;
+    virtual InS getSymbol()=0;
   };
 }

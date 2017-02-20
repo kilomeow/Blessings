@@ -1,7 +1,7 @@
 #pragma once
 
 namespace blessings {
-  template <class OutputSymbol>
+  template <class OutS>
   class WriteStreamLinux;
 }
 

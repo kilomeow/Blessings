@@ -254,6 +254,24 @@ namespace blessings {
     }
   }
 
+  void TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::showCursor() {
+    if(!isReady()) throw ReadinessError();
+
+    try {
+      ws->write(ESCSymbol);
+      ws->write(openBracket);
+      ws->write(question);
+      ws->write(two);
+      ws->write(five);
+      ws->write(hSym);
+
+      ws->flush();
+    }
+    catch(...) {
+      throw IOError();
+    }
+  }
+
   void TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::setDeviceReady() {
     if(!inited) throw UninitedStateError();
 
