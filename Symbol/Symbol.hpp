@@ -5,7 +5,7 @@
 
 #include "../Error.hpp"
 
-namespace Blessings {
+namespace blessings {
   template <class SymbolType>
   SymbolType getSym(FILE*);
 

@@ -4,7 +4,7 @@
 #include "../Symbol/SymbolUTF8.hpp"
 #include "../Error.hpp"
 
-namespace Blessings {
+namespace blessings {
   WriteStreamLinux<SymbolUTF8>::WriteStreamLinux(FILE* f) :\
     file(f) {};
 

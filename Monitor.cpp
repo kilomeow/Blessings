@@ -4,8 +4,7 @@
 #include "Symbol/Symbol.hpp"
 
 
-namespace Blessings {
-
+namespace blessings {
   template <class InS, class OutS>
   Monitor<InS,OutS>::Monitor(TerminalIO Term, int MaxSize) {
     if (MaxSize <= 0) throw Monitor::Error();   // ::Error("wrong MaxSize")
