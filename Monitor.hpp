@@ -5,6 +5,7 @@
 #include "AdditionalStructs.hpp"
 #include "TerminalIO.hpp"
 #include "Symbol.hpp"
+#include "Monitor.hpp"
 
 
 namespace Blessings_ns {
@@ -18,11 +19,6 @@ namespace Blessings_ns {
 
   class MonitorGeneral {
 	public:
-
-		virtual void resetPointer()=0;
-    virtual MonitorCell slideCell()=0;
-    virtual void pushCell(MonitorCell)=0;
-
 		virtual void update()=0;
 		virtual void clearScreen()=0;
     virtual void printPage()=0;
@@ -61,9 +57,18 @@ namespace Blessings_ns {
     MonitorCell& operator()(int x, int y);
     MonitorCell operator()(int x, int y) const;
 
-    void resetPointer();
-    MonitorCell slideCell();
-    void pushCell(MonitorCell);
+    class Iterator {
+    	Iterator(int pnt, int bnd)
+			Iterator& operator++();
+			Iterator operator++(int);
+			MonitorCell& operator*();
+
+			int currentIndex();
+			GridPos currentPos();
+    };
+
+    Iterator begin();
+    Iterator end();
 
     void update();
 		void clearScreen();
@@ -93,9 +98,7 @@ namespace Blessings_ns {
 		MonitorCell * Monitor::grid;
 		TerminalIO Monitor::termIO;
 		int maxSize;
-		int stopPosition;
 		MonitorResolution res;
-		int pointer;
 		GlidPos cursorPos;
 		GridPos cursorSlot;
   };
