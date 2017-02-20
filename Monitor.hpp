@@ -4,12 +4,9 @@
 
 #include "AdditionalStructs.hpp"
 #include "TerminalIO.hpp"
-#include "Symbol.hpp"
-#include "Monitor.hpp"
+#include "Symbol/Symbol.hpp"
 
-
-namespace Blessings_ns {
-
+namespace Blessings {
 	template <class Symbol>
   struct MonitorCell {
   	Symbol symb;

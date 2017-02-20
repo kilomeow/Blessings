@@ -1,28 +1,26 @@
 #include "Symbol.hpp"
-#include "Error.hpp"
+#include "../Error.hpp"
 
-namespace Blessings_ns {
+namespace Blessings {
   ColorANSI ColorANSI::DefaultColor=ColorANSI(BLACK);
   ColorRGB ColorRGB::DefaultColor=ColorRGB::BLACK;
-
-  PropertyANSI::DefaultProperty={ColorRGB::GREEN, false, false};
 
   const ColorRGB ColorRGB::WHITE=ColorRGB(255,255,255);
   const ColorRGB ColorRGB::BLACK=ColorRGB(0,0,0);
 
   ColorRGB::ColorRGB(int red, int green, int blue) : r(red), g(green), b(blue) {
     if(red<0 || red>255 || green<0 || green>255 || blue<0 || blue>255) {
-      throw Error("bad init values");
+      throw InitError();
     }
   }
 
   PropertyType::PropertyType(Type t) {
-    if(t==OTHER) throw Error("bad init Type");
+    if(t==OTHER) throw InitError();
     type=t;
   }
 
   PropertyType::PropertyType(int t) {
-    if(t==static_cast<int>(OTHER)) throw Error("init int equals to OTHER");
+    if(t==static_cast<int>(OTHER)) throw InitError();
     type=t;
   }
 

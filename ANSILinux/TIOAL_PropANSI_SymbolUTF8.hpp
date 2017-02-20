@@ -1,15 +1,17 @@
 #pragma once
 
-#include "Termios.hpp"
+#include <termios.h>
 #include <cstdio>
 
-#include "Symbol.hpp"
+#include "../Symbol/Symbol.hpp"
 #include "../WriteStream.hpp"
 #include "../ReadStream.hpp"
-#include "ReadStream.hpp"
-#include "AdditionalStructs.hpp"
+#include "../AdditionalStructs.hpp"
+#include "../Error.hpp"
+#include "TerminalIOANSILinux.hpp"
+#include "../TerminalIO.hpp"
 
-namespace Blessings_ns {
+namespace Blessings {
   template <>
   class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI> :
     public TerminalIO<SymbolUTF8, SymbolUTF8, PropertyANSI> {
@@ -17,25 +19,32 @@ namespace Blessings_ns {
     bool inited;
     bool noncanonicalMode;
 
-    WriteStream<SymbolUTF8, PropertyANSI>* ws;
-    ReadStream<SymbolUTF8>* rs;
+    WriteStream<SymbolUTF8>* ws;
+    //ReadStream<SymbolUTF8>* rs;
 
-    Termios_ns::termios storedSettings;
+    termios storedSettings;
 
     FILE* file;
   public:
     class Error;
+    class InitError;
+    class ReadinessError;
+    class ArgumentError;
+    class IOError;
+    class DeviceError;
 
     TerminalIOANSILinux();
+
+    ~TerminalIOANSILinux();
 
     void Init(FILE* f=stdout);
 
     //Device info
-    MonitorResolution getResolution getResolution() {};
+    MonitorResolution getResolution() {};
     GridPos getCursorPos() {};
 
     //IO
-    void print(SymbolUTF8, PropertyGeneral*);
+    void print(SymbolUTF8, Property*);
     SymbolUTF8 getSym() {};
 
     //Screen state
@@ -54,17 +63,32 @@ namespace Blessings_ns {
     void resetSGR();
 
     //Terminal info
-    int boldSupported() {return 0};
-    int italicsSupported() {return 0};
+    int boldSupported() {return 0;};
+    int italicsSupported() {return 0;};
 
-    PropertyType getPropertyType() {return PropertyType(PropertyType::ANSI)};
+    PropertyType getPropertyType() {return PropertyType(PropertyType::ANSI);};
 
     //Terminal state
     void setDeviceReady();
     void resetDeviceMode();
-    bool isDeviceReady();
+    bool isDeviceReady() {};
 
     //Global state
-    bool isReady();
+    bool isReady() {return inited && noncanonicalMode;};
   };
+
+
+  //Errors
+  class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::Error :\
+    public BlessingsError {};
+  class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::InitError :\
+    public TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::Error {};
+  class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::ReadinessError :\
+    public TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::Error {};
+  class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::ArgumentError :\
+    public TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::Error {};
+  class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::IOError :\
+    public TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::Error {};
+  class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::DeviceError :\
+    public TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::Error {};
 }

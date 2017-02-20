@@ -1,10 +1,10 @@
 #include "Monitor.hpp"
 #include "AdditionalStructs.hpp"
 #include "TerminalIO.hpp"
-#include "Symbol.hpp"
+#include "Symbol/Symbol.hpp"
 
 
-namespace Blessings_ns {
+namespace Blessings {
 
 	Monitor::Monitor(TerminalIO Term, int MaxSize) {
 		if (MaxSize <= 0) throw Monitor::Error("wrong MaxSize");
@@ -68,4 +68,5 @@ namespace Blessings_ns {
 		if ((p <= 0) || (p >= maxSize)) throw Monitor::Error("p out of range");
 		return grid[p];
 	}
+
 }

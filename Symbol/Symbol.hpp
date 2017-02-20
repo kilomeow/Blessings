@@ -3,24 +3,23 @@
 #include <string>
 #include <cstdint>
 
-namespace Blessings_ns {
-  class Symbol {
-  public:
-    virtual std::string getString() const=0;
-  };
+#include "../Error.hpp"
 
+namespace Blessings {
   template <class SymbolType>
   SymbolType getSym(FILE*);
+
 
   //Color
   struct ColorANSI {
     enum ColorT {BLACK=0, RED=1, GREEN=2, YELLOW=3, BLUE=4, MAGENTA=5, CYAN=6, WHITE=7};
     ColorT color;
 
-    ColorANSI(ColorName col=BLACK) : color(col) {};
+    ColorANSI(ColorT col=BLACK) : color(col) {};
 
     static ColorANSI DefaultColor;
   };
+
 
   struct ColorRGB {
     uint8_t r;
@@ -28,6 +27,7 @@ namespace Blessings_ns {
     uint8_t b;
 
     class Error;
+    class InitError;
 
     ColorRGB(int red=0, int green=0, int blue=0);
 
@@ -37,25 +37,26 @@ namespace Blessings_ns {
     static ColorRGB DefaultColor;
   };
 
-  //Property
-  struct PropertyGeneral {};
 
-  struct PropertyANSI : public PropertyGeneral {
+  class ColorRGB::Error : public BlessingsError {};
+  class ColorRGB::InitError : public ColorRGB::Error {};
+
+
+  //Property
+  struct Property {};
+
+  struct PropertyANSI : public Property {
     ColorANSI color;
     bool italics;
     bool bold;
-
-    static PropertyANSI DefaultProperty;
-
-    Property() {
-      *this=DefaultProperty;
-    }
   };
+
 
   struct PropertyType {
     class Error;
+    class InitError;
 
-    enum Type {OTHER, ANSI};
+    enum Type {OTHER=0, ANSI=1};
 
     int type;
 
@@ -64,4 +65,8 @@ namespace Blessings_ns {
 
     Type getType();
   };
+
+
+  class PropertyType::Error : public BlessingsError {};
+  class PropertyType::InitError : PropertyType::Error {};
 }

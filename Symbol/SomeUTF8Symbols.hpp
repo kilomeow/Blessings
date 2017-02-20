@@ -2,8 +2,8 @@
 
 #include "SymbolUTF8.hpp"
 
-namespace Blessings_ns {
-  namespace Some_UTF8_symbols{
+namespace Blessings {
+  namespace SomeUTF8Symbols{
     extern const char CSIInit[];
     extern const char newLineSymbolInit[];
 
