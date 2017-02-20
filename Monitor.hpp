@@ -38,7 +38,7 @@ namespace blessings {
   };
 
 
-  template <class InS, class OutS>
+  template <class InS, class OutS>    // <InputSymbol, OutputSymbol>
   class Monitor : public MonitorGeneral {
   public:
     Monitor(TerminalIO <InS, OutS> Term, int MaxSize);
@@ -95,7 +95,7 @@ namespace blessings {
 
     MonitorResolution getResolution();
 
-    int boldSupported();         // Must be rewrited
+    int boldSupported();    // Must be rewrited
     int italicsSupported();
 
     PropertyType getPropertyType();
@@ -103,13 +103,13 @@ namespace blessings {
   protected:
     void setResolution(MonitorResolution mr);
 
-    MonitorCell * Monitor::grid;
-    TerminalIO Monitor::termIO;
+    MonitorCell <OutS> * grid;
+    TerminalIO <InS, OutS> termIO;
 
     int maxSize;
     MonitorResolution res;
 
-    GlidPos cursorPos;
+    GridPos cursorPos;
     GridPos cursorSlot;
   };
 }
