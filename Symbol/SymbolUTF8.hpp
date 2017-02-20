@@ -6,7 +6,7 @@
 
 #include "Symbol.hpp"
 
-namespace Blessings {
+namespace blessings {
   class SymbolUTF8 {
     char arr[4]; //char in c++ is always 1 byte
   public:

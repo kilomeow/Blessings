@@ -6,16 +6,17 @@
 #include "TIOAL_PropANSI_SymbolUTF8.hpp"
 #include "WriteStreamLinux.hpp"
 
-namespace Blessings {
+namespace blessings {
   using namespace SomeUTF8Symbols;
 
   TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::TerminalIOANSILinux() {
     inited=false;
     noncanonicalMode=false;
+    settingsStored=false;
   }
 
   TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::~TerminalIOANSILinux() {
-    if(noncanonicalMode) resetDeviceMode();
+
   }
 
   void TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::Init(FILE* f) {
@@ -29,17 +30,19 @@ namespace Blessings {
     }
 
     inited=true;
+    noncanonicalMode=false;
+    settingsStored=false;
   }
 
   void TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::print(\
     SymbolUTF8 sym, Property* propRaw) {
     if(!isReady()) throw ReadinessError();
 
+    if(propRaw==nullptr) throw ArgumentError();
+
     PropertyANSI* prop=static_cast<PropertyANSI* >(propRaw);
 
     try {
-      resetSGR();
-
       if(prop->bold) {
         ws->write(CSISymbol);
         ws->write(one);
@@ -87,6 +90,20 @@ namespace Blessings {
       ws->write(sym);
 
       resetSGR();
+
+      ws->flush();
+    }
+    catch(...) {
+      throw IOError();
+    }
+  }
+
+  void TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::print(\
+    SymbolUTF8 sym) {
+    if(!isReady()) throw ReadinessError();
+
+    try {
+      ws->write(sym);
 
       ws->flush();
     }
@@ -164,6 +181,36 @@ namespace Blessings {
     }
   }
 
+  void TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::moveCursorTo(int x, int y) {
+    if(!isReady()) throw ReadinessError();
+
+    if(x<=0 || y<=0) throw ArgumentError();
+
+    try {
+      std::string xStr=std::to_string(x);
+      std::string yStr=std::to_string(y);
+
+      ws->write(CSISymbol);
+
+      for(int i=0; i<yStr.size(); ++i) {
+        ws->write(yStr[i]);
+      }
+
+      ws->write(semicolon);
+
+      for(int i=0; i<xStr.size(); ++i) {
+        ws->write(xStr[i]);
+      }
+
+      ws->write(HSym);
+
+      ws->flush();
+    }
+    catch(...) {
+      throw IOError();
+    }
+  }
+
   void TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::resetSGR() {
     if(!isReady()) throw ReadinessError();
 
@@ -180,6 +227,10 @@ namespace Blessings {
   }
 
   void TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::setDeviceReady() {
+    if(!inited) throw UninitedStateError();
+
+    if(noncanonicalMode==true) return;
+
     termios newSettings;
 
     int fd=fileno(file);
@@ -198,9 +249,17 @@ namespace Blessings {
     tcsetattr(fd,TCSANOW,&newSettings); //Pray it works
 
     noncanonicalMode=true;
+    settingsStored=true;
+
+    resetSGR();
   }
 
   void TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::resetDeviceMode() {
+    if(!inited) throw UninitedStateError();
+    if(!settingsStored) throw NoStoredSettingsError();
+
+    if(noncanonicalMode==false) return;
+
     int fd=fileno(file);
     if(fd==-1) throw DeviceError();
 

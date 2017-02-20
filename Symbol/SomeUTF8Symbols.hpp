@@ -2,7 +2,7 @@
 
 #include "SymbolUTF8.hpp"
 
-namespace Blessings {
+namespace blessings {
   namespace SomeUTF8Symbols{
     extern const char CSIInit[];
     extern const char newLineSymbolInit[];
@@ -30,6 +30,8 @@ namespace Blessings {
     extern const char BSymInit[];
     extern const char CSymInit[];
     extern const char DSymInit[];
+    extern const char HSymInit[];
+    extern const char fSymInit[];
 
     extern const SymbolUTF8 CSISymbol;
     extern const SymbolUTF8 newLineSymbol;
@@ -57,5 +59,7 @@ namespace Blessings {
     extern const SymbolUTF8 BSym;
     extern const SymbolUTF8 CSym;
     extern const SymbolUTF8 DSym;
+    extern const SymbolUTF8 HSym;
+    extern const SymbolUTF8 fSym;
   }
 }

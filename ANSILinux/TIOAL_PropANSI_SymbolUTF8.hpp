@@ -11,7 +11,7 @@
 #include "TerminalIOANSILinux.hpp"
 #include "../TerminalIO.hpp"
 
-namespace Blessings {
+namespace blessings {
   template <>
   class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI> :
     public TerminalIO<SymbolUTF8, SymbolUTF8, PropertyANSI> {
@@ -23,6 +23,7 @@ namespace Blessings {
     //ReadStream<SymbolUTF8>* rs;
 
     termios storedSettings;
+    bool settingsStored;
 
     FILE* file;
   public:
@@ -32,6 +33,8 @@ namespace Blessings {
     class ArgumentError;
     class IOError;
     class DeviceError;
+    class UninitedStateError;
+    class NoStoredSettingsError;
 
     TerminalIOANSILinux();
 
@@ -45,6 +48,7 @@ namespace Blessings {
 
     //IO
     void print(SymbolUTF8, Property*);
+    void print(SymbolUTF8);
     SymbolUTF8 getSym() {};
 
     //Screen state
@@ -53,6 +57,7 @@ namespace Blessings {
     void newLine();
 
     void moveCursor(int x, int y);
+    void moveCursorTo(int x, int y);
 
     void hideCursor() {};
     void showCursor() {};
@@ -91,4 +96,8 @@ namespace Blessings {
     public TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::Error {};
   class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::DeviceError :\
     public TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::Error {};
+  class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::UninitedStateError :\
+    public TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::ReadinessError {};
+  class TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::NoStoredSettingsError :\
+    public TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::ReadinessError {};
 }

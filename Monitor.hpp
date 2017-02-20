@@ -7,7 +7,7 @@
 #include "WriteStream.hpp"
 #include "Symbol/Symbol.hpp"
 
-namespace Blessings {
+namespace blessings {
 	template <class Symbol>
   struct MonitorCell {
   	Symbol symb;
@@ -95,8 +95,7 @@ namespace Blessings {
 		int stopPosition;
 		MonitorResolution res;
 		int pointer;
-		GlidPos cursorPos;
+		GridPos cursorPos;
 		GridPos cursorSlot;
   };
-
 }

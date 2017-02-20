@@ -1,7 +1,7 @@
 #include "SymbolUTF8.hpp"
 #include "SomeUTF8Symbols.hpp"
 
-namespace Blessings::SomeUTF8Symbols {
+namespace blessings::SomeUTF8Symbols {
   const char CSIInit[]={static_cast<char>(0xC2), static_cast<char>(0x9B), '\0'};
   const char newLineSymbolInit[]={static_cast<char>(0xA), '\0'};
 
@@ -28,6 +28,8 @@ namespace Blessings::SomeUTF8Symbols {
   const char BSymInit[]={static_cast<char>(0x42), '\0'};
   const char CSymInit[]={static_cast<char>(0x43), '\0'};
   const char DSymInit[]={static_cast<char>(0x44), '\0'};
+  const char HSymInit[]={static_cast<char>(0x48), '\0'};
+  const char fSymInit[]={static_cast<char>(0x66), '\0'};
 
   const SymbolUTF8 CSISymbol=SymbolUTF8(CSIInit);
   const SymbolUTF8 newLineSymbol=SymbolUTF8(newLineSymbolInit);
@@ -55,4 +57,6 @@ namespace Blessings::SomeUTF8Symbols {
   const SymbolUTF8 BSym=SymbolUTF8(BSymInit);
   const SymbolUTF8 CSym=SymbolUTF8(CSymInit);
   const SymbolUTF8 DSym=SymbolUTF8(DSymInit);
+  const SymbolUTF8 HSym=SymbolUTF8(HSymInit);
+  const SymbolUTF8 fSym=SymbolUTF8(fSymInit);
 }
