@@ -55,6 +55,10 @@ namespace Blessings {
     MonitorCell operator()(int x, int y) const;
 
     class Iterator {
+		protected:
+			int pointer;
+			int stopPos;
+		public:
     	Iterator(int pnt, int bnd)
 			Iterator& operator++();
 			Iterator operator++(int);
