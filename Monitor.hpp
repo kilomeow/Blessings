@@ -7,17 +7,17 @@
 #include "Symbol/Symbol.hpp"
 
 namespace Blessings {
-	template <class Symbol>
+  template <class Symbol>
   struct MonitorCell {
-  	Symbol symb;
-  	Property* prop;
+    Symbol symb;
+    Property* prop;
   };
 
 
   class MonitorGeneral {
-	public:
-		virtual void update()=0;
-		virtual void clearScreen()=0;
+  public:
+    virtual void update()=0;
+    virtual void clearScreen()=0;
     virtual void printPage()=0;
 
     virtual void moveCursor(int x, int y)=0;
@@ -49,30 +49,30 @@ namespace Blessings {
 
     class Error;
 
-		MonitorCell& operator[] (int p);
+    MonitorCell& operator[] (int p);
     MonitorCell operator[] (int p) const;
     MonitorCell& operator()(int x, int y);
     MonitorCell operator()(int x, int y) const;
 
     class Iterator {
-		protected:
-			int pointer;
-			int stopPos;
-		public:
-    	Iterator(int pnt, int bnd)
-			Iterator& operator++();
-			Iterator operator++(int);
-			MonitorCell& operator*();
+    protected:
+      int pointer;
+      int stopPos;
+    public:
+      Iterator(int pnt, int bnd);
+      Iterator& operator++();
+      Iterator operator++(int);
+      MonitorCell& operator*();
 
-			int currentIndex();
-			GridPos currentPos();
+      int currentIndex();
+      GridPos currentPos();
     };
 
     Iterator begin();
     Iterator end();
 
     void update();
-		void clearScreen();
+    void clearScreen();
     void printPage();
 
     InputSymbol getSym();
@@ -95,13 +95,13 @@ namespace Blessings {
 
     PropertyType getPropertyType();
 
-	protected:
-		MonitorCell * Monitor::grid;
-		TerminalIO Monitor::termIO;
-		int maxSize;
-		MonitorResolution res;
-		GlidPos cursorPos;
-		GridPos cursorSlot;
+  protected:
+    MonitorCell * Monitor::grid;
+    TerminalIO Monitor::termIO;
+    int maxSize;
+    MonitorResolution res;
+    GlidPos cursorPos;
+    GridPos cursorSlot;
   };
 
 }
