@@ -5,4 +5,4 @@ namespace blessings {
   class TerminalIOANSILinux;
 }
 
-#include "TIOAL_PropANSI_SymbolUTF8.hpp"
+#include "TIOAL_PropANSI.hpp"
