@@ -62,6 +62,8 @@ for pair in structure:
     for header in pair[1]:
         firstStr=firstStr+" "+header[len(currPath)+1:]
 
+    firstStr=firstStr+" "+pair[0][len(currPath)+1:]
+
     if pair[0][len(currPath)+1:-len(pair[0].split("/")[-1])]!="":
         secondStr="\tmkdir -p "+"build/"+pair[0][len(currPath)+1:-len(pair[0].split("/")[-1])]
 
