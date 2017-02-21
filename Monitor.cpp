@@ -146,8 +146,13 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  MonitorResolution Monitor<InS,OutS>::getResolution() {
+  MonitorResolution Monitor<InS,OutS>::getCurrentResolution() {
     return res;
+  }
+
+  template <class InS, class OutS>
+  MonitorResolution Monitor<InS,OutS>::getTerminalResolution() {
+    return termIO->getResolution();
   }
 
   template <class InS, class OutS>
@@ -199,7 +204,7 @@ namespace blessings {
 
   template <class InS, class OutS>
   void Monitor<InS,OutS>::update() {
-    setResolution(termIO->getResolution());
+    setResolution(getTerminalResolution());
   }
 
   template <class InS, class OutS>
@@ -218,9 +223,9 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  void Monitor<InS,OutS>::draw() {
-    update();
-    moveCursor(1, 1);
+  void Monitor<InS,OutS>::draw(bool useUpdate) {
+    if (useUpdate) update();
+    moveCursor(1, 1);  // moveCursor(0, 0); ?
     printPage();
   }
 

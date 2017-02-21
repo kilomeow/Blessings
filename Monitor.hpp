@@ -19,7 +19,7 @@ namespace blessings {
     virtual void update()=0;
     virtual void clearScreen()=0;
     virtual void printPage()=0;
-    virtual void draw()=0;
+    virtual void draw(bool useUpdate=false)=0;
 
     virtual void moveCursor(int x, int y)=0;
     virtual GridPos getCursorPos()=0;
@@ -78,8 +78,9 @@ namespace blessings {
     Iterator begin();
     Iterator end();
 
-    MonitorResolution getResolution();
-    // void setResolution(MonitorResolution);
+    MonitorResolution getCurrentResolution();
+    MonitorResolution getTerminalResolution();
+    void setResolution(MonitorResolution);
 
     void moveCursor(int x, int y);
     GridPos getCursorPos();
@@ -92,19 +93,17 @@ namespace blessings {
     InS getSymbol();
     void printSymbol(OutS);
 
-    void update();
+    void update();        // rename this
     void clearScreen();
     void printPage();
-    void draw();
+    void draw(bool useUpdate=false);
 
-    int boldSupported();    // Must be rewrited
+    int boldSupported();    // Must be rewritten
     int italicsSupported();
 
     PropertyType getPropertyType();
 
   protected:
-    void setResolution(MonitorResolution);
-
     MonitorCell <OutS> * grid;
     TerminalIO <InS, OutS> * termIO;
 
