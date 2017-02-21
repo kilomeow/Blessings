@@ -72,31 +72,30 @@ namespace blessings {
       class EndError;
 
       int currentIndex();
-      bool isAtEnd();
+      bool isEnd();
     };
 
     Iterator begin();
     Iterator end();
 
-    void update();
-    void clearScreen();
-    void printPage();
-    void draw();
-
-    InS getSym();
-
-    void printSymbol(OutS);
+    MonitorResolution getResolution();
+    // void setResolution(MonitorResolution);
 
     void moveCursor(int x, int y);
     GridPos getCursorPos();
 
     void hideCursor();
     void showCursor();
-
     void saveCursorPos();
     void restoreCursorPos();
 
-    MonitorResolution getResolution();
+    InS getSymbol();
+    void printSymbol(OutS);
+
+    void update();
+    void clearScreen();
+    void printPage();
+    void draw();
 
     int boldSupported();    // Must be rewrited
     int italicsSupported();
@@ -104,15 +103,12 @@ namespace blessings {
     PropertyType getPropertyType();
 
   protected:
-    void setResolution(MonitorResolution mr);
+    void setResolution(MonitorResolution);
 
     MonitorCell <OutS> * grid;
     TerminalIO <InS, OutS> * termIO;
 
     int maxSize;
     MonitorResolution res;
-
-    GridPos cursorPos;
-    GridPos cursorSlot;
   };
 }

@@ -16,7 +16,7 @@ namespace blessings {
     //IO
     virtual void print(OutS, Property*)=0;
     virtual void print(OutS)=0;
-    virtual InS getSym()=0;
+    virtual InS getSymbol()=0;
 
     //Screen state
     virtual void clearScreen()=0;

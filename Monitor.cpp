@@ -129,7 +129,7 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  bool Monitor<InS,OutS>::Iterator::isAtEnd() {
+  bool Monitor<InS,OutS>::Iterator::isEnd() {
     return (pointer==stopPos);
   }
 
@@ -144,9 +144,98 @@ namespace blessings {
     Monitor::Iterator i(grid, currentBound(), currentBound());
     return i;
   }
-}
 
+  template <class InS, class OutS>
+  MonitorResolution Monitor<InS,OutS>::getResolution() {
+    return res;
+  }
 
-int main() {
-  return 0;
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::setResolution(MonitorResolution mr) {
+    if ((mr.width<=0) || (mr.height<=0)) throw Monitor::Error(); // "wrong resolution"
+    if (mr.width*mr.height>maxSize) throw Monitor::Error(); // "resolution out of range"
+    res = mr;
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::moveCursor(int x, int y) {
+    termIO->moveCursor(x, y);
+  }
+
+  template <class InS, class OutS>
+  GridPos Monitor<InS,OutS>::getCursorPos() {
+    return termIO->getCursorPos();
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::hideCursor() {
+    termIO->hideCursor();
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::showCursor() {
+    termIO->showCursor();
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::saveCursorPos() {
+    termIO->saveCursorPos();
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::restoreCursorPos() {
+    termIO->restoreCursorPos();
+  }
+
+  template <class InS, class OutS>
+  InS Monitor<InS,OutS>::getSymbol() {
+    return termIO->getSym();
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::printSymbol(OutS smb) {
+    termIO->print(smb);
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::update() {
+    setResolution(termIO->getResolution());
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::clearScreen() {
+    termIO->clearScreen();
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::printPage() {
+    Monitor::Iterator i = begin();
+    while (!i.isEnd()) {
+      termIO->print((*i).symb, (*i).prop);
+      i++;
+      if (i.currentIndex()%res.width==0) termIO->newLine();
+    }
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::draw() {
+    update();
+    moveCursor(1, 1);
+    printPage();
+  }
+
+  template <class InS, class OutS>
+  int Monitor<InS,OutS>::boldSupported() {
+    return termIO->boldSupported();
+  }
+
+  template <class InS, class OutS>
+  int Monitor<InS,OutS>::italicsSupported() {
+    return termIO->italicsSupported();
+  }
+
+  template <class InS, class OutS>
+  PropertyType Monitor<InS,OutS>::getPropertyType() {
+    return termIO->getPropertyType();
+  }
 }
