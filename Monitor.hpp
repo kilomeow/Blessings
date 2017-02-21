@@ -30,7 +30,9 @@ namespace blessings {
     virtual void saveCursorPos()=0;
     virtual void restoreCursorPos()=0;
 
-    virtual MonitorResolution getResolution()=0;
+    virtual MonitorResolution getCurrentResolution()=0;
+    virtual MonitorResolution getTerminalResolution()=0;
+    virtual void setResolution(MonitorResolution)=0;
 
     virtual int boldSupported()=0;
     virtual int italicsSupported()=0;
