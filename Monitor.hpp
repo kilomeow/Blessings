@@ -19,6 +19,7 @@ namespace blessings {
     virtual void update()=0;
     virtual void clearScreen()=0;
     virtual void printPage()=0;
+    virtual void draw()=0;
 
     virtual void moveCursor(int x, int y)=0;
     virtual GridPos getCursorPos()=0;
@@ -80,6 +81,7 @@ namespace blessings {
     void update();
     void clearScreen();
     void printPage();
+    void draw();
 
     InS getSym();
 
