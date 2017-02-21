@@ -1,7 +1,9 @@
+#!/usr/bin/python3
+
 import os
 
 makefile=""
-cppFiles=[]
+structure=[]
 
 currPath=os.getcwd()
 
@@ -11,8 +13,6 @@ def walk(dir):
         if os.path.isfile(path):
             if name[-4:]!=".cpp":
                 continue
-
-            cppFiles.append(os.path.join(dir, name))
 
             f=open(path, "r")
             contents=f.readlines()
@@ -29,7 +29,7 @@ def walk(dir):
 
                 filesToInclude.append(os.path.join(dir, fileToInclude[1:-1]))
 
-            print(filesToInclude)
+            structure.append([os.path.join(dir, name), filesToInclude])
 
             f.close()
         else:
@@ -38,3 +38,29 @@ def walk(dir):
             walk(path)
 
 walk(currPath)
+
+for pair in structure:
+    firstStr="build"+(pair[0][:-3]+"o")[len(currPath):]+" :"
+
+    for header in pair[1]:
+        firstStr=firstStr+" "+header[len(currPath)+1:]
+
+    secondStr="\tclang --std=c++1z -c "+(pair[0])[len(currPath)+1:]+" -o "+"build"\
+        +(pair[0][:-3]+"o")[len(currPath):]
+
+    makefile=makefile+firstStr+"\n"+secondStr+"\n\n"
+
+firstStr="all:"
+for pair in structure:
+    firstStr=firstStr+" build"+(pair[0][:-3]+"o")[len(currPath):]
+
+secondStr="\tclang --std=c++1z"
+for pair in structure:
+    secondStr=secondStr+" build"+(pair[0][:-3]+"o")[len(currPath):]
+secondStr=secondStr+" -o work"
+
+makefile=makefile+firstStr+"\n"+secondStr
+
+f=open("Makefile", "w")
+f.write(makefile)
+f.close()
