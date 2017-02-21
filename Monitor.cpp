@@ -6,11 +6,11 @@
 
 namespace blessings {
   template <class InS, class OutS>
-  Monitor<InS,OutS>::Monitor(TerminalIO<InS,OutS> Term, int MaxSize) {
+  Monitor<InS,OutS>::Monitor(TerminalIO<InS,OutS>* Term, int MaxSize) {
     if (MaxSize <= 0) throw Monitor::Error();   // ::Error("wrong MaxSize")
     termIO = Term;
     maxSize = MaxSize;
-    res.width=1; res.height=0;
+    res.width=1; res.height=1;
     grid = new MonitorCell<OutS>[maxSize];
   }
 
@@ -55,6 +55,11 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
+  int Monitor<InS,OutS>::currentBound() const {
+    return res.width*res.height;
+  }
+
+  template <class InS, class OutS>
   MonitorCell<OutS>& Monitor<InS,OutS>::operator[] (int p) {
     if ((p <= 0) || (p >= maxSize)) throw Monitor::Error();
     //Monitor::Error("p out of range");
@@ -86,9 +91,10 @@ namespace blessings {
 
 
   template <class InS, class OutS>
-  Monitor<InS,OutS>::Iterator::Iterator(int pnt, int bnd) {
+  Monitor<InS,OutS>::Iterator::Iterator(MonitorCell<OutS>* grd, int pnt, int bnd) {
     if ((pnt<0) || (pnt>bnd)) throw Monitor::Iterator::Error();
     //Monitor::Iterator::Error("pointer out of range");
+    grid = grd;
     pointer = pnt;
     stopPos = bnd;
   }
@@ -123,19 +129,19 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  GridPos Monitor<InS,OutS>::Iterator::currentPos() {
-    return positionOf(pointer);
+  bool Monitor<InS,OutS>::Iterator::isAtEnd() {
+    return (pointer==stopPos);
   }
 
   template <class InS, class OutS>
-  typename  Monitor<InS,OutS>::Iterator Monitor<InS,OutS>::begin() {
-    Monitor::Iterator i(0, res.width*res.height);
+  typename Monitor<InS,OutS>::Iterator Monitor<InS,OutS>::begin() {
+    Monitor::Iterator i(grid, 0, currentBound());
     return i;
   }
 
   template <class InS, class OutS>
   typename Monitor<InS,OutS>::Iterator Monitor<InS,OutS>::end() {
-    Monitor::Iterator i(res.width*res.height, res.width*res.height);
+    Monitor::Iterator i(grid, currentBound(), currentBound());
     return i;
   }
 }

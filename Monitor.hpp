@@ -41,7 +41,7 @@ namespace blessings {
   template <class InS, class OutS>    // <InputSymbol, OutputSymbol>
   class Monitor : public MonitorGeneral {
   public:
-    Monitor(TerminalIO <InS, OutS> Term, int MaxSize);
+    Monitor(TerminalIO <InS, OutS>* Term, int MaxSize);
     Monitor(const Monitor&);
     Monitor& operator=(const Monitor&);
     ~Monitor();
@@ -50,6 +50,7 @@ namespace blessings {
 
     GridPos positionOf(int) const;
     int indexOf(GridPos) const;
+    int currentBound() const;
 
     MonitorCell <OutS> & operator[] (int p);
     MonitorCell <OutS> operator[] (int p) const;
@@ -61,7 +62,7 @@ namespace blessings {
       int pointer;
       int stopPos;
     public:
-      Iterator(int pnt, int bnd);
+      Iterator(MonitorCell<OutS>* grd, int pnt, int bnd);
       MonitorCell<OutS>& operator*();
       Iterator& operator++();
       Iterator operator++(int);
@@ -70,7 +71,7 @@ namespace blessings {
       class EndError;
 
       int currentIndex();
-      GridPos currentPos();
+      bool isAtEnd();
     };
 
     Iterator begin();
@@ -104,7 +105,7 @@ namespace blessings {
     void setResolution(MonitorResolution mr);
 
     MonitorCell <OutS> * grid;
-    TerminalIO <InS, OutS> termIO;
+    TerminalIO <InS, OutS> * termIO;
 
     int maxSize;
     MonitorResolution res;
