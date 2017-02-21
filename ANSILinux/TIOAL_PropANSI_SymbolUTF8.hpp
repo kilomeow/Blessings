@@ -39,7 +39,7 @@ namespace blessings {
 
     TerminalIOANSILinux();
 
-    ~TerminalIOANSILinux();
+    ~TerminalIOANSILinux() throw();
 
     void Init(FILE* f=stdout);
 
