@@ -3,7 +3,18 @@
 import sys
 import os
 
+gcc=False
+ignoreList=[]
 
+args=sys.argv[1:]
+for arg in args:
+    if arg=="--gcc":
+        gcc=True
+    elif arg[:9]=="--ignore=":
+        ignoreList.append(arg[9:])
+    else:
+        print("Bad argument ", arg)
+        exit(1)
 
 makefile=""
 structure=[]
@@ -15,6 +26,9 @@ def walk(dir):
         path = os.path.join(dir, name)
         if os.path.isfile(path):
             if name[-4:]!=".cpp":
+                continue
+
+            if path[len(currPath)+1:] in ignoreList:
                 continue
 
             f=open(path, "r")
@@ -48,21 +62,38 @@ for pair in structure:
     for header in pair[1]:
         firstStr=firstStr+" "+header[len(currPath)+1:]
 
-    secondStr="\tclang --std=c++1z -c "+(pair[0])[len(currPath)+1:]+" -o "+"build"\
-        +(pair[0][:-3]+"o")[len(currPath):]
+    if pair[0][len(currPath)+1:-len(pair[0].split("/")[-1])]!="":
+        secondStr="\tmkdir -p "+"build/"+pair[0][len(currPath)+1:-len(pair[0].split("/")[-1])]
 
-    makefile=makefile+firstStr+"\n"+secondStr+"\n\n"
+    thirdStr=""
+    if not gcc:
+        thirdStr="\tclang --std=c++1z -c "+(pair[0])[len(currPath)+1:]+" -o "+"build"\
+            +(pair[0][:-3]+"o")[len(currPath):]
+    else:
+        thirdStr="\tg++ --std=c++1z -c "+(pair[0])[len(currPath)+1:]+" -o "+"build"\
+            +(pair[0][:-3]+"o")[len(currPath):]
+
+    if secondStr:
+        makefile=makefile+firstStr+"\n"+secondStr+"\n"+thirdStr+"\n\n"
+    else:
+        makefile=makefile+firstStr+"\n"+thirdStr+"\n\n"
 
 firstStr="all:"
 for pair in structure:
     firstStr=firstStr+" build"+(pair[0][:-3]+"o")[len(currPath):]
 
-secondStr="\tclang --std=c++1z"
+secondStr=""
+if not gcc:
+    secondStr="\tclang -lstdc++ --std=c++1z"
+else:
+    secondStr="\tg++ -lstdc++ --std=c++1z"
 for pair in structure:
     secondStr=secondStr+" build"+(pair[0][:-3]+"o")[len(currPath):]
-secondStr=secondStr+" -o work"
+secondStr=secondStr+" -o work\n"
 
-makefile=makefile+firstStr+"\n"+secondStr
+makefile=makefile+"clean:\n\trm -rf build\n"
+
+makefile=firstStr+"\n"+secondStr+"\n"+makefile
 
 f=open("Makefile", "w")
 f.write(makefile)

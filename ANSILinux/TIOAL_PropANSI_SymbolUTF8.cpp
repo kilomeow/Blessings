@@ -14,7 +14,7 @@ namespace blessings {
     noncanonicalMode=false;
   }
 
-  TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::~TerminalIOANSILinux() {
+  TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::~TerminalIOANSILinux() throw() {
     if(noncanonicalMode) {
       int fd=fileno(file);
       if(fd==-1) throw DeviceError();
