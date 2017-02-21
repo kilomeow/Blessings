@@ -7,7 +7,7 @@
 #include "Symbol/Symbol.hpp"
 
 namespace blessings {
-	template <class Symbol>
+  template <class Symbol>
   struct MonitorCell {
     Symbol symb;
     Property* prop;
@@ -62,7 +62,7 @@ namespace blessings {
       int stopPos;
     public:
       Iterator(int pnt, int bnd);
-      MonitorCell <OutS> & operator*(Iterator);
+      MonitorCell<OutS>& operator*();
       Iterator& operator++();
       Iterator operator++(int);
 
@@ -72,9 +72,6 @@ namespace blessings {
       int currentIndex();
       GridPos currentPos();
     };
-
-    Iterator begin();
-    Iterator end();
 
     void update();
     void clearScreen();
