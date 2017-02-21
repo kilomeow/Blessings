@@ -3,67 +3,202 @@
 #include "SymbolUTF8.hpp"
 
 namespace blessings {
-  namespace SomeUTF8Symbols{
-    extern const char CSIInit[];
-    extern const char newLineSymbolInit[];
-    extern const char ESCInit[];
+  template <class Symbol>
+  struct SymbolTable {
+    static const char CSIInit[];
+    static const char newLineSymbolInit[];
+    static const char ESCInit[];
 
-    extern const char spaceInit[];
-    extern const char openBracketInit[];
-    extern const char closeBracketInit[];
-    extern const char semicolonInit[];
-    extern const char questionInit[];
+    static const char spaceInit[];
+    static const char openBracketInit[];
+    static const char closeBracketInit[];
+    static const char semicolonInit[];
+    static const char questionInit[];
 
-    extern const char zeroInit[];
-    extern const char oneInit[];
-    extern const char twoInit[];
-    extern const char threeInit[];
-    extern const char fourInit[];
-    extern const char fiveInit[];
-    extern const char sixInit[];
-    extern const char sevenInit[];
-    extern const char eightInit[];
-    extern const char nineInit[];
+    static const char zeroInit[];
+    static const char oneInit[];
+    static const char twoInit[];
+    static const char threeInit[];
+    static const char fourInit[];
+    static const char fiveInit[];
+    static const char sixInit[];
+    static const char sevenInit[];
+    static const char eightInit[];
+    static const char nineInit[];
 
-    extern const char mSymInit[];
-    extern const char JSymInit[];
-    extern const char ASymInit[];
-    extern const char BSymInit[];
-    extern const char CSymInit[];
-    extern const char DSymInit[];
-    extern const char HSymInit[];
-    extern const char fSymInit[];
+    static const char mSymInit[];
+    static const char JSymInit[];
+    static const char ASymInit[];
+    static const char BSymInit[];
+    static const char CSymInit[];
+    static const char DSymInit[];
+    static const char HSymInit[];
+    static const char fSymInit[];
+    static const char lSymInit[];
+    static const char hSymInit[];
+    static const char sSymInit[];
+    static const char uSymInit[];
 
-    extern const SymbolUTF8 CSISymbol;
-    extern const SymbolUTF8 newLineSymbol;
-    extern const SymbolUTF8 ESCSymbol;
+    static const SymbolUTF8 CSISymbol;
+    static const SymbolUTF8 newLineSymbol;
+    static const SymbolUTF8 ESCSymbol;
 
-    extern const SymbolUTF8 spaceSymbol;
-    extern const SymbolUTF8 openBracket;
-    extern const SymbolUTF8 closeBracket;
-    extern const SymbolUTF8 semicolon;
-    extern const SymbolUTF8 question;
+    static const SymbolUTF8 spaceSymbol;
+    static const SymbolUTF8 openBracket;
+    static const SymbolUTF8 closeBracket;
+    static const SymbolUTF8 semicolon;
+    static const SymbolUTF8 question;
 
-    extern const SymbolUTF8 zero;
-    extern const SymbolUTF8 one;
-    extern const SymbolUTF8 two;
-    extern const SymbolUTF8 three;
-    extern const SymbolUTF8 four;
-    extern const SymbolUTF8 five;
-    extern const SymbolUTF8 six;
-    extern const SymbolUTF8 seven;
-    extern const SymbolUTF8 eight;
-    extern const SymbolUTF8 nine;
+    static const SymbolUTF8 zero;
+    static const SymbolUTF8 one;
+    static const SymbolUTF8 two;
+    static const SymbolUTF8 three;
+    static const SymbolUTF8 four;
+    static const SymbolUTF8 five;
+    static const SymbolUTF8 six;
+    static const SymbolUTF8 seven;
+    static const SymbolUTF8 eight;
+    static const SymbolUTF8 nine;
 
-    extern const SymbolUTF8 mSym;
-    extern const SymbolUTF8 JSym;
-    extern const SymbolUTF8 ASym;
-    extern const SymbolUTF8 BSym;
-    extern const SymbolUTF8 CSym;
-    extern const SymbolUTF8 DSym;
-    extern const SymbolUTF8 HSym;
-    extern const SymbolUTF8 fSym;
-    extern const SymbolUTF8 lSym;
-    extern const SymbolUTF8 hSym;
-  }
+    static const SymbolUTF8 mSym;
+    static const SymbolUTF8 JSym;
+    static const SymbolUTF8 ASym;
+    static const SymbolUTF8 BSym;
+    static const SymbolUTF8 CSym;
+    static const SymbolUTF8 DSym;
+    static const SymbolUTF8 HSym;
+    static const SymbolUTF8 fSym;
+    static const SymbolUTF8 lSym;
+    static const SymbolUTF8 hSym;
+    static const SymbolUTF8 sSym;
+    static const SymbolUTF8 uSym;
+  };
+
+  template<>
+  const char SymbolTable<SymbolUTF8>::CSIInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::newLineSymbolInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::ESCInit[];
+
+  template<>
+  const char SymbolTable<SymbolUTF8>::spaceInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::openBracketInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::closeBracketInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::semicolonInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::questionInit[];
+
+  template<>
+  const char SymbolTable<SymbolUTF8>::zeroInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::oneInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::twoInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::threeInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::fourInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::fiveInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::sixInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::sevenInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::eightInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::nineInit[];
+
+  template<>
+  const char SymbolTable<SymbolUTF8>::mSymInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::JSymInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::ASymInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::BSymInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::CSymInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::DSymInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::HSymInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::fSymInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::lSymInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::hSymInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::sSymInit[];
+  template<>
+  const char SymbolTable<SymbolUTF8>::uSymInit[];
+
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::CSISymbol;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::newLineSymbol;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::ESCSymbol;
+
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::spaceSymbol;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::openBracket;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::closeBracket;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::semicolon;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::question;
+
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::zero;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::one;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::two;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::three;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::four;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::five;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::six;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::seven;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::eight;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::nine;
+
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::mSym;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::JSym;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::ASym;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::BSym;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::CSym;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::DSym;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::HSym;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::fSym;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::lSym;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::hSym;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::sSym;
+  template<>
+  const SymbolUTF8 SymbolTable<SymbolUTF8>::uSym;
 }
