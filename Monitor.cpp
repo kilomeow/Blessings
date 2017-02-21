@@ -127,9 +127,8 @@ namespace blessings {
     return positionOf(pointer);
   }
 
-
   template <class InS, class OutS>
-  typename Monitor<InS,OutS>::Iterator Monitor<InS,OutS>::begin() {
+  typename  Monitor<InS,OutS>::Iterator Monitor<InS,OutS>::begin() {
     Monitor::Iterator i(0, res.width*res.height);
     return i;
   }

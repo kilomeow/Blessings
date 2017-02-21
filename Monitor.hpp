@@ -73,6 +73,9 @@ namespace blessings {
       GridPos currentPos();
     };
 
+    Iterator begin();
+    Iterator end();
+
     void update();
     void clearScreen();
     void printPage();
