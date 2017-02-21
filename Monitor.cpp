@@ -86,7 +86,7 @@ namespace blessings {
 
 
   template <class InS, class OutS>
-  typename Monitor<InS,OutS>::Iterator Monitor<InS,OutS>::Iterator(int pnt, int bnd) {
+  Monitor<InS,OutS>::Iterator::Iterator(int pnt, int bnd) {
     if ((pnt<0) || (pnt>bnd)) throw Monitor::Iterator::Error();
     //Monitor::Iterator::Error("pointer out of range");
     pointer = pnt;
