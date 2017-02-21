@@ -62,9 +62,9 @@ namespace blessings {
       int stopPos;
     public:
       Iterator(int pnt, int bnd);
-      MonitorCell <OutS> & operator*(Iterator);
-      Iterator& operator++(Iterator&);
-      Iterator operator++(Iterator&, int);
+      MonitorCell <OutS> & operator*();
+      Iterator& operator++();
+      Iterator operator++(int);
 
       class Error;
       class EndError;
