@@ -16,7 +16,8 @@ for arg in args:
         print("Bad argument ", arg)
         exit(1)
 
-makefile=""
+tempFile="configureTemp.x1zasd"
+makefile=[]
 structure=[]
 
 currPath=os.getcwd()
@@ -29,26 +30,18 @@ def walk(dir):
                 continue
 
             if path[len(currPath)+1:] in ignoreList:
+                print("Ignoring "+path[len(currPath)+1:])
                 continue
 
-            f=open(path, "r")
-            contents=f.readlines()
+            print("Working with "+path[len(currPath)+1:])
 
-            filesToInclude=[]
+            os.system("g++ -MM -MF "+tempFile+" -MT build/"+path[len(currPath)+1:-3]+"o "+path)
 
-            for string in contents:
-                if string[:8]!="#include":
-                    continue
-
-                fileToInclude=string.split()[1]
-                if fileToInclude[0]=="<":
-                    continue
-
-                filesToInclude.append(os.path.join(dir, fileToInclude[1:-1]))
-
-            structure.append([os.path.join(dir, name), filesToInclude])
-
+            f=open(tempFile, "r")
+            lines=f.readlines();
             f.close()
+
+            structure.append([path[len(currPath)+1:], "build/"+path[len(currPath)+1:-3]+"o",lines])
         else:
             if name==".git":
                 continue
@@ -56,47 +49,43 @@ def walk(dir):
 
 walk(currPath)
 
-for pair in structure:
-    firstStr="build"+(pair[0][:-3]+"o")[len(currPath):]+" :"
+for triple in structure:
+    for string in triple[2]:
+        makefile.append(string)
 
-    for header in pair[1]:
-        firstStr=firstStr+" "+header[len(currPath)+1:]
-
-    firstStr=firstStr+" "+pair[0][len(currPath)+1:]
-
-    if pair[0][len(currPath)+1:-len(pair[0].split("/")[-1])]!="":
-        secondStr="\tmkdir -p "+"build/"+pair[0][len(currPath)+1:-len(pair[0].split("/")[-1])]
+    secondStr="\tmkdir -p "+triple[1][:-len(triple[1].split("/")[-1])]+"\n"
 
     thirdStr=""
     if not gcc:
-        thirdStr="\tclang --std=c++1z -c "+(pair[0])[len(currPath)+1:]+" -o "+"build"\
-            +(pair[0][:-3]+"o")[len(currPath):]
+        thirdStr="\tclang --std=c++1z -c "+triple[0]+" -o "+triple[1]+"\n"
     else:
-        thirdStr="\tg++ --std=c++1z -c "+(pair[0])[len(currPath)+1:]+" -o "+"build"\
-            +(pair[0][:-3]+"o")[len(currPath):]
+        thirdStr="\tg++ --std=c++1z -c "+triple[0]+" -o "+triple[1]+"\n"
 
-    if secondStr:
-        makefile=makefile+firstStr+"\n"+secondStr+"\n"+thirdStr+"\n\n"
-    else:
-        makefile=makefile+firstStr+"\n"+thirdStr+"\n\n"
+    makefile.append(secondStr)
+    makefile.append(thirdStr)
 
 firstStr="all:"
-for pair in structure:
-    firstStr=firstStr+" build"+(pair[0][:-3]+"o")[len(currPath):]
+for triple in structure:
+    firstStr=firstStr+" "+triple[1]
+firstStr=firstStr+"\n"
 
 secondStr=""
 if not gcc:
-    secondStr="\tclang -lstdc++ --std=c++1z"
+    secondStr="\tclang -lstdc++ --std=c++1z "
 else:
-    secondStr="\tg++ -lstdc++ --std=c++1z"
-for pair in structure:
-    secondStr=secondStr+" build"+(pair[0][:-3]+"o")[len(currPath):]
-secondStr=secondStr+" -o work\n"
+    secondStr="\tg++ -lstdc++ --std=c++1z "
 
-makefile=makefile+"clean:\n\trm -rf build\n"
+for triple in structure:
+    secondStr=secondStr+triple[1]+" \\\n\t"
+secondStr=secondStr+"-o work\n"
 
-makefile=firstStr+"\n"+secondStr+"\n"+makefile
+makefile=[firstStr]+[secondStr]+makefile
+
+makefile=makefile+["clean:\n\trm -rf build\n\trm work\n"]
 
 f=open("Makefile", "w")
-f.write(makefile)
+for line in makefile:
+    f.write(line)
 f.close()
+
+os.remove(tempFile)
