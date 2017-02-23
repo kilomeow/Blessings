@@ -10,7 +10,12 @@
 namespace blessings {
   template <class InS, class OutS>
   class TerminalIO {
+  protected:
+    TerminalIO(const TerminalIO&);
+    TerminalIO& operator=(const TerminalIO&);
   public:
+    TerminalIO() {};
+
     //Device info
     virtual MonitorResolution getResolution()=0;
     virtual GridPos getCursorPos()=0;

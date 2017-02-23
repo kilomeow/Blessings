@@ -21,8 +21,8 @@ namespace blessings {
 
     void write(SymbolUTF8);
     void write(char);
-    void write(const char*) {};
-    void write(std::string) {};
+    void write(const char*);
+    void write(std::string);
 
     void flush();
   };

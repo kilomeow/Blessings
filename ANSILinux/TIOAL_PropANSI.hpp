@@ -28,6 +28,7 @@ namespace blessings {
 
     termios storedSettings;
 
+    int fd;
     FILE* file;
   public:
     class Error;
@@ -38,11 +39,11 @@ namespace blessings {
     class DeviceError;
     class UninitedStateError;
 
-    TerminalIOANSILinux() throw();
+    TerminalIOANSILinux();
 
     ~TerminalIOANSILinux();
 
-    void Init(FILE* f=stdout);
+    void Init(std::string path="");
 
     //Device info
     MonitorResolution getResolution() {};

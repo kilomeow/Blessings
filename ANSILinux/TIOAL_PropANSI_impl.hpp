@@ -1,5 +1,7 @@
 #include <cstdio>
 #include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 #include "../Symbol/SomeUTF8Symbols.hpp"
 #include "../Symbol/Symbol.hpp"
@@ -8,7 +10,7 @@
 
 namespace blessings {
   template<class InS, class OutS>
-  TerminalIOANSILinux<InS, OutS, PropertyANSI>::TerminalIOANSILinux() throw() {
+  TerminalIOANSILinux<InS, OutS, PropertyANSI>::TerminalIOANSILinux() {
     inited=false;
     noncanonicalMode=false;
   }
@@ -29,11 +31,19 @@ namespace blessings {
   }
 
   template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::Init(FILE* f) {
-    try {
-      file=f;
+  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::Init(std::string path) {
+    if(path=="") fd=open(ttyname(1), O_RDWR|O_APPEND);
+    else fd=open(path.c_str(), O_RDWR|O_APPEND);
 
-      ws=new WriteStreamLinux<SymbolUTF8>(f);
+    std::cout << 1 << std::endl;
+    if(fd==-1) throw InitError();
+
+    file=fdopen(fd, "rw+");
+    if(file==nullptr) throw InitError();
+    std::cout << 1 << std::endl;
+
+    try {
+      ws=new WriteStreamLinux<SymbolUTF8>(file);
     }
     catch(...) {
       throw InitError();
@@ -328,9 +338,6 @@ namespace blessings {
 
     termios newSettings;
 
-    int fd=fileno(file);
-    if(fd==-1) throw DeviceError();
-
     int temp=tcgetattr(fd,&storedSettings);
     if(temp!=0) throw DeviceError();
 
@@ -353,9 +360,6 @@ namespace blessings {
     if(!inited) throw UninitedStateError();
 
     if(noncanonicalMode==false) return;
-
-    int fd=fileno(file);
-    if(fd==-1) throw DeviceError();
 
     tcsetattr(fd,TCSANOW,&storedSettings); //And here pray too
 

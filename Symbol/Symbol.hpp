@@ -7,7 +7,10 @@
 
 namespace blessings {
   template <class SymbolType>
-  SymbolType getSym(FILE*);
+  SymbolType getSymbol(FILE*);
+
+  template <class SymbolType>
+  void writeSymbol(const SymbolType&, FILE*);
 
 
   //Color

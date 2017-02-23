@@ -21,7 +21,7 @@ namespace blessings {
     vector<SymbolUTF8> ret;
 
     if(select(1, &rdfs, NULL, NULL, &tv)) {
-      ret.push_back(getSym<SymbolUTF8>(stdin));
+      ret.push_back(blessings::getSymbol<SymbolUTF8>(stdin));
     }
 
     return ret;
