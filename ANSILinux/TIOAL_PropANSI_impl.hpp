@@ -110,6 +110,39 @@ namespace blessings {
       }
       ws->write(SymbolTable<OutS>::mSym);
 
+      ws->write(SymbolTable<OutS>::ESCSymbol);
+      ws->write(SymbolTable<OutS>::openBracket);
+      ws->write(SymbolTable<OutS>::four);
+      switch(prop->backgroundColor.color) {
+      case ColorANSI::BLACK:
+        ws->write(SymbolTable<OutS>::zero);
+        break;
+      case ColorANSI::RED:
+        ws->write(SymbolTable<OutS>::one);
+        break;
+      case ColorANSI::GREEN:
+        ws->write(SymbolTable<OutS>::two);
+        break;
+      case ColorANSI::YELLOW:
+        ws->write(SymbolTable<OutS>::three);
+        break;
+      case ColorANSI::BLUE:
+        ws->write(SymbolTable<OutS>::four);
+        break;
+      case ColorANSI::MAGENTA:
+        ws->write(SymbolTable<OutS>::five);
+        break;
+      case ColorANSI::CYAN:
+        ws->write(SymbolTable<OutS>::six);
+        break;
+      case ColorANSI::WHITE:
+        ws->write(SymbolTable<OutS>::seven);
+        break;
+      default:
+        throw ArgumentError();
+      }
+      ws->write(SymbolTable<OutS>::mSym);
+
       ws->write(sym);
 
       resetSGR();

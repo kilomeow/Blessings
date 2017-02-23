@@ -29,8 +29,8 @@ namespace blessings {
     uint8_t g;
     uint8_t b;
 
-    class Error;
-    class InitError;
+    class Error : public BlessingsError {};
+    class InitError : public Error {};
 
     ColorRGB(int red=0, int green=0, int blue=0);
 
@@ -41,15 +41,12 @@ namespace blessings {
   };
 
 
-  class ColorRGB::Error : public BlessingsError {};
-  class ColorRGB::InitError : public ColorRGB::Error {};
-
-
   //Property
   struct Property {};
 
   struct PropertyANSI : public Property {
     ColorANSI color;
+    ColorANSI backgroundColor;
     bool italics;
     bool bold;
   };

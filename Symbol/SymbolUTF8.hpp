@@ -35,6 +35,8 @@ namespace blessings {
 
     operator int32_t();
 
+    bool isSpace() const;
+
     friend bool operator==(const SymbolUTF8&, const SymbolUTF8&);
     friend bool operator!=(const SymbolUTF8&, const SymbolUTF8&);
 
@@ -97,5 +99,8 @@ namespace blessings {
     }
   };
 
-  typedef std::basic_string<SymbolUTF8, std::char_traits<SymbolUTF8> > StringUTF8;
+  typedef std::basic_string<SymbolUTF8, SymbolUTF8_traits> StringUTF8;
+
+  std::ostream& operator<<(std::ostream& stream, const StringUTF8& str);
+  std::istream& operator>>(std::istream& stream, StringUTF8& str);
 }

@@ -258,6 +258,8 @@ namespace blessings {
       --size;
       ++ch;
     }
+
+    return ret;
   }
 
   uint32_t SymbolUTF8::getUnicode() const {
@@ -291,8 +293,18 @@ namespace blessings {
     }
   }
 
+  bool SymbolUTF8::isSpace() const {
+    if(getSize()==1) {
+      if(arr[0]==0x20 || arr[0]==0x0c || arr[0]==0x0a || arr[0]==0x0d || arr[0]==0x09\
+        || arr[0]==0x0b) return true;
+    }
+
+    return false;
+  }
+
   SymbolUTF8* SymbolUTF8_traits::assign(SymbolUTF8* p, size_t count, SymbolUTF8 a) {
     for(size_t i=0; i<count; ++i) p[i]=a;
+    return p;
   }
 
   SymbolUTF8* SymbolUTF8_traits::move(SymbolUTF8* dest, const SymbolUTF8* src, size_t count) {
@@ -300,10 +312,14 @@ namespace blessings {
     for(size_t i=0; i<count; ++i) temp[i]=src[i];
     for(size_t i=0; i<count; ++i) dest[i]=temp[i];
     delete [] temp;
+
+    return dest;
   }
 
   SymbolUTF8* SymbolUTF8_traits::copy(SymbolUTF8* dest, const SymbolUTF8* src, size_t count) {
     for(size_t i=0; i<count; ++i) dest[i]=src[i];
+
+    return dest;
   }
 
   int32_t SymbolUTF8_traits::compare(const SymbolUTF8* s1, const SymbolUTF8* s2, size_t count) {
@@ -332,5 +348,38 @@ namespace blessings {
 
   int32_t SymbolUTF8_traits::to_int_type(SymbolUTF8 c) {
     return static_cast<int32_t>(c);
+  }
+
+  std::ostream& operator<<(std::ostream& stream, const StringUTF8& str) {
+    for(auto it=str.begin(); it!=str.end(); ++it) stream << (*it);
+    return stream;
+  }
+
+  std::istream& operator>>(std::istream& stream, StringUTF8& str) {
+    SymbolUTF8 sym;
+    str.clear();
+
+    while(stream) {
+      stream >> sym;
+      if(!sym.isSpace()) {
+        for(int i=sym.getSize()-1; i>=0; --i) {
+          stream.putback(sym[i]);
+        }
+        break;
+      }
+    }
+
+    while(stream) {
+      stream >> sym;
+      if(sym.isSpace()) {
+        for(int i=sym.getSize()-1; i>=0; --i) {
+          stream.putback(sym[i]);
+        }
+        break;
+      }
+      str.push_back(sym);
+    }
+
+    return stream;
   }
 }

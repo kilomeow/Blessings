@@ -4,6 +4,7 @@
 #include "Symbol/SymbolUTF8.hpp"
 #include "Symbol/Symbol.hpp"
 #include "ANSILinux/TerminalIOANSILinux.hpp"
+#include "demos.hpp"
 
 using namespace std;
 using namespace blessings;
