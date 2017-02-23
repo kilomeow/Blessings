@@ -4,6 +4,7 @@ import sys
 import os
 
 gcc=False
+LIBS=""
 ignoreList=[]
 
 args=sys.argv[1:]
@@ -12,6 +13,8 @@ for arg in args:
         gcc=True
     elif arg[:9]=="--ignore=":
         ignoreList.append(arg[9:])
+    elif arg[:9]=="--boostFS":
+        LIBS=LIBS+" -lboost_filesystem -lboost_system"
     else:
         print("Bad argument ", arg)
         exit(1)
@@ -57,9 +60,9 @@ for triple in structure:
 
     thirdStr=""
     if not gcc:
-        thirdStr="\tclang --std=c++1z -c "+triple[0]+" -o "+triple[1]+"\n"
+        thirdStr="\tclang --std=c++11 -c "+triple[0]+" -o "+triple[1]+LIBS+"\n"
     else:
-        thirdStr="\tg++ --std=c++1z -c "+triple[0]+" -o "+triple[1]+"\n"
+        thirdStr="\tg++ --std=c++11 -c "+triple[0]+" -o "+triple[1]+LIBS+"\n"
 
     makefile.append(secondStr)
     makefile.append(thirdStr)
@@ -71,13 +74,13 @@ firstStr=firstStr+"\n"
 
 secondStr=""
 if not gcc:
-    secondStr="\tclang -lstdc++ --std=c++1z "
+    secondStr="\tclang -lstdc++ --std=c++11 "
 else:
-    secondStr="\tg++ -lstdc++ --std=c++1z "
+    secondStr="\tg++ -lstdc++ --std=c++11 "
 
 for triple in structure:
     secondStr=secondStr+triple[1]+" \\\n\t"
-secondStr=secondStr+"-o work\n"
+secondStr=secondStr+"-o work"+LIBS+"\n"
 
 makefile=[firstStr]+[secondStr]+makefile
 

@@ -8,16 +8,21 @@
 
 namespace blessings {
   template<class InS, class OutS>
-  TerminalIOANSILinux<InS, OutS, PropertyANSI>::TerminalIOANSILinux() {
+  TerminalIOANSILinux<InS, OutS, PropertyANSI>::TerminalIOANSILinux() throw() {
     inited=false;
     noncanonicalMode=false;
   }
 
   template<class InS, class OutS>
-  TerminalIOANSILinux<InS, OutS, PropertyANSI>::~TerminalIOANSILinux() throw() {
+  TerminalIOANSILinux<InS, OutS, PropertyANSI>::~TerminalIOANSILinux() {
+    if(isReady()) {
+      resetSGR();
+      showCursor();
+    }
+
     if(noncanonicalMode) {
       int fd=fileno(file);
-      if(fd==-1) throw DeviceError();
+      if(fd==-1) return;
 
       tcsetattr(fd,TCSANOW,&storedSettings);
     }

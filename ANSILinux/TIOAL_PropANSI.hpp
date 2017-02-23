@@ -5,6 +5,7 @@
 
 #include <termios.h>
 #include <cstdio>
+#include <vector>
 
 #include "../Symbol/Symbol.hpp"
 #include "../WriteStream.hpp"
@@ -37,9 +38,9 @@ namespace blessings {
     class DeviceError;
     class UninitedStateError;
 
-    TerminalIOANSILinux();
+    TerminalIOANSILinux() throw();
 
-    ~TerminalIOANSILinux() throw();
+    ~TerminalIOANSILinux();
 
     void Init(FILE* f=stdout);
 
@@ -50,7 +51,7 @@ namespace blessings {
     //IO
     void print(OutS, Property*);
     void print(OutS);
-    InS getSymbol() {};
+    std::vector<InS> getSymbol(); //rewrite!
 
     //Screen state
     void clearScreen();
