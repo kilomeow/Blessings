@@ -3,13 +3,13 @@
 #include "../Symbol/SymbolUTF8.hpp"
 
 #include <unistd.h> //remove
-#include <vector> //remove
+#include <queue> //remove
 
 using namespace std; //remove
 
 namespace blessings {
   template<>
-  vector<SymbolUTF8> TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::getSymbol() {
+  queue<SymbolUTF8> TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI>::getSymbol(int ns) {
     fd_set rdfs;
     FD_ZERO(&rdfs);
     FD_SET(0, &rdfs);
@@ -18,10 +18,10 @@ namespace blessings {
     tv.tv_sec=0;
     tv.tv_usec=0;
 
-    vector<SymbolUTF8> ret;
+    queue<SymbolUTF8> ret;
 
     if(select(1, &rdfs, NULL, NULL, &tv)) {
-      ret.push_back(blessings::getSymbol<SymbolUTF8>(stdin));
+      ret.push(blessings::getSymbol<SymbolUTF8>(stdin));
     }
 
     return ret;

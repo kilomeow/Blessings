@@ -46,11 +46,16 @@ namespace blessings {
     virtual PropertyType getPropertyType()=0;
 
     //Terminal state
-    virtual void setDeviceReady()=0;
-    virtual void resetDeviceMode()=0;
-    virtual bool isDeviceReady()=0;
+    virtual void setNonCanonicalMode();
+    virtual void setCanonicalMode();
+    virtual void setEchoInhibition();
+    virtual void setEchoForwarding();
 
-    //Global state
-    virtual bool isReady()=0;
+    virtual void resetDeviceMode();
+
+    virtual bool isCanonical();
+    virtual bool isEchoInhibition();
+
+    virtual bool isInited();
   };
 }

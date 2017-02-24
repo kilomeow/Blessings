@@ -5,7 +5,7 @@
 
 #include <termios.h>
 #include <cstdio>
-#include <vector>
+#include <queue>
 
 #include "../Symbol/Symbol.hpp"
 #include "../WriteStream.hpp"
@@ -22,6 +22,7 @@ namespace blessings {
 
     bool inited;
     bool noncanonicalMode;
+    bool echoInhibition;
 
     WriteStream<OutS>* ws;
     //ReadStream<InS>* rs;
@@ -52,7 +53,8 @@ namespace blessings {
     //IO
     void print(OutS, Property*);
     void print(OutS);
-    std::vector<InS> getSymbol(); //rewrite!
+    std::queue<InS> getSymbol(int n=1); //rewrite!
+    void clearInputBuff() {};
 
     //Screen state
     void clearScreen();
@@ -82,7 +84,7 @@ namespace blessings {
     bool isDeviceReady() {return noncanonicalMode;};
 
     //Global state
-    bool isReady() {return inited && noncanonicalMode;};
+    bool isInited() {return inited && noncanonicalMode;};
   };
 
 

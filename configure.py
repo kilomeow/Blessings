@@ -84,7 +84,7 @@ secondStr=secondStr+"-o work"+LIBS+"\n"
 
 makefile=[firstStr]+[secondStr]+makefile
 
-makefile=makefile+["clean:\n\trm -rf build\n\trm work\n"]
+makefile=makefile+["clean:\n\trm -rf build\n\trm -f work\n"]
 
 f=open("Makefile", "w")
 for line in makefile:

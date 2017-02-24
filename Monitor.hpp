@@ -14,35 +14,8 @@ namespace blessings {
   };
 
 
-  class MonitorGeneral {
-  public:
-    virtual void update()=0;
-    virtual void clearScreen()=0;
-    virtual void printPage()=0;
-    virtual void draw(bool useUpdate=false)=0;
-
-    virtual void moveCursor(int x, int y)=0;
-    virtual GridPos getCursorPos()=0;
-
-    virtual void hideCursor()=0;
-    virtual void showCursor()=0;
-
-    virtual void saveCursorPos()=0;
-    virtual void restoreCursorPos()=0;
-
-    virtual MonitorResolution getCurrentResolution()=0;
-    virtual MonitorResolution getTerminalResolution()=0;
-    virtual void setResolution(MonitorResolution)=0;
-
-    virtual int boldSupported()=0;
-    virtual int italicsSupported()=0;
-
-    virtual PropertyType getPropertyType()=0;
-  };
-
-
   template <class InS, class OutS>    // <InputSymbol, OutputSymbol>
-  class Monitor : public MonitorGeneral {
+  class Monitor {
   public:
     Monitor(TerminalIO <InS, OutS>* Term, int MaxSize);
     Monitor(const Monitor&);

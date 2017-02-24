@@ -13,6 +13,7 @@ namespace blessings {
   TerminalIOANSILinux<InS, OutS, PropertyANSI>::TerminalIOANSILinux() {
     inited=false;
     noncanonicalMode=false;
+    echoInput
   }
 
   template<class InS, class OutS>
