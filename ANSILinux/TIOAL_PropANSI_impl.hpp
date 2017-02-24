@@ -487,6 +487,8 @@ namespace blessings {
 
   template<class InS, class OutS>
   MonitorResolution TerminalIOANSILinux<InS, OutS, PropertyANSI>::getResolution() {
+    if(!inited) throw BadModeError();
+
     struct winsize ws;
     int temp=ioctl(fd, TIOCGWINSZ, &ws);
     if(temp==-1) throw DeviceError();
