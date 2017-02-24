@@ -21,8 +21,8 @@ namespace blessings {
     public TerminalIO<InS, OutS> {
 
     bool inited;
-    bool noncanonicalMode;
-    bool echoInhibition;
+    int noncanonicalMode;
+    int echoInhibition;
 
     WriteStream<OutS>* ws;
     //ReadStream<InS>* rs;
@@ -34,7 +34,7 @@ namespace blessings {
   public:
     class Error;
     class InitError;
-    class ReadinessError;
+    class NotInitedError;
     class ArgumentError;
     class IOError;
     class DeviceError;
@@ -79,12 +79,17 @@ namespace blessings {
     PropertyType getPropertyType() {return PropertyType(PropertyType::ANSI);};
 
     //Terminal state
-    void setDeviceReady();
-    void resetDeviceMode();
-    bool isDeviceReady() {return noncanonicalMode;};
+    void setNonCanonicalMode();
+    void setCanonicalMode();
+    void setEchoInhibition();
+    void setEchoForwarding();
 
-    //Global state
-    bool isInited() {return inited && noncanonicalMode;};
+    void resetDeviceMode();
+
+    int isCanonical();
+    int isEchoInhibition();
+
+    bool isInited();
   };
 
 
@@ -96,7 +101,7 @@ namespace blessings {
   class TerminalIOANSILinux<InS, OutS, PropertyANSI>::InitError :\
     public TerminalIOANSILinux<InS, OutS, PropertyANSI>::Error {};
   template<class InS, class OutS>
-  class TerminalIOANSILinux<InS, OutS, PropertyANSI>::ReadinessError :\
+  class TerminalIOANSILinux<InS, OutS, PropertyANSI>::NotInitedError :\
     public TerminalIOANSILinux<InS, OutS, PropertyANSI>::Error {};
   template<class InS, class OutS>
   class TerminalIOANSILinux<InS, OutS, PropertyANSI>::ArgumentError :\

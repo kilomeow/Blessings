@@ -23,7 +23,7 @@ namespace blessings {
     //IO
     virtual void print(OutS, Property*)=0;
     virtual void print(OutS)=0;
-    virtual std::queue<InS> getSymbol()=0;
+    virtual std::queue<InS> getSymbol(int n)=0;
 
     //Screen state
     virtual void clearScreen()=0;
@@ -46,16 +46,16 @@ namespace blessings {
     virtual PropertyType getPropertyType()=0;
 
     //Terminal state
-    virtual void setNonCanonicalMode();
-    virtual void setCanonicalMode();
-    virtual void setEchoInhibition();
-    virtual void setEchoForwarding();
+    virtual void setNonCanonicalMode()=0;
+    virtual void setCanonicalMode()=0;
+    virtual void setEchoInhibition()=0;
+    virtual void setEchoForwarding()=0;
 
-    virtual void resetDeviceMode();
+    virtual void resetDeviceMode()=0;
 
-    virtual bool isCanonical();
-    virtual bool isEchoInhibition();
+    virtual int isCanonical()=0;
+    virtual int isEchoInhibition()=0;
 
-    virtual bool isInited();
+    virtual bool isInited()=0;
   };
 }
