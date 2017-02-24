@@ -21,8 +21,8 @@ namespace blessings {
     public TerminalIO<InS, OutS> {
 
     bool inited;
-    int noncanonicalMode;
-    int echoInhibition;
+    int nonCanonicalMode;
+    int echoInhibited;
 
     WriteStream<OutS>* ws;
     //ReadStream<InS>* rs;
@@ -34,11 +34,12 @@ namespace blessings {
   public:
     class Error;
     class InitError;
+    class ReInitAttemptError;
     class NotInitedError;
     class ArgumentError;
     class IOError;
     class DeviceError;
-    class UninitedStateError;
+    class BadModeError;
 
     TerminalIOANSILinux();
 
@@ -53,7 +54,7 @@ namespace blessings {
     //IO
     void print(OutS, Property*);
     void print(OutS);
-    std::queue<InS> getSymbol(int n=1); //rewrite!
+    std::queue<InS> getSymbol(int n=1) {return std::queue<InS>();}; //rewrite!
     void clearInputBuff() {};
 
     //Screen state
@@ -82,14 +83,14 @@ namespace blessings {
     void setNonCanonicalMode();
     void setCanonicalMode();
     void setEchoInhibition();
-    void setEchoForwarding();
+    void setEchoForward();
 
     void resetDeviceMode();
 
-    int isCanonical();
-    int isEchoInhibition();
+    int isNonCanonical() {return nonCanonicalMode;};
+    int isEchoInhibited() {return echoInhibited;};
 
-    bool isInited();
+    bool isInited() {return inited;};
   };
 
 
@@ -113,6 +114,9 @@ namespace blessings {
   class TerminalIOANSILinux<InS, OutS, PropertyANSI>::DeviceError :\
     public TerminalIOANSILinux<InS, OutS, PropertyANSI>::Error {};
   template<class InS, class OutS>
-  class TerminalIOANSILinux<InS, OutS, PropertyANSI>::UninitedStateError :\
-    public TerminalIOANSILinux<InS, OutS, PropertyANSI>::ReadinessError {};
+  class TerminalIOANSILinux<InS, OutS, PropertyANSI>::BadModeError :\
+    public TerminalIOANSILinux<InS, OutS, PropertyANSI>::Error {};
+  template<class InS, class OutS>
+  class TerminalIOANSILinux<InS, OutS, PropertyANSI>::ReInitAttemptError :\
+    public TerminalIOANSILinux<InS, OutS, PropertyANSI>::InitError {};
 }

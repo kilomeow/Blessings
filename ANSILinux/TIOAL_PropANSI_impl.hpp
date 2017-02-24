@@ -12,52 +12,75 @@ namespace blessings {
   template<class InS, class OutS>
   TerminalIOANSILinux<InS, OutS, PropertyANSI>::TerminalIOANSILinux() {
     inited=false;
-    noncanonicalMode=0;
-    echoInhibition=0;
+    nonCanonicalMode=0;
+    echoInhibited=0;
   }
 
   template<class InS, class OutS>
   TerminalIOANSILinux<InS, OutS, PropertyANSI>::~TerminalIOANSILinux() {
-    if(isReady()) {
+    if(inited) {
+      setEchoInhibition();
       resetSGR();
       showCursor();
-    }
-
-    if(noncanonicalMode) {
-      int fd=fileno(file);
-      if(fd==-1) return;
-
-      tcsetattr(fd,TCSANOW,&storedSettings);
+      resetDeviceMode();
     }
   }
 
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::Init(std::string path) {
+    if(inited) throw ReInitAttemptError();
+
     if(path=="") fd=open(ttyname(1), O_RDWR|O_APPEND);
     else fd=open(path.c_str(), O_RDWR|O_APPEND);
 
-    std::cout << 1 << std::endl;
     if(fd==-1) throw InitError();
 
     file=fdopen(fd, "rw+");
-    if(file==nullptr) throw InitError();
-    std::cout << 1 << std::endl;
+    if(file==nullptr) {
+      close(fd);
+      throw InitError();
+    }
 
     try {
       ws=new WriteStreamLinux<SymbolUTF8>(file);
     }
     catch(...) {
+      fclose(file);
       throw InitError();
     }
 
+    int temp=tcgetattr(fd,&storedSettings);
+    if(temp!=0) {
+      fclose(file);
+      throw InitError();
+    }
+
+    termios tempSettings=storedSettings;
+    tempSettings.c_lflag &=~ECHO;
+    tcsetattr(fd,TCSANOW,&tempSettings); //Pray it works
+
+    try {
+      ws->write(SymbolTable<OutS>::ESCSymbol);
+      ws->write(SymbolTable<OutS>::openBracket);
+      ws->write(SymbolTable<OutS>::zero);
+      ws->write(SymbolTable<OutS>::mSym);
+
+      ws->flush();
+    }
+    catch(...) {
+      throw InitError();
+    }
+
+    tcsetattr(fd,TCSANOW,&storedSettings); //Pray it works
+
     inited=true;
-    noncanonicalMode=false;
   }
 
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::print(\
     OutS sym, Property* propRaw) {
-    if(!isReady()) throw ReadinessError();
+    if(!inited) throw BadModeError();
+    if(echoInhibited!=1) throw BadModeError();
 
     if(propRaw==nullptr) throw ArgumentError();
 
@@ -158,7 +181,8 @@ namespace blessings {
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::print(\
     OutS sym) {
-    if(!isReady()) throw ReadinessError();
+    if(!inited) throw BadModeError();
+    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(sym);
@@ -172,7 +196,8 @@ namespace blessings {
 
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::clearScreen() {
-    if(!isReady()) throw ReadinessError();
+    if(!inited) throw BadModeError();
+    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(SymbolTable<OutS>::ESCSymbol);
@@ -189,7 +214,8 @@ namespace blessings {
 
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::newLine() {
-    if(!isReady()) throw ReadinessError();
+    if(!inited) throw BadModeError();
+    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(SymbolTable<OutS>::newLineSymbol);
@@ -203,7 +229,8 @@ namespace blessings {
 
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::moveCursor(int x, int y) {
-    if(!isReady()) throw ReadinessError();
+    if(!inited) throw BadModeError();
+    if(echoInhibited!=1) throw BadModeError();
 
     try {
       if(x==0 && y==0) return;
@@ -247,7 +274,8 @@ namespace blessings {
 
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::moveCursorTo(int x, int y) {
-    if(!isReady()) throw ReadinessError();
+    if(!inited) throw BadModeError();
+    if(echoInhibited!=1) throw BadModeError();
 
     if(x<=0 || y<=0) throw ArgumentError();
 
@@ -279,7 +307,8 @@ namespace blessings {
 
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::resetSGR() {
-    if(!isReady()) throw ReadinessError();
+    if(!inited) throw BadModeError();
+    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(SymbolTable<OutS>::ESCSymbol);
@@ -296,7 +325,8 @@ namespace blessings {
 
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::hideCursor() {
-    if(!isReady()) throw ReadinessError();
+    if(!inited) throw BadModeError();
+    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(SymbolTable<OutS>::ESCSymbol);
@@ -315,7 +345,8 @@ namespace blessings {
 
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::showCursor() {
-    if(!isReady()) throw ReadinessError();
+    if(!inited) throw BadModeError();
+    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(SymbolTable<OutS>::ESCSymbol);
@@ -334,7 +365,8 @@ namespace blessings {
 
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::saveCursorPos() {
-    if(!isReady()) throw ReadinessError();
+    if(!inited) throw BadModeError();
+    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(SymbolTable<OutS>::ESCSymbol);
@@ -350,7 +382,8 @@ namespace blessings {
 
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::restoreCursorPos() {
-    if(!isReady()) throw ReadinessError();
+    if(!inited) throw BadModeError();
+    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(SymbolTable<OutS>::ESCSymbol);
@@ -365,38 +398,86 @@ namespace blessings {
   }
 
   template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::setDeviceReady() {
-    if(!inited) throw UninitedStateError();
+  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::setNonCanonicalMode() {
+    if(!inited) throw BadModeError();
 
-    if(noncanonicalMode==true) return;
+    if(nonCanonicalMode==1) return;
 
-    termios newSettings;
+    termios currSettings;
 
-    int temp=tcgetattr(fd,&storedSettings);
+    int temp=tcgetattr(fd,&currSettings);
     if(temp!=0) throw DeviceError();
 
-    newSettings = storedSettings;
+    currSettings.c_lflag &=~ICANON;
+    currSettings.c_cc[VTIME] = 0;
+    currSettings.c_cc[VMIN] = 0;
 
-    newSettings.c_lflag &=~ICANON;
-    newSettings.c_lflag &=~ECHO;
-    newSettings.c_cc[VTIME] = 0;
-    newSettings.c_cc[VMIN] = 0;
+    tcsetattr(fd,TCSANOW,&currSettings); //Pray it works
 
-    tcsetattr(fd,TCSANOW,&newSettings); //Pray it works
+    nonCanonicalMode=1;
+  }
 
-    noncanonicalMode=true;
+  template<class InS, class OutS>
+  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::setCanonicalMode() {
+    if(!inited) throw BadModeError();
 
-    resetSGR();
+    if(nonCanonicalMode==-1) return;
+
+    termios currSettings;
+
+    int temp=tcgetattr(fd,&currSettings);
+    if(temp!=0) throw DeviceError();
+
+    currSettings.c_lflag |=ICANON;
+
+    tcsetattr(fd,TCSANOW,&currSettings); //Pray it works
+
+    nonCanonicalMode=-1;
+  }
+
+  template<class InS, class OutS>
+  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::setEchoInhibition() {
+    if(!inited) throw BadModeError();
+
+    if(echoInhibited==1) return;
+
+    termios currSettings;
+
+    int temp=tcgetattr(fd,&currSettings);
+    if(temp!=0) throw DeviceError();
+
+    currSettings.c_lflag &=~ECHO;
+
+    tcsetattr(fd,TCSANOW,&currSettings); //Pray it works
+
+    echoInhibited=1;
+  }
+
+  template<class InS, class OutS>
+  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::setEchoForward() {
+    if(!inited) throw BadModeError();
+
+    if(echoInhibited==-1) return;
+
+    termios currSettings;
+
+    int temp=tcgetattr(fd,&currSettings);
+    if(temp!=0) throw DeviceError();
+
+    currSettings.c_lflag |=ECHO;
+
+    tcsetattr(fd,TCSANOW,&currSettings); //Pray it works
+
+    echoInhibited=-1;
   }
 
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::resetDeviceMode() {
-    if(!inited) throw UninitedStateError();
+    if(!inited) throw BadModeError();
 
-    if(noncanonicalMode==false) return;
+    tcsetattr(fd,TCSANOW,&storedSettings); //Pray it works
 
-    tcsetattr(fd,TCSANOW,&storedSettings); //And here pray too
-
-    noncanonicalMode=false;
+    nonCanonicalMode=0;
+    echoInhibited=0;
   }
 }

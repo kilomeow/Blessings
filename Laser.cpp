@@ -4,7 +4,7 @@
 #include "Symbol/SymbolUTF8.hpp"
 #include "Symbol/Symbol.hpp"
 #include "ANSILinux/TerminalIOANSILinux.hpp"
-#include "demos.hpp"
+#include "Demos.hpp"
 
 using namespace std;
 using namespace blessings;
@@ -60,8 +60,8 @@ void laser() {
   TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI> term;
 
   term.Init();
-  term.setDeviceReady();
-  cout << term.isReady() << endl;
+  term.setNonCanonicalMode();
+  term.setEchoInhibition();
 
   term.clearScreen();
 

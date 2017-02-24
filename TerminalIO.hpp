@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <queue>
 
 #include "Symbol/Symbol.hpp"
 #include "WriteStream.hpp"
@@ -49,12 +49,12 @@ namespace blessings {
     virtual void setNonCanonicalMode()=0;
     virtual void setCanonicalMode()=0;
     virtual void setEchoInhibition()=0;
-    virtual void setEchoForwarding()=0;
+    virtual void setEchoForward()=0;
 
     virtual void resetDeviceMode()=0;
 
-    virtual int isCanonical()=0;
-    virtual int isEchoInhibition()=0;
+    virtual int isNonCanonical()=0;
+    virtual int isEchoInhibited()=0;
 
     virtual bool isInited()=0;
   };

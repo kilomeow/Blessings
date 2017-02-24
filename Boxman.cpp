@@ -5,7 +5,7 @@
 #include "Symbol/SymbolUTF8.hpp"
 #include "Symbol/Symbol.hpp"
 #include "ANSILinux/TerminalIOANSILinux.hpp"
-#include "demos.hpp"
+#include "Demos.hpp"
 
 #include <boost/filesystem.hpp>
 
@@ -860,7 +860,8 @@ void playBoxman() {
   TL term;
 
   term.Init();
-  term.setDeviceReady();
+  term.setNonCanonicalMode();
+  term.setEchoInhibition();
 
   BoxmanGame game("levels");
   game.launchMainMenu(&term);
