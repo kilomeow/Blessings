@@ -23,7 +23,7 @@ namespace blessings {
     //IO
     virtual void print(OutS, Property*)=0;
     virtual void print(OutS)=0;
-    virtual std::vector<InS> getSymbol()=0;
+    virtual std::queue<InS> getSymbol()=0;
 
     //Screen state
     virtual void clearScreen()=0;
