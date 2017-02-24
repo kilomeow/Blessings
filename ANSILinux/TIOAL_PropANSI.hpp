@@ -48,13 +48,12 @@ namespace blessings {
     void Init(std::string path="");
 
     //Device info
-    MonitorResolution getResolution() {};
-    GridPos getCursorPos() {};
+    MonitorResolution getResolution(); //TODO: rewrite!
 
     //IO
     void print(OutS, Property*);
     void print(OutS);
-    std::queue<InS> getSymbol(int n=1) {return std::queue<InS>();}; //rewrite!
+    std::queue<InS> getSymbol(int n=1) {return std::queue<InS>();}; //TODO: rewrite!
     void clearInputBuff() {};
 
     //Screen state

@@ -18,7 +18,6 @@ namespace blessings {
 
     //Device info
     virtual MonitorResolution getResolution()=0;
-    virtual GridPos getCursorPos()=0;
 
     //IO
     virtual void print(OutS, Property*)=0;

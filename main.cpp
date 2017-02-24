@@ -13,7 +13,16 @@ using namespace blessings;
 typedef TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI> TL;
 
 int main() {
-  laser();
+  TL term;
+
+  term.Init();
+
+  term.setNonCanonicalMode();
+  term.setEchoInhibition();
+
+  cout << term.getResolution().width << ' ' << term.getResolution().height << endl;
+
+  term.resetDeviceMode();
 
   return 0;
 }

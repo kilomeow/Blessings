@@ -2,11 +2,13 @@
 #include <termios.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/ioctl.h>
 
 #include "../Symbol/SomeUTF8Symbols.hpp"
 #include "../Symbol/Symbol.hpp"
 #include "TIOAL_PropANSI.hpp"
 #include "WriteStreamLinux.hpp"
+#include "../AdditionalStructs.hpp"
 
 namespace blessings {
   template<class InS, class OutS>
@@ -68,6 +70,8 @@ namespace blessings {
       ws->flush();
     }
     catch(...) {
+      tcsetattr(fd,TCSANOW,&storedSettings);
+      fclose(file);
       throw InitError();
     }
 
@@ -479,5 +483,14 @@ namespace blessings {
 
     nonCanonicalMode=0;
     echoInhibited=0;
+  }
+
+  template<class InS, class OutS>
+  MonitorResolution TerminalIOANSILinux<InS, OutS, PropertyANSI>::getResolution() {
+    struct winsize ws;
+    int temp=ioctl(fd, TIOCGWINSZ, &ws);
+    if(temp==-1) throw DeviceError();
+
+    return MonitorResolution(ws.ws_col, ws.ws_row);
   }
 }
