@@ -4,8 +4,12 @@ import sys
 import os
 
 gcc=False
-LIBS=""
 ignoreList=[]
+libs=["stdc++"]
+compilerKeys=[]
+includeDirs=[]
+staticLibs=[]
+outputLibName="Blessings.a"
 
 args=sys.argv[1:]
 i=0
@@ -15,11 +19,27 @@ while(i<len(args)): #Yeah, no for i in range(...):
     elif args[i][:8]=="--ignore":
         ignoreList.append(args[i+1])
         i+=1
+    elif args[i][:5]=="--lib":
+        libs.append(args[i+1])
+        i+=1
+    elif args[i][:13]=="--compilerKey":
+        compilerKeys.append(args[i+1])
+        i+=1
     else:
         print("Bad argument ", args[i])
         exit(1)
 
     i+=1
+
+libsStr=""
+for lib in libs:
+    libsStr=libsStr+" -l"+lib
+compilerKeysStr="";
+for key in compilerKeys:
+    compilerKeysStr=compilerKeysStr+" -"+key
+includeDirsStr=""
+for include in includeDirs:
+    includeDirsStr=includeDirsStr+" -I "+include
 
 tempFile="configureTemp.x1zasd"
 makefile=[]
@@ -61,10 +81,11 @@ for triple in structure:
     secondStr="\tmkdir -p "+triple[1][:-len(triple[1].split("/")[-1])]+"\n"
 
     thirdStr=""
+
     if not gcc:
-        thirdStr="\tclang --std=c++11 -c "+triple[0]+" -o "+triple[1]+LIBS+"\n"
+        thirdStr="\tclang --std=c++11 -c "+triple[0]+" -o "+triple[1]+compilerKeysStr+includeDirsStr+"\n"
     else:
-        thirdStr="\tg++ --std=c++11 -c "+triple[0]+" -o "+triple[1]+LIBS+"\n"
+        thirdStr="\tg++ --std=c++11 -c "+triple[0]+" -o "+triple[1]+compilerKeysStr+includeDirsStr+"\n"
 
     makefile.append(secondStr)
     makefile.append(thirdStr)
@@ -72,21 +93,29 @@ for triple in structure:
 firstStr="all:"
 for triple in structure:
     firstStr=firstStr+" "+triple[1]
+for libFile in staticLibs:
+    firstStr=firstStr+" "+libFile
 firstStr=firstStr+"\n"
 
 secondStr=""
 if not gcc:
-    secondStr="\tclang -lstdc++ --std=c++11 "
+    secondStr="\tclang --std=c++11"+compilerKeysStr+" $^"+" -o work"+libsStr+"\n"
 else:
-    secondStr="\tg++ -lstdc++ --std=c++11 "
-
-for triple in structure:
-    secondStr=secondStr+triple[1]+" \\\n\t"
-secondStr=secondStr+"-o work"+LIBS+"\n"
+    secondStr="\tg++ --std=c++11"+compilerKeysStr+" $^"+" -o work"+libsStr+"\n"
 
 makefile=[firstStr]+[secondStr]+makefile
 
-makefile=makefile+["clean:\n\trm -rf build\n\trm -f work\n"]
+firstStr="lib:"
+for triple in structure:
+    firstStr=firstStr+" "+triple[1]+" \\\n"
+firstStr=firstStr[:-3]+"\n"
+
+secondStr="\tar rcs "+outputLibName+" $^\n"
+
+makefile.append(firstStr)
+makefile.append(secondStr)
+
+makefile=makefile+["clean:\n\trm -rf build\n\trm -f work\n\trm -f "+outputLibName+"\n"]
 
 f=open("Makefile", "w")
 for line in makefile:
