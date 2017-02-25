@@ -35,8 +35,10 @@ namespace blessings {
 
     class Iterator {
     protected:
+      MonitorCell <OutS> * grid;
       int pointer;
       int stopPos;
+
     public:
       Iterator(MonitorCell<OutS>* grd, int pnt, int bnd);
       MonitorCell<OutS>& operator*();

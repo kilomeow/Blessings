@@ -244,3 +244,8 @@ namespace blessings {
     return termIO->getPropertyType();
   }
 }
+
+
+int main() {
+  return 0;
+}
