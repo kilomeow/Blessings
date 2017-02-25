@@ -5,13 +5,13 @@ namespace blessings {
     int width;
     int height;
 
-    MonitorResolution(int w, int h) : width(w), height(h) {}
+    MonitorResolution(int w=0, int h=0) : width(w), height(h) {}
   };
 
   struct GridPos {
     int x;
     int y;
 
-    GridPos(int X, int Y) : x(X), y(Y) {};
+    GridPos(int X=0, int Y=0) : x(X), y(Y) {};
   };
 }

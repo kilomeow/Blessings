@@ -42,15 +42,26 @@ namespace blessings {
 
 
   //Property
-  struct Property {};
+  struct Property {
+    virtual const Property* getDefault()=0;
+  };
 
   struct PropertyANSI : public Property {
     ColorANSI color;
     ColorANSI backgroundColor;
     bool italics;
     bool bold;
-  };
 
+    bool empty;
+
+    static const PropertyANSI defaultProperty;
+
+    virtual const PropertyANSI* getDefault() {
+      return &defaultProperty;
+    };
+
+    PropertyANSI() : empty(true) {};
+  };
 
   struct PropertyType {
     class Error;

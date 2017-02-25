@@ -91,91 +91,94 @@ namespace blessings {
     PropertyANSI* prop=static_cast<PropertyANSI* >(propRaw);
 
     try {
-      if(prop->bold) {
+      if(prop->empty) print(sym);
+      else {
+        if(prop->bold) {
+          ws->write(SymbolTable<OutS>::ESCSymbol);
+          ws->write(SymbolTable<OutS>::openBracket);
+          ws->write(SymbolTable<OutS>::one);
+          ws->write(SymbolTable<OutS>::mSym);
+        }
+
+        if(prop->italics) {
+          ws->write(SymbolTable<OutS>::ESCSymbol);
+          ws->write(SymbolTable<OutS>::openBracket);
+          ws->write(SymbolTable<OutS>::three);
+          ws->write(SymbolTable<OutS>::mSym);
+        }
+
         ws->write(SymbolTable<OutS>::ESCSymbol);
         ws->write(SymbolTable<OutS>::openBracket);
-        ws->write(SymbolTable<OutS>::one);
+        ws->write(SymbolTable<OutS>::three);
+        switch(prop->color.color) {
+        case ColorANSI::BLACK:
+          ws->write(SymbolTable<OutS>::zero);
+          break;
+        case ColorANSI::RED:
+          ws->write(SymbolTable<OutS>::one);
+          break;
+        case ColorANSI::GREEN:
+          ws->write(SymbolTable<OutS>::two);
+          break;
+        case ColorANSI::YELLOW:
+          ws->write(SymbolTable<OutS>::three);
+          break;
+        case ColorANSI::BLUE:
+          ws->write(SymbolTable<OutS>::four);
+          break;
+        case ColorANSI::MAGENTA:
+          ws->write(SymbolTable<OutS>::five);
+          break;
+        case ColorANSI::CYAN:
+          ws->write(SymbolTable<OutS>::six);
+          break;
+        case ColorANSI::WHITE:
+          ws->write(SymbolTable<OutS>::seven);
+          break;
+        default:
+          throw ArgumentError();
+        }
         ws->write(SymbolTable<OutS>::mSym);
-      }
 
-      if(prop->italics) {
         ws->write(SymbolTable<OutS>::ESCSymbol);
         ws->write(SymbolTable<OutS>::openBracket);
-        ws->write(SymbolTable<OutS>::three);
+        ws->write(SymbolTable<OutS>::four);
+        switch(prop->backgroundColor.color) {
+        case ColorANSI::BLACK:
+          ws->write(SymbolTable<OutS>::zero);
+          break;
+        case ColorANSI::RED:
+          ws->write(SymbolTable<OutS>::one);
+          break;
+        case ColorANSI::GREEN:
+          ws->write(SymbolTable<OutS>::two);
+          break;
+        case ColorANSI::YELLOW:
+          ws->write(SymbolTable<OutS>::three);
+          break;
+        case ColorANSI::BLUE:
+          ws->write(SymbolTable<OutS>::four);
+          break;
+        case ColorANSI::MAGENTA:
+          ws->write(SymbolTable<OutS>::five);
+          break;
+        case ColorANSI::CYAN:
+          ws->write(SymbolTable<OutS>::six);
+          break;
+        case ColorANSI::WHITE:
+          ws->write(SymbolTable<OutS>::seven);
+          break;
+        default:
+          throw ArgumentError();
+        }
         ws->write(SymbolTable<OutS>::mSym);
+
+        ws->write(sym);
+
+        resetSGR();
+
+        ws->flush();
       }
-
-      ws->write(SymbolTable<OutS>::ESCSymbol);
-      ws->write(SymbolTable<OutS>::openBracket);
-      ws->write(SymbolTable<OutS>::three);
-      switch(prop->color.color) {
-      case ColorANSI::BLACK:
-        ws->write(SymbolTable<OutS>::zero);
-        break;
-      case ColorANSI::RED:
-        ws->write(SymbolTable<OutS>::one);
-        break;
-      case ColorANSI::GREEN:
-        ws->write(SymbolTable<OutS>::two);
-        break;
-      case ColorANSI::YELLOW:
-        ws->write(SymbolTable<OutS>::three);
-        break;
-      case ColorANSI::BLUE:
-        ws->write(SymbolTable<OutS>::four);
-        break;
-      case ColorANSI::MAGENTA:
-        ws->write(SymbolTable<OutS>::five);
-        break;
-      case ColorANSI::CYAN:
-        ws->write(SymbolTable<OutS>::six);
-        break;
-      case ColorANSI::WHITE:
-        ws->write(SymbolTable<OutS>::seven);
-        break;
-      default:
-        throw ArgumentError();
-      }
-      ws->write(SymbolTable<OutS>::mSym);
-
-      ws->write(SymbolTable<OutS>::ESCSymbol);
-      ws->write(SymbolTable<OutS>::openBracket);
-      ws->write(SymbolTable<OutS>::four);
-      switch(prop->backgroundColor.color) {
-      case ColorANSI::BLACK:
-        ws->write(SymbolTable<OutS>::zero);
-        break;
-      case ColorANSI::RED:
-        ws->write(SymbolTable<OutS>::one);
-        break;
-      case ColorANSI::GREEN:
-        ws->write(SymbolTable<OutS>::two);
-        break;
-      case ColorANSI::YELLOW:
-        ws->write(SymbolTable<OutS>::three);
-        break;
-      case ColorANSI::BLUE:
-        ws->write(SymbolTable<OutS>::four);
-        break;
-      case ColorANSI::MAGENTA:
-        ws->write(SymbolTable<OutS>::five);
-        break;
-      case ColorANSI::CYAN:
-        ws->write(SymbolTable<OutS>::six);
-        break;
-      case ColorANSI::WHITE:
-        ws->write(SymbolTable<OutS>::seven);
-        break;
-      default:
-        throw ArgumentError();
-      }
-      ws->write(SymbolTable<OutS>::mSym);
-
-      ws->write(sym);
-
-      resetSGR();
-
-      ws->flush();
     }
     catch(...) {
       throw IOError();

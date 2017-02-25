@@ -8,6 +8,8 @@ namespace blessings {
   const ColorRGB ColorRGB::WHITE=ColorRGB(255,255,255);
   const ColorRGB ColorRGB::BLACK=ColorRGB(0,0,0);
 
+  const struct PropertyANSI PropertyANSI::defaultProperty=PropertyANSI();
+
   ColorRGB::ColorRGB(int red, int green, int blue) : r(red), g(green), b(blue) {
     if(red<0 || red>255 || green<0 || green>255 || blue<0 || blue>255) {
       throw InitError();

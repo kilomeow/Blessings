@@ -6,11 +6,13 @@
 #include "Symbol/Symbol.hpp"
 #include "ANSILinux/TerminalIOANSILinux.hpp"
 #include "Demos.hpp"
+#include "Monitor.hpp"
 
 using namespace std;
 using namespace blessings;
 
 typedef TerminalIOANSILinux<SymbolUTF8, SymbolUTF8, PropertyANSI> TL;
+typedef Monitor<SymbolUTF8, SymbolUTF8> MonUTF8;
 
 int main() {
   TL term;
@@ -19,8 +21,6 @@ int main() {
 
   term.setNonCanonicalMode();
   term.setEchoInhibition();
-
-  cout << term.getResolution().width << ' ' << term.getResolution().height << endl;
 
   term.resetDeviceMode();
 
