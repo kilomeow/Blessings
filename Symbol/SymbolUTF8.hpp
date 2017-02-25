@@ -43,12 +43,12 @@ namespace blessings {
     friend std::ostream& operator<<(std::ostream&, const SymbolUTF8&);
     friend std::istream& operator>>(std::istream&, SymbolUTF8&);
 
-    friend SymbolUTF8 getSymbol<SymbolUTF8>(FILE*);
+    friend SymbolUTF8 readSymbol<SymbolUTF8>(FILE*);
     friend void writeSymbol<SymbolUTF8>(const SymbolUTF8&, FILE*);
   };
 
   template <>
-  SymbolUTF8 getSymbol<SymbolUTF8>(FILE*);
+  SymbolUTF8 readSymbol<SymbolUTF8>(FILE*);
   template <>
   void writeSymbol<SymbolUTF8>(const SymbolUTF8&, FILE*);
 

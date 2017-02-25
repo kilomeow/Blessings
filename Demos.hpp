@@ -1,2 +1,0 @@
-void playBoxman();
-void laser();

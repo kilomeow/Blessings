@@ -8,16 +8,18 @@ LIBS=""
 ignoreList=[]
 
 args=sys.argv[1:]
-for arg in args:
-    if arg=="--gcc":
+i=0
+while(i<len(args)): #Yeah, no for i in range(...):
+    if args[i]=="--gcc":
         gcc=True
-    elif arg[:9]=="--ignore=":
-        ignoreList.append(arg[9:])
-    elif arg[:9]=="--boostFS":
-        LIBS=LIBS+" -lboost_filesystem -lboost_system"
+    elif args[i][:8]=="--ignore":
+        ignoreList.append(args[i+1])
+        i+=1
     else:
-        print("Bad argument ", arg)
+        print("Bad argument ", args[i])
         exit(1)
+
+    i+=1
 
 tempFile="configureTemp.x1zasd"
 makefile=[]

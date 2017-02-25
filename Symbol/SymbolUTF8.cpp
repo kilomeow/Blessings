@@ -220,7 +220,7 @@ namespace blessings {
   }
 
   template <>
-  SymbolUTF8 getSymbol<SymbolUTF8>(FILE* file) {
+  SymbolUTF8 readSymbol<SymbolUTF8>(FILE* file) {
     int temp=getc(file);
     if(temp==EOF) throw SymbolUTF8::IOError();
 

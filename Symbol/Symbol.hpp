@@ -7,7 +7,7 @@
 
 namespace blessings {
   template <class SymbolType>
-  SymbolType getSymbol(FILE*);
+  SymbolType readSymbol(FILE*);
 
   template <class SymbolType>
   void writeSymbol(const SymbolType&, FILE*);
