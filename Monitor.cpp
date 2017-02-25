@@ -19,7 +19,6 @@ namespace blessings {
     termIO = monitor.termIO;
     maxSize = monitor.maxSize;
     res = monitor.res;
-    delete grid;
     grid = new MonitorCell<OutS>[maxSize];
     for (int i=0;i++;i<maxSize)
       grid[i] = monitor.grid[i];
@@ -30,7 +29,7 @@ namespace blessings {
     termIO = monitor.termIO;
     maxSize = monitor.maxSize;
     res = monitor.res;
-    delete grid;
+    delete [] grid;
     grid = new MonitorCell<OutS>[maxSize];
     for (int i=0;i++;i<maxSize)
       grid[i] = monitor.grid[i];
@@ -243,9 +242,4 @@ namespace blessings {
   PropertyType Monitor<InS,OutS>::getPropertyType() {
     return termIO->getPropertyType();
   }
-}
-
-
-int main() {
-  return 0;
 }
