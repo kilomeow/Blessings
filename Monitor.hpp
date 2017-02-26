@@ -49,8 +49,8 @@ namespace blessings {
       int currentIndex();
       bool isEnd();
 
-      class Error;
-      class EndError;
+      class Error {};
+      class EndError : public Error {};
     };
 
     Iterator begin();

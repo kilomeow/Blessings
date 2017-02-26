@@ -5,6 +5,7 @@
 #include "Symbol/Symbol.hpp"
 #include "ANSILinux/TerminalIOANSILinux.hpp"
 #include "Monitor.cpp"
+#include "AdditionalStructs.hpp"
 
 using namespace std;
 using namespace blessings;
@@ -22,7 +23,7 @@ int main() {
 
   M monitor(term, 256);
 
-  monitor.setResolution(10, 10);
+  monitor.setResolution(MonitorResolution(10, 10));
 
   return 0;
 }

@@ -32,7 +32,7 @@ while(i<len(args)): #Yeah, no for i in range(...):
     elif args[i][:8]=="--libDir":
         libDirs.append(args[i+1])
         i+=1
-    elif args[i][12]=="--includeDir":
+    elif args[i][:12]=="--includeDir":
         includeDirs.append(args[i+1])
         i+=1
     else:
