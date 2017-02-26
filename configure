@@ -5,11 +5,15 @@ import os
 
 gcc=False
 ignoreList=[]
+libFileIgnoreList=["main.cpp"]
 libs=["stdc++"]
 compilerKeys=[]
 includeDirs=[]
-staticLibs=[]
-outputLibName="Blessings.a"
+libDirs=[]
+outputStaticLibName="blessings.a"
+outputSharedLibName="blessings.so"
+prefix="$(HOME)/.prefix"
+includeDirName="blessings" #shold be nonempty
 
 args=sys.argv[1:]
 i=0
@@ -25,6 +29,12 @@ while(i<len(args)): #Yeah, no for i in range(...):
     elif args[i][:13]=="--compilerKey":
         compilerKeys.append(args[i+1])
         i+=1
+    elif args[i][:8]=="--libDir":
+        libDirs.append(args[i+1])
+        i+=1
+    elif args[i][12]=="--includeDir":
+        includeDirs.append(args[i+1])
+        i+=1
     else:
         print("Bad argument ", args[i])
         exit(1)
@@ -38,12 +48,16 @@ compilerKeysStr="";
 for key in compilerKeys:
     compilerKeysStr=compilerKeysStr+" -"+key
 includeDirsStr=""
-for include in includeDirs:
-    includeDirsStr=includeDirsStr+" -I "+include
+for includeDir in includeDirs:
+    includeDirsStr=includeDirsStr+" -I "+includeDir
+libDirsStr=""
+for libDir in libDirs:
+    libDirsStr=libDirsStr+" -L "+libDir
 
 tempFile="configureTemp.x1zasd"
 makefile=[]
 structure=[]
+headers=[]
 
 currPath=os.getcwd()
 
@@ -74,6 +88,22 @@ def walk(dir):
 
 walk(currPath)
 
+def walkHeaders(dir):
+    for name in os.listdir(dir):
+        path = os.path.join(dir, name)
+        if os.path.isfile(path):
+            if name[-4:]!=".hpp":
+                continue
+
+            headers.append(path[len(currPath)+1:])
+        else:
+            if name==".git":
+                continue
+            walkHeaders(path)
+
+walkHeaders(currPath)
+
+#.o goals
 for triple in structure:
     for string in triple[2]:
         makefile.append(string)
@@ -83,39 +113,86 @@ for triple in structure:
     thirdStr=""
 
     if not gcc:
-        thirdStr="\tclang --std=c++11 -c "+triple[0]+" -o "+triple[1]+compilerKeysStr+includeDirsStr+"\n"
+        thirdStr="\tclang --std=c++11 -fpic -c -o "+triple[1]+compilerKeysStr+includeDirsStr+" "+triple[0]+"\n"
     else:
-        thirdStr="\tg++ --std=c++11 -c "+triple[0]+" -o "+triple[1]+compilerKeysStr+includeDirsStr+"\n"
+        thirdStr="\tg++ --std=c++11 -fpic -c -o "+triple[1]+compilerKeysStr+includeDirsStr+" "+triple[0]+"\n"
 
     makefile.append(secondStr)
     makefile.append(thirdStr)
 
-firstStr="all:"
+
+#lib
+firstStr="lib: lib_shared lib_static\n"
+makefile=[firstStr]+makefile
+
+
+#lib_static
+firstStr="lib_static:"
 for triple in structure:
+    if triple[0] in libFileIgnoreList:
+        continue
+
     firstStr=firstStr+" "+triple[1]
-for libFile in staticLibs:
-    firstStr=firstStr+" "+libFile
 firstStr=firstStr+"\n"
 
-secondStr=""
-if not gcc:
-    secondStr="\tclang --std=c++11"+compilerKeysStr+" $^"+" -o work"+libsStr+"\n"
-else:
-    secondStr="\tg++ --std=c++11"+compilerKeysStr+" $^"+" -o work"+libsStr+"\n"
-
-makefile=[firstStr]+[secondStr]+makefile
-
-firstStr="lib:"
-for triple in structure:
-    firstStr=firstStr+" "+triple[1]+" \\\n"
-firstStr=firstStr[:-3]+"\n"
-
-secondStr="\tar rcs "+outputLibName+" $^\n"
+secondStr="\tar rcs "+outputStaticLibName+" $^\n"
 
 makefile.append(firstStr)
 makefile.append(secondStr)
 
-makefile=makefile+["clean:\n\trm -rf build\n\trm -f work\n\trm -f "+outputLibName+"\n"]
+
+#lib_shared
+firstStr="lib_shared:"
+for triple in structure:
+    if triple[0] in libFileIgnoreList:
+        continue
+
+    firstStr=firstStr+" "+triple[1]
+firstStr=firstStr+"\n"
+
+if not gcc:
+    secondStr="\tclang --std=c++11 -shared -o "+outputSharedLibName+compilerKeysStr+" $^\n"
+else:
+    secondStr="\tg++ --std=c++11 -shared -o "+outputSharedLibName+compilerKeysStr+" $^\n"
+
+makefile.append(firstStr)
+makefile.append(secondStr)
+
+
+#test
+firstStr="test:"
+for triple in structure:
+    firstStr=firstStr+" "+triple[1]
+firstStr=firstStr+"\n"
+
+secondStr=""
+if not gcc:
+    secondStr="\tclang --std=c++11 -o work"+compilerKeysStr+libsStr+libDirsStr+" $^\n"
+else:
+    secondStr="\tg++ --std=c++11  -o work"+compilerKeysStr+libsStr+libDirsStr+" $^\n"
+
+makefile=makefile+[firstStr]+[secondStr]
+
+
+#clean
+makefile=makefile+["clean:\n\trm -rf build\n\trm -f work\n\trm -f "+outputStaticLibName+"\n"\
+    +"\trm -f "+outputSharedLibName+"\n"]
+
+
+#install
+makefile.append("install:\n")
+for header in headers:
+    makefile.append("\tmkdir -p "+prefix+"/usr/include/"+includeDirName+"/"+header[:-len(header.split("/")[-1])]+"\n")
+    makefile.append("\tcp "+header+" "+prefix+"/usr/include/"+includeDirName+"/"+header+"\n");
+makefile.append("\tmkdir -p "+prefix+"/usr/lib/"+"\n")
+makefile.append("\tcp "+outputStaticLibName+" "+prefix+"/usr/lib/"+outputStaticLibName+"\n");
+makefile.append("\tcp "+outputSharedLibName+" "+prefix+"/usr/lib/"+outputSharedLibName+"\n");
+
+#uninstall
+makefile.append("uninstall:\n")
+makefile.append("\trm -rf "+prefix+"/usr/include/"+includeDirName+"\n")
+makefile.append("\trm -f "+prefix+"/usr/lib/"+outputStaticLibName+"\n");
+makefile.append("\trm -f "+prefix+"/usr/lib/"+outputSharedLibName+"\n");
 
 f=open("Makefile", "w")
 for line in makefile:
