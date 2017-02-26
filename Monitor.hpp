@@ -1,6 +1,7 @@
 #pragma once
 
-#include <utility>
+#include <utility> // ?
+#include <queue>
 
 #include "AdditionalStructs.hpp"
 #include "TerminalIO.hpp"
@@ -11,6 +12,8 @@ namespace blessings {
   struct MonitorCell {
     Symbol symb;
     Property* prop;
+
+    MonitorCell(Symbol s, Property* p) : symb(s), prop(p) {}
   };
 
 
@@ -21,8 +24,6 @@ namespace blessings {
     Monitor(const Monitor&);
     Monitor& operator=(const Monitor&);
     ~Monitor();
-
-    class Error;
 
     GridPos positionOf(int) const;
     int indexOf(GridPos) const;
@@ -45,19 +46,23 @@ namespace blessings {
       Iterator& operator++();
       Iterator operator++(int);
 
-      class Error;
-      class EndError;
-
       int currentIndex();
       bool isEnd();
+
+      class Error;
+      class EndError;
     };
 
     Iterator begin();
     Iterator end();
 
+    void tile(OutS, const Property*);
+
     MonitorResolution getCurrentResolution();
     MonitorResolution getTerminalResolution();
     void setResolution(MonitorResolution);
+    void setResolution(int w, int h);
+    void updateResolution();
 
     void moveCursor(int x, int y);
     GridPos getCursorPos();
@@ -67,18 +72,29 @@ namespace blessings {
     void saveCursorPos();
     void restoreCursorPos();
 
-    InS getSymbol();
+    std::queue<InS> getSymbol(int n=1);
+    void printSymbol(OutS, Property*);
     void printSymbol(OutS);
 
-    void update();        // rename this
+    enum resChange {
+      alarm,
+      ignore,
+      ignoreExtension
+    };
+
     void clearScreen();
     void printPage();
-    void draw(bool useUpdate=false);
+    void draw(resChange drawMode=alarm);
 
     int boldSupported();    // Must be rewritten
     int italicsSupported();
 
     PropertyType getPropertyType();
+
+    class Error {};
+    class DrawError : public Error {};
+    class ResolutionDisparity : public DrawError {};
+    class TerminalModeError : public DrawError {};
 
   protected:
     MonitorCell <OutS> * grid;

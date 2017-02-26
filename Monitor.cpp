@@ -60,14 +60,14 @@ namespace blessings {
 
   template <class InS, class OutS>
   MonitorCell<OutS>& Monitor<InS,OutS>::operator[] (int p) {
-    if ((p <= 0) || (p >= maxSize)) throw Monitor::Error();
+    if ((p<=0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
 
   template <class InS, class OutS>
   MonitorCell<OutS> Monitor<InS,OutS>::operator[] (int p) const {
-    if ((p <= 0) || (p >= maxSize)) throw Monitor::Error();
+    if ((p<=0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
@@ -75,7 +75,7 @@ namespace blessings {
   template <class InS, class OutS>
   MonitorCell<OutS>& Monitor<InS,OutS>::operator() (int x, int y) {
     int p = x+y*res.width;
-    if ((p <= 0) || (p >= maxSize)) throw Monitor::Error();
+    if ((p<=0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
@@ -83,7 +83,7 @@ namespace blessings {
   template <class InS, class OutS>
   MonitorCell<OutS> Monitor<InS,OutS>::operator() (int x, int y) const {
     int p = x+y*res.width;
-    if ((p <= 0) || (p >= maxSize)) throw Monitor::Error();
+    if ((p<=0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
@@ -144,6 +144,17 @@ namespace blessings {
     return i;
   }
 
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::tile(OutS s, const Property* p) {
+    MonitorCell<OutS> c(s, p);
+    Monitor::Iterator i = begin();
+    while (!i.isEnd()) {
+      (*i) = c;
+      i++;
+    }
+  }
+
   template <class InS, class OutS>
   MonitorResolution Monitor<InS,OutS>::getCurrentResolution() {
     return res;
@@ -159,6 +170,12 @@ namespace blessings {
     if ((mr.width<=0) || (mr.height<=0)) throw Monitor::Error(); // "wrong resolution"
     if (mr.width*mr.height>maxSize) throw Monitor::Error(); // "resolution out of range"
     res = mr;
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::setResolution(int w, int h) {
+    MonitorResolution mr(w, h);
+    setResolution(mr);
   }
 
   template <class InS, class OutS>
@@ -192,17 +209,22 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  InS Monitor<InS,OutS>::getSymbol() {
-    return termIO->getSym();
+  std::queue<InS> Monitor<InS,OutS>::getSymbol(int n) {
+    return termIO->getSymbol(n);
   }
 
   template <class InS, class OutS>
-  void Monitor<InS,OutS>::printSymbol(OutS smb) {
-    termIO->print(smb);
+  void Monitor<InS,OutS>::printSymbol(OutS symb, Property* prop) {
+    termIO->print(symb, prop);
   }
 
   template <class InS, class OutS>
-  void Monitor<InS,OutS>::update() {
+  void Monitor<InS,OutS>::printSymbol(OutS symb) {
+    termIO->print(symb);
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::updateResolution() {
     setResolution(getTerminalResolution());
   }
 
@@ -222,9 +244,24 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  void Monitor<InS,OutS>::draw(bool useUpdate) {
-    if (useUpdate) update();
-    moveCursor(1, 1);  // moveCursor(0, 0); ?
+  void Monitor<InS,OutS>::draw(Monitor::resChange drawMode) {
+    if (termIO->isNonCanonicalMode() != 1) throw TerminalModeError();
+    if (termIO->isEchoInhibited() != 1) throw TerminalModeError();
+    switch (drawMode) {
+    case alarm: {
+      if ((getTerminalResolution().width != res.width) ||
+          (getTerminalResolution().height != res.height))
+        throw ResolutionDisparity();
+        break;
+      }
+    case ignoreExtension: {
+      if ((getTerminalResolution().width < res.width) ||
+          (getTerminalResolution().height < res.height))
+        throw ResolutionDisparity();
+        break;
+    }
+    }
+    moveCursor(1, 1);
     printPage();
   }
 
