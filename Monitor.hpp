@@ -11,10 +11,10 @@ namespace blessings {
   template <class Symbol>
   struct MonitorCell {
     Symbol symb;
-    Property* prop;
+    const Property* prop;
     
-    MonitorCell(void) {}
-    MonitorCell(Symbol s, Property* p) : symb(s), prop(p) {}
+    MonitorCell() {}
+    MonitorCell(Symbol s, const Property* p) : symb(s), prop(p) {}
   };
 
 
@@ -74,7 +74,7 @@ namespace blessings {
     void restoreCursorPos();
 
     std::queue<InS> getSymbol(int n=1);
-    void printSymbol(OutS, Property*);
+    void printSymbol(OutS, const Property*);
     void printSymbol(OutS);
 
     enum resChange {

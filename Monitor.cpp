@@ -214,7 +214,7 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  void Monitor<InS,OutS>::printSymbol(OutS symb, Property* prop) {
+  void Monitor<InS,OutS>::printSymbol(OutS symb, const Property* prop) {
     termIO->print(symb, prop);
   }
 
