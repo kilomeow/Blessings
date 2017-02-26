@@ -7,6 +7,8 @@
 #include <cstdio>
 #include <cstdint>
 
+using namespace std;
+
 namespace blessings {
   SymbolUTF8::SymbolUTF8(char c) {
     if(c&0b10000000) throw InitError();
@@ -246,6 +248,39 @@ namespace blessings {
     return ret;
   }
 
+  template <>
+  pair<SymbolUTF8, const char*> getSymbol<SymbolUTF8>(const char* str) {
+    size_t n=strlen(str);
+    return getSymbol<SymbolUTF8>(str, n);
+  }
+
+  template <>
+  pair<SymbolUTF8, const char*> getSymbol<SymbolUTF8>(const char* str, size_t n) {
+    if(n==0) throw SymbolUTF8::InitError();
+
+    pair<SymbolUTF8, const char*> ret; //UTF-8 space symbol, 1 byte
+    ret.first.arr[0]=str[0];
+
+    int size;
+    if(!(ret.first.arr[0]&0b10000000)) size=1;
+    else if(!((ret.first.arr[0]&0b11100000)^0b11000000)) size=2;
+    else if(!((ret.first.arr[0]&0b11110000)^0b11100000)) size=3;
+    else if(!((ret.first.arr[0]&0b11111000)^0b11110000)) size=4;
+    else throw SymbolUTF8::InitError();
+
+    if(n<size) throw SymbolUTF8::InitError();
+
+    ret.second=str+size;
+
+    for(int i=1; i<size; ++i) {
+      ret.first.arr[i]=str[i];
+
+      if((ret.first.arr[i]&0b11000000)^0b10000000) throw SymbolUTF8::InitError();
+    }
+
+    return ret;
+  }
+
   SymbolUTF8::operator int32_t() {
     int size=getSize();
 
@@ -381,5 +416,19 @@ namespace blessings {
     }
 
     return stream;
+  }
+
+  StringUTF8 operator "" _sUTF8(const char* str, size_t n) {
+    StringUTF8 ret;
+
+    const char* p;
+    while(p!=str+n) {
+      auto temp=getSymbol<SymbolUTF8>(str, n-(p-str));
+
+      ret.push_back(temp.first);
+      p=temp.second;
+    }
+
+    return ret;
   }
 }

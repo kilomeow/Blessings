@@ -2,6 +2,7 @@
 
 #include <string>
 #include <cstdint>
+#include <utility>
 
 #include "../Error.hpp"
 
@@ -12,10 +13,15 @@ namespace blessings {
   template <class SymbolType>
   void writeSymbol(const SymbolType&, FILE*);
 
+  template <class SymbolType>
+  std::pair<SymbolType, const char*> getSymbol(const char* str);
+  template <class SymbolType>
+  std::pair<SymbolType, const char*> getSymbol(const char* str, size_t n);
+
 
   //Color
   struct ColorANSI {
-    enum ColorT {BLACK=0, RED=1, GREEN=2, YELLOW=3, BLUE=4, MAGENTA=5, CYAN=6, WHITE=7};
+    enum ColorT {BLACK=0, RED=1, GREEN=2, YELLOW=3, BLUE=4, MAGENTA=5, CYAN=6, WHITE=7, NONE=8};
     ColorT color;
 
     ColorANSI(ColorT col=BLACK) : color(col) {};
@@ -42,9 +48,7 @@ namespace blessings {
 
 
   //Property
-  struct Property {
-    virtual const Property* getDefault()=0;
-  };
+  struct Property {};
 
   struct PropertyANSI : public Property {
     ColorANSI color;
@@ -52,15 +56,10 @@ namespace blessings {
     bool italics;
     bool bold;
 
-    bool empty;
-
     static const PropertyANSI defaultProperty;
 
-    virtual const PropertyANSI* getDefault() {
-      return &defaultProperty;
-    };
-
-    PropertyANSI() : empty(true) {};
+    PropertyANSI() : color(ColorANSI::NONE), backgroundColor(ColorANSI::NONE),\
+      italics(false), bold(false) {};
   };
 
   struct PropertyType {

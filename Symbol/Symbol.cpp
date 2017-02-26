@@ -2,7 +2,7 @@
 #include "../Error.hpp"
 
 namespace blessings {
-  ColorANSI ColorANSI::DefaultColor=ColorANSI(BLACK);
+  ColorANSI ColorANSI::DefaultColor=ColorANSI(NONE);
   ColorRGB ColorRGB::DefaultColor=ColorRGB::BLACK;
 
   const ColorRGB ColorRGB::WHITE=ColorRGB(255,255,255);

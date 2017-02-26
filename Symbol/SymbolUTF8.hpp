@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <cstdio>
+#include <utility>
 
 #include "Symbol.hpp"
 
@@ -45,12 +46,19 @@ namespace blessings {
 
     friend SymbolUTF8 readSymbol<SymbolUTF8>(FILE*);
     friend void writeSymbol<SymbolUTF8>(const SymbolUTF8&, FILE*);
+
+    friend std::pair<SymbolUTF8, const char*> getSymbol<SymbolUTF8>(const char*, size_t);
   };
 
   template <>
   SymbolUTF8 readSymbol<SymbolUTF8>(FILE*);
   template <>
   void writeSymbol<SymbolUTF8>(const SymbolUTF8&, FILE*);
+
+  template <>
+  std::pair<SymbolUTF8, const char*> getSymbol<SymbolUTF8>(const char* str);
+  template <>
+  std::pair<SymbolUTF8, const char*> getSymbol<SymbolUTF8>(const char* str, size_t n);
 
   bool operator==(const SymbolUTF8&, const SymbolUTF8&);
   bool operator!=(const SymbolUTF8&, const SymbolUTF8&);
@@ -103,4 +111,7 @@ namespace blessings {
 
   std::ostream& operator<<(std::ostream& stream, const StringUTF8& str);
   std::istream& operator>>(std::istream& stream, StringUTF8& str);
+
+  //StringUTF8 literal
+  StringUTF8 operator "" _sUTF8(const char*, size_t);
 }

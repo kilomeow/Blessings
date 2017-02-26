@@ -1,21 +1,11 @@
 lib: lib_shared lib_static
-build/Monitor.o: /home/shkiper/Код/Blessings/Monitor.cpp \
- /home/shkiper/Код/Blessings/Monitor.hpp \
- /home/shkiper/Код/Blessings/AdditionalStructs.hpp \
- /home/shkiper/Код/Blessings/TerminalIO.hpp \
- /home/shkiper/Код/Blessings/Symbol/Symbol.hpp \
- /home/shkiper/Код/Blessings/Symbol/../Error.hpp \
- /home/shkiper/Код/Blessings/WriteStream.hpp \
- /home/shkiper/Код/Blessings/ReadStream.hpp
-	mkdir -p build/
-	clang --std=c++11 -fpic -c -o build/Monitor.o Monitor.cpp
 build/Symbol/SymbolUTF8.o: \
  /home/shkiper/Код/Blessings/Symbol/SymbolUTF8.cpp \
  /home/shkiper/Код/Blessings/Symbol/Symbol.hpp \
  /home/shkiper/Код/Blessings/Symbol/../Error.hpp \
  /home/shkiper/Код/Blessings/Symbol/SymbolUTF8.hpp
 	mkdir -p build/Symbol/
-	clang --std=c++11 -fpic -c -o build/Symbol/SymbolUTF8.o Symbol/SymbolUTF8.cpp
+	clang --std=c++11 -fpic -c -o build/Symbol/SymbolUTF8.o -O3 Symbol/SymbolUTF8.cpp
 build/Symbol/SomeUTF8Symbols.o: \
  /home/shkiper/Код/Blessings/Symbol/SomeUTF8Symbols.cpp \
  /home/shkiper/Код/Blessings/Symbol/SymbolUTF8.hpp \
@@ -23,12 +13,12 @@ build/Symbol/SomeUTF8Symbols.o: \
  /home/shkiper/Код/Blessings/Symbol/../Error.hpp \
  /home/shkiper/Код/Blessings/Symbol/SomeUTF8Symbols.hpp
 	mkdir -p build/Symbol/
-	clang --std=c++11 -fpic -c -o build/Symbol/SomeUTF8Symbols.o Symbol/SomeUTF8Symbols.cpp
+	clang --std=c++11 -fpic -c -o build/Symbol/SomeUTF8Symbols.o -O3 Symbol/SomeUTF8Symbols.cpp
 build/Symbol/Symbol.o: /home/shkiper/Код/Blessings/Symbol/Symbol.cpp \
  /home/shkiper/Код/Blessings/Symbol/Symbol.hpp \
  /home/shkiper/Код/Blessings/Symbol/../Error.hpp
 	mkdir -p build/Symbol/
-	clang --std=c++11 -fpic -c -o build/Symbol/Symbol.o Symbol/Symbol.cpp
+	clang --std=c++11 -fpic -c -o build/Symbol/Symbol.o -O3 Symbol/Symbol.cpp
 build/ANSILinux/TIOAL_PropANSI_SymbolUTF8.o: \
  /home/shkiper/Код/Blessings/ANSILinux/TIOAL_PropANSI_SymbolUTF8.cpp \
  /home/shkiper/Код/Blessings/ANSILinux/TIOAL_PropANSI_impl.hpp \
@@ -45,7 +35,7 @@ build/ANSILinux/TIOAL_PropANSI_SymbolUTF8.o: \
  /home/shkiper/Код/Blessings/ANSILinux/WriteStreamLinux.hpp \
  /home/shkiper/Код/Blessings/ANSILinux/WSL_SymbolUTF8.hpp
 	mkdir -p build/ANSILinux/
-	clang --std=c++11 -fpic -c -o build/ANSILinux/TIOAL_PropANSI_SymbolUTF8.o ANSILinux/TIOAL_PropANSI_SymbolUTF8.cpp
+	clang --std=c++11 -fpic -c -o build/ANSILinux/TIOAL_PropANSI_SymbolUTF8.o -O3 ANSILinux/TIOAL_PropANSI_SymbolUTF8.cpp
 build/ANSILinux/WSL_SymbolUTF8.o: \
  /home/shkiper/Код/Blessings/ANSILinux/WSL_SymbolUTF8.cpp \
  /home/shkiper/Код/Blessings/ANSILinux/WSL_SymbolUTF8.hpp \
@@ -55,27 +45,13 @@ build/ANSILinux/WSL_SymbolUTF8.o: \
  /home/shkiper/Код/Blessings/ANSILinux/../WriteStream.hpp \
  /home/shkiper/Код/Blessings/ANSILinux/WriteStreamLinux.hpp
 	mkdir -p build/ANSILinux/
-	clang --std=c++11 -fpic -c -o build/ANSILinux/WSL_SymbolUTF8.o ANSILinux/WSL_SymbolUTF8.cpp
-build/test.o: /home/shkiper/Код/Blessings/test.cpp \
- /home/shkiper/Код/Blessings/Symbol/SymbolUTF8.hpp \
- /home/shkiper/Код/Blessings/Symbol/Symbol.hpp \
- /home/shkiper/Код/Blessings/Symbol/../Error.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/TerminalIOANSILinux.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/TIOAL_PropANSI.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../WriteStream.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../ReadStream.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../AdditionalStructs.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../TerminalIO.hpp \
- /home/shkiper/Код/Blessings/Monitor.cpp \
- /home/shkiper/Код/Blessings/Monitor.hpp
-	mkdir -p build/
-	clang --std=c++11 -fpic -c -o build/test.o test.cpp
-lib_static: build/Monitor.o build/Symbol/SymbolUTF8.o build/Symbol/SomeUTF8Symbols.o build/Symbol/Symbol.o build/ANSILinux/TIOAL_PropANSI_SymbolUTF8.o build/ANSILinux/WSL_SymbolUTF8.o build/test.o
+	clang --std=c++11 -fpic -c -o build/ANSILinux/WSL_SymbolUTF8.o -O3 ANSILinux/WSL_SymbolUTF8.cpp
+lib_static: build/Symbol/SymbolUTF8.o build/Symbol/SomeUTF8Symbols.o build/Symbol/Symbol.o build/ANSILinux/TIOAL_PropANSI_SymbolUTF8.o build/ANSILinux/WSL_SymbolUTF8.o
 	ar rcs blessings.a $^
-lib_shared: build/Monitor.o build/Symbol/SymbolUTF8.o build/Symbol/SomeUTF8Symbols.o build/Symbol/Symbol.o build/ANSILinux/TIOAL_PropANSI_SymbolUTF8.o build/ANSILinux/WSL_SymbolUTF8.o build/test.o
-	clang --std=c++11 -shared -o blessings.so $^
-test: build/Monitor.o build/Symbol/SymbolUTF8.o build/Symbol/SomeUTF8Symbols.o build/Symbol/Symbol.o build/ANSILinux/TIOAL_PropANSI_SymbolUTF8.o build/ANSILinux/WSL_SymbolUTF8.o build/test.o
-	clang --std=c++11 -o work -lstdc++ $^
+lib_shared: build/Symbol/SymbolUTF8.o build/Symbol/SomeUTF8Symbols.o build/Symbol/Symbol.o build/ANSILinux/TIOAL_PropANSI_SymbolUTF8.o build/ANSILinux/WSL_SymbolUTF8.o
+	clang --std=c++11 -shared -o blessings.so -O3 $^
+test: build/Symbol/SymbolUTF8.o build/Symbol/SomeUTF8Symbols.o build/Symbol/Symbol.o build/ANSILinux/TIOAL_PropANSI_SymbolUTF8.o build/ANSILinux/WSL_SymbolUTF8.o
+	clang --std=c++11 -o work -O3 -lstdc++ $^
 clean:
 	rm -rf build
 	rm -f work

@@ -84,29 +84,27 @@ namespace blessings {
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::print(\
     OutS sym, Property* propRaw) {
     if(!inited) throw BadModeError();
-    if(echoInhibited!=1) throw BadModeError();
 
     if(propRaw==nullptr) throw ArgumentError();
 
     PropertyANSI* prop=static_cast<PropertyANSI* >(propRaw);
 
     try {
-      if(prop->empty) print(sym);
-      else {
-        if(prop->bold) {
-          ws->write(SymbolTable<OutS>::ESCSymbol);
-          ws->write(SymbolTable<OutS>::openBracket);
-          ws->write(SymbolTable<OutS>::one);
-          ws->write(SymbolTable<OutS>::mSym);
-        }
+      if(prop->bold) {
+        ws->write(SymbolTable<OutS>::ESCSymbol);
+        ws->write(SymbolTable<OutS>::openBracket);
+        ws->write(SymbolTable<OutS>::one);
+        ws->write(SymbolTable<OutS>::mSym);
+      }
 
-        if(prop->italics) {
-          ws->write(SymbolTable<OutS>::ESCSymbol);
-          ws->write(SymbolTable<OutS>::openBracket);
-          ws->write(SymbolTable<OutS>::three);
-          ws->write(SymbolTable<OutS>::mSym);
-        }
+      if(prop->italics) {
+        ws->write(SymbolTable<OutS>::ESCSymbol);
+        ws->write(SymbolTable<OutS>::openBracket);
+        ws->write(SymbolTable<OutS>::three);
+        ws->write(SymbolTable<OutS>::mSym);
+      }
 
+      if(prop->color.color!=ColorANSI::NONE) {
         ws->write(SymbolTable<OutS>::ESCSymbol);
         ws->write(SymbolTable<OutS>::openBracket);
         ws->write(SymbolTable<OutS>::three);
@@ -139,7 +137,9 @@ namespace blessings {
           throw ArgumentError();
         }
         ws->write(SymbolTable<OutS>::mSym);
+      }
 
+      if(prop->backgroundColor.color!=ColorANSI::NONE) {
         ws->write(SymbolTable<OutS>::ESCSymbol);
         ws->write(SymbolTable<OutS>::openBracket);
         ws->write(SymbolTable<OutS>::four);
@@ -172,13 +172,13 @@ namespace blessings {
           throw ArgumentError();
         }
         ws->write(SymbolTable<OutS>::mSym);
-
-        ws->write(sym);
-
-        resetSGR();
-
-        ws->flush();
       }
+
+      ws->write(sym);
+
+      resetSGR();
+
+      ws->flush();
     }
     catch(...) {
       throw IOError();
@@ -189,7 +189,6 @@ namespace blessings {
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::print(\
     OutS sym) {
     if(!inited) throw BadModeError();
-    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(sym);
@@ -204,7 +203,6 @@ namespace blessings {
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::clearScreen() {
     if(!inited) throw BadModeError();
-    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(SymbolTable<OutS>::ESCSymbol);
@@ -222,7 +220,6 @@ namespace blessings {
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::newLine() {
     if(!inited) throw BadModeError();
-    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(SymbolTable<OutS>::newLineSymbol);
@@ -237,7 +234,6 @@ namespace blessings {
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::moveCursor(int x, int y) {
     if(!inited) throw BadModeError();
-    if(echoInhibited!=1) throw BadModeError();
 
     try {
       if(x==0 && y==0) return;
@@ -282,7 +278,6 @@ namespace blessings {
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::moveCursorTo(int x, int y) {
     if(!inited) throw BadModeError();
-    if(echoInhibited!=1) throw BadModeError();
 
     if(x<=0 || y<=0) throw ArgumentError();
 
@@ -315,7 +310,6 @@ namespace blessings {
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::resetSGR() {
     if(!inited) throw BadModeError();
-    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(SymbolTable<OutS>::ESCSymbol);
@@ -333,7 +327,6 @@ namespace blessings {
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::hideCursor() {
     if(!inited) throw BadModeError();
-    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(SymbolTable<OutS>::ESCSymbol);
@@ -353,7 +346,6 @@ namespace blessings {
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::showCursor() {
     if(!inited) throw BadModeError();
-    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(SymbolTable<OutS>::ESCSymbol);
@@ -373,7 +365,6 @@ namespace blessings {
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::saveCursorPos() {
     if(!inited) throw BadModeError();
-    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(SymbolTable<OutS>::ESCSymbol);
@@ -390,7 +381,6 @@ namespace blessings {
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::restoreCursorPos() {
     if(!inited) throw BadModeError();
-    if(echoInhibited!=1) throw BadModeError();
 
     try {
       ws->write(SymbolTable<OutS>::ESCSymbol);
