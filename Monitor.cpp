@@ -11,7 +11,7 @@ namespace blessings {
     termIO = Term;
     maxSize = MaxSize;
     res.width=1; res.height=1;
-    grid = new MonitorCell<OutS>[maxSize];
+    grid = new MonitorCell<OutS> [maxSize];
   }
 
   template <class InS, class OutS>
@@ -19,7 +19,7 @@ namespace blessings {
     termIO = monitor.termIO;
     maxSize = monitor.maxSize;
     res = monitor.res;
-    grid = new MonitorCell<OutS>[maxSize];
+    grid = new MonitorCell<OutS> [maxSize];
     for (int i=0;i++;i<maxSize)
       grid[i] = monitor.grid[i];
   }
@@ -30,7 +30,7 @@ namespace blessings {
     maxSize = monitor.maxSize;
     res = monitor.res;
     delete [] grid;
-    grid = new MonitorCell<OutS>[maxSize];
+    grid = new MonitorCell<OutS> [maxSize];
     for (int i=0;i++;i<maxSize)
       grid[i] = monitor.grid[i];
   }

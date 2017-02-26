@@ -23,7 +23,7 @@ int main() {
 
   M monitor(term, 256);
 
-  monitor.setResolution(MonitorResolution(10, 10));
+  monitor.setResolution(10, 10);
 
   return 0;
 }
