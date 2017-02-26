@@ -22,7 +22,7 @@ namespace blessings {
     Monitor& operator=(const Monitor&);
     ~Monitor();
 
-    class Error;
+    class Error {};
 
     GridPos positionOf(int) const;
     int indexOf(GridPos) const;
@@ -45,8 +45,8 @@ namespace blessings {
       Iterator& operator++();
       Iterator operator++(int);
 
-      class Error;
-      class EndError;
+      class Error {};
+      class EndError : public Error {};
 
       int currentIndex();
       bool isEnd();

@@ -7,7 +7,7 @@
 namespace blessings {
   template <class InS, class OutS>
   Monitor<InS,OutS>::Monitor(TerminalIO<InS,OutS>* Term, int MaxSize) {
-    if (MaxSize <= 0) throw Monitor::Error();   // ::Error("wrong MaxSize")
+    if (MaxSize <= 0) throw Error();   // ::Error("wrong MaxSize")
     termIO = Term;
     maxSize = MaxSize;
     res.width=1; res.height=1;
@@ -156,8 +156,8 @@ namespace blessings {
 
   template <class InS, class OutS>
   void Monitor<InS,OutS>::setResolution(MonitorResolution mr) {
-    if ((mr.width<=0) || (mr.height<=0)) throw Monitor::Error(); // "wrong resolution"
-    if (mr.width*mr.height>maxSize) throw Monitor::Error(); // "resolution out of range"
+    if ((mr.width<=0) || (mr.height<=0)) throw Error(); // "wrong resolution"
+    if (mr.width*mr.height>maxSize) throw Error(); // "resolution out of range"
     res = mr;
   }
 
