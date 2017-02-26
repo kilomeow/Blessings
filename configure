@@ -60,7 +60,7 @@ def walk(dir):
 
             print("Working with "+path[len(currPath)+1:])
 
-            os.system("g++ -MM -MF "+tempFile+" -MT build/"+path[len(currPath)+1:-3]+"o "+path)
+            os.system("g++ --std=c++11 -MM -MF "+tempFile+" -MT build/"+path[len(currPath)+1:-3]+"o "+path)
 
             f=open(tempFile, "r")
             lines=f.readlines();
