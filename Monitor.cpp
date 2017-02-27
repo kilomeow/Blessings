@@ -182,6 +182,11 @@ namespace blessings {
   void Monitor<InS,OutS>::moveCursor(int x, int y) {
     termIO->moveCursor(x, y);
   }
+  
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::moveCursorTo(int x, int y) {
+    termIO->moveCursorTo(x, y);
+  }
 
   template <class InS, class OutS>
   GridPos Monitor<InS,OutS>::getCursorPos() {
@@ -245,7 +250,7 @@ namespace blessings {
 
   template <class InS, class OutS>
   void Monitor<InS,OutS>::draw(Monitor::resChange drawMode) {
-    if (termIO->isNonCanonicalMode() != 1) throw TerminalModeError();
+    if (termIO->isNonCanonical() != 1) throw TerminalModeError();
     if (termIO->isEchoInhibited() != 1) throw TerminalModeError();
     switch (drawMode) {
     case alarm: {
@@ -261,7 +266,7 @@ namespace blessings {
         break;
     }
     }
-    moveCursor(1, 1);
+    moveCursorTo(1, 1);
     printPage();
   }
 

@@ -21,6 +21,7 @@ namespace blessings {
   template <class InS, class OutS>    // <InputSymbol, OutputSymbol>
   class Monitor {
   public:
+		Monitor() {}
     Monitor(TerminalIO <InS, OutS>* Term, int MaxSize);
     Monitor(const Monitor&);
     Monitor& operator=(const Monitor&);
@@ -42,6 +43,7 @@ namespace blessings {
       int stopPos;
 
     public:
+			Iterator() {};
       Iterator(MonitorCell<OutS>* grd, int pnt, int bnd);
       MonitorCell<OutS>& operator*();
       Iterator& operator++();
@@ -66,6 +68,7 @@ namespace blessings {
     void updateResolution();
 
     void moveCursor(int x, int y);
+    void moveCursorTo(int x, int y);
     GridPos getCursorPos();
 
     void hideCursor();
