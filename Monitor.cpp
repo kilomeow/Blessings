@@ -20,7 +20,7 @@ namespace blessings {
     maxSize = monitor.maxSize;
     res = monitor.res;
     grid = new MonitorCell<OutS> [maxSize];
-    for (int i=0;i++;i<maxSize)
+    for (int i=0;i<maxSize;i++)
       grid[i] = monitor.grid[i];
   }
 
@@ -31,7 +31,7 @@ namespace blessings {
     res = monitor.res;
     delete [] grid;
     grid = new MonitorCell<OutS> [maxSize];
-    for (int i=0;i++;i<maxSize)
+    for (int i=0;i<maxSize;i++)
       grid[i] = monitor.grid[i];
   }
 
@@ -60,14 +60,14 @@ namespace blessings {
 
   template <class InS, class OutS>
   MonitorCell<OutS>& Monitor<InS,OutS>::operator[] (int p) {
-    if ((p<=0) || (p>=currentBound())) throw Monitor::Error();
+    if ((p<0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
 
   template <class InS, class OutS>
   MonitorCell<OutS> Monitor<InS,OutS>::operator[] (int p) const {
-    if ((p<=0) || (p>=currentBound())) throw Monitor::Error();
+    if ((p<0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
@@ -75,7 +75,7 @@ namespace blessings {
   template <class InS, class OutS>
   MonitorCell<OutS>& Monitor<InS,OutS>::operator() (int x, int y) {
     int p = x+y*res.width;
-    if ((p<=0) || (p>=currentBound())) throw Monitor::Error();
+    if ((p<0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
@@ -83,7 +83,7 @@ namespace blessings {
   template <class InS, class OutS>
   MonitorCell<OutS> Monitor<InS,OutS>::operator() (int x, int y) const {
     int p = x+y*res.width;
-    if ((p<=0) || (p>=currentBound())) throw Monitor::Error();
+    if ((p<0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
