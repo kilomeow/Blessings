@@ -1,7 +1,7 @@
-#include <iostream>
+#include <cstdio>
 #include <string>
-//#include <chrono>
-//#include <thread>
+#include <chrono>
+#include <thread>
 
 #include "Symbol/SymbolUTF8.hpp"
 #include "Symbol/Symbol.hpp"
@@ -28,27 +28,41 @@ int main() {
 
   M monitor(&term, 2000);
   monitor.setResolution(50, 10);
-  //monitor.clearScreen();
+  monitor.clearScreen();
   
-  int t=0;
-  
-  for (int k=0;k++;k<5) {
-		cout << k << endl;
-		t++;
+  FILE * in = fopen("in.txt", "r");
+  int s;
+  char c;
+  bool ex=false;
+
+  for (int t=0;t<300;t++) {
+    rewind(in);
+    s = 0;
+    
+	  while (s<500) {
+      for (int k=0;k<=t;k++) fscanf(in, "%c", &c);
+      
+      for (int k=0;k<50;k++) {
+        if (c==*"\n") ex = true;
+        if (ex) break; 
+        
+        monitor[s] = Cell(S(c), &P::defaultProperty);
+        fscanf(in, "%c", &c);
+        s++;
+      }
+      
+      if (ex) break;
+      
+      while (c !=*"\n") fscanf(in, "%c", &c);
+	  }
+    
+    if (ex) break;
+    
+	  monitor.draw(M::resChange::ignore);
+	  this_thread::sleep_for(chrono::milliseconds(50));
 	}
   
-  cout << t << endl;
-
-  //for (int k=0;k++;k<4) {
-	//	for (int s=0;s++;s<500) {
-	//		c = fscanf(in, "%c");
-	//		if (c != *"\n") {
-	//			monitor[s] = Cell(S(c), &P::defaultProperty);
-	//		}
-	//	}
-	//	monitor.draw(M::resChange::ignore);
-	//	this_thread::sleep_for(chrono::milliseconds(500));
-	//}
+  fclose(in);
 	
   return 0;
 }
