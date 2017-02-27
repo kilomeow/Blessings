@@ -18,6 +18,7 @@ typedef TerminalIOANSILinux<S, S, P> TL;
 typedef Monitor<S, S> M;
 typedef MonitorCell<S> Cell;
 
+
 int main() {
   TL term;
 
@@ -34,6 +35,8 @@ int main() {
   int s;
   char c;
   bool ex=false;
+  
+  const P p(ColorANSI(3));
 
   for (int t=0;t<300;t++) {
     rewind(in);
@@ -46,7 +49,16 @@ int main() {
         if (c==*"\n") ex = true;
         if (ex) break; 
         
-        monitor[s] = Cell(S(c), &P::defaultProperty);
+        //if (c!=*".") {
+        //  const P p(ColorANSI(rand()%6+1));
+        //  monitor[s] = Cell(S(c), &p);
+        //} else {
+        //  const P p();
+        //  monitor[s] = Cell(S(c), &p);
+        //}
+        
+        monitor[s] = Cell(S(c), &p);
+
         fscanf(in, "%c", &c);
         s++;
       }
