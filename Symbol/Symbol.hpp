@@ -24,7 +24,8 @@ namespace blessings {
     enum ColorT {BLACK=0, RED=1, GREEN=2, YELLOW=3, BLUE=4, MAGENTA=5, CYAN=6, WHITE=7, NONE=8};
     ColorT color;
 
-    ColorANSI(ColorT col=BLACK) : color(col) {};
+    ColorANSI(ColorT col=BLACK) : color(col) {}
+    ColorANSI(int c) : color(ColorT(c)) {}
 
     static ColorANSI DefaultColor;
   };
@@ -58,8 +59,9 @@ namespace blessings {
 
     static const PropertyANSI defaultProperty;
 
-    PropertyANSI() : color(ColorANSI::NONE), backgroundColor(ColorANSI::NONE),\
-      italics(false), bold(false) {};
+    PropertyANSI(ColorANSI clr=ColorANSI::NONE, \
+      ColorANSI bgclr=ColorANSI::NONE, bool itl=false, bool bld=false) :
+      color(clr), backgroundColor(bgclr), italics(itl), bold(bld) {}
   };
 
   struct PropertyType {
