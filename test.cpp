@@ -23,9 +23,6 @@ int main() {
 
   term.Init();
 
-  term.setNonCanonicalMode();
-  term.setEchoInhibition();
-
   M monitor(&term, 2000);
   monitor.setResolution(50, 10);
   monitor.clearScreen();
