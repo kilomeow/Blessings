@@ -9,8 +9,11 @@ namespace blessings {
     if (MaxSize <= 0) throw Error();   // ::Error("wrong MaxSize")
     termIO = Term;
     maxSize = MaxSize;
-    res.width=1; res.height=1;
     grid = new MonitorCell<OutS> [maxSize];
+    res.width=1; res.height=1;
+    termIO->setNonCanonicalMode();
+    termIO->setEchoInhibition();
+    termIO->hideCursor();
   }
 
   template <class InS, class OutS>
@@ -24,7 +27,7 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  Monitor<InS,OutS>& Monitor<InS,OutS>::operator=(const Monitor& monitor) {
+  Monitor& Monitor<InS,OutS>& Monitor<InS,OutS>::operator=(const Monitor& monitor) {
     termIO = monitor.termIO;
     maxSize = monitor.maxSize;
     res = monitor.res;
@@ -32,6 +35,7 @@ namespace blessings {
     grid = new MonitorCell<OutS> [maxSize];
     for (int i=0;i<maxSize;i++)
       grid[i] = monitor.grid[i];
+    return (*this);
   }
 
   template <class InS, class OutS>
@@ -87,6 +91,25 @@ namespace blessings {
     return grid[p];
   }
 
+  template <class InS, class OutS>
+  MonitorCell<OutS>& Monitor<InS,OutS>::at (int p) {
+    return (*this)[p];
+  }
+
+  template <class InS, class OutS>
+  MonitorCell<OutS> Monitor<InS,OutS>::at (int p) const {
+    return (*this)[p];
+  }
+
+  template <class InS, class OutS>
+  MonitorCell<OutS>& Monitor<InS,OutS>::at (int x, int y) {
+    return (*this)(x, y);
+  }
+
+  template <class InS, class OutS>
+  MonitorCell<OutS> Monitor<InS,OutS>::at (int x, int y) const {
+    return (*this)(x, y);
+  }
 
   template <class InS, class OutS>
   Monitor<InS,OutS>::Iterator::Iterator(MonitorCell<OutS>* grd, int pnt, int bnd) {

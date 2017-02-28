@@ -35,6 +35,11 @@ namespace blessings {
     MonitorCell <OutS> & operator()(int x, int y);
     MonitorCell <OutS> operator()(int x, int y) const;
 
+    MonitorCell <OutS> & at(int p);
+    MonitorCell <OutS> at (int p) const;
+    MonitorCell <OutS> & at(int x, int y);
+    MonitorCell <OutS> at (int x, int y) const;
+
     class Iterator {
     protected:
       MonitorCell <OutS> * grid;
