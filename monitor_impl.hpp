@@ -145,7 +145,7 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  int Monitor<InS,OutS>::Iterator::currentIndex() {
+  int Monitor<InS,OutS>::Iterator::index() {
     return pointer;
   }
 
@@ -211,6 +211,11 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
+  void Monitor<InS,OutS>::moveCursorTo(GridPos pos) {
+    termIO->moveCursorTo(pos.x, pos.y);
+  }
+
+  template <class InS, class OutS>
   void Monitor<InS,OutS>::hideCursor() {
     termIO->hideCursor();
   }
@@ -251,24 +256,7 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  void Monitor<InS,OutS>::clearScreen() {
-    termIO->clearScreen();
-  }
-
-  template <class InS, class OutS>
-  void Monitor<InS,OutS>::printPage() {
-    Monitor::Iterator i = begin();
-    while (!i.isEnd()) {
-      termIO->print((*i).symb, (*i).prop);
-      i++;
-      if (i.currentIndex()%res.width==0) termIO->newLine();
-    }
-  }
-
-  template <class InS, class OutS>
-  void Monitor<InS,OutS>::draw(Monitor::resChange drawMode) {
-    if (termIO->isNonCanonical() != 1) throw TerminalModeError();
-    if (termIO->isEchoInhibited() != 1) throw TerminalModeError();
+  void Monitor<InS,OutS>::checkResolution(resChange drawMode) {
     switch (drawMode) {
     case alarm: {
       if ((getTerminalResolution().width != res.width) ||
@@ -282,9 +270,55 @@ namespace blessings {
         throw ResolutionDisparity();
         break;
     }
+    case ignore: {
+      break;
     }
+    }
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::checkMode() {
+    if (termIO->isNonCanonical() != 1) throw TerminalModeError();
+    if (termIO->isEchoInhibited() != 1) throw TerminalModeError();
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::clearScreen() {
+    termIO->clearScreen();
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::printPage() {
+    Monitor::Iterator i = begin();
+    while (!i.isEnd()) {
+      termIO->print((*i).symb, (*i).prop);
+      (*i).unstaged = false;
+      i++;
+      if (i.index()%res.width==0) termIO->newLine();
+    }
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::draw(Monitor::resChange drawMode) {
+    checkMode();
+    checkResolution(drawMode);
     moveCursorTo(1, 1);
     printPage();
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::lazyDraw(Monitor::resChange drawMode) {
+    checkMode();
+    checkResolution(drawMode);
+    Monitor::Iterator i = begin();
+    while (!i.isEnd()) {
+      if ((*i).unstaged) {
+        moveCursorTo(positionOf((*i).index()).x+1,
+                     positionOf((*i).index()).y+1);
+        termIO->print((*i).symb, (*i).prop);
+        (*i).unstaged = false;
+      }
+    }
   }
 
   template <class InS, class OutS>

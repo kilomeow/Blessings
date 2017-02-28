@@ -11,14 +11,27 @@ namespace blessings {
   struct MonitorCell {
     Symbol symb;
     const Property* prop;
+    bool unstaged = false;
 
     MonitorCell() {}
     MonitorCell(Symbol s, const Property* p) : symb(s), prop(p) {}
+    MonitorCell& operator=(const MonitorCell& cell) {
+      symb = cell.symb;
+      prop = cell.prop;
+      unstaged = true;
+    }
   };
 
 
   template <class InS, class OutS>    // <InputSymbol, OutputSymbol>
   class Monitor {
+  protected:
+    MonitorCell <OutS> * grid;
+    TerminalIO <InS, OutS> * termIO;
+
+    int maxSize;
+    MonitorResolution res;
+
   public:
     Monitor() {}
     Monitor(TerminalIO <InS, OutS>* Term, int MaxSize);
@@ -53,7 +66,7 @@ namespace blessings {
       Iterator& operator++();
       Iterator operator++(int);
 
-      int currentIndex();
+      int index();
       bool isEnd();
 
       class Error {};
@@ -73,6 +86,7 @@ namespace blessings {
 
     void moveCursor(int x, int y);
     void moveCursorTo(int x, int y);
+    void moveCursorTo(GridPos);
 
     void hideCursor();
     void showCursor();
@@ -92,6 +106,7 @@ namespace blessings {
     void clearScreen();
     void printPage();
     void draw(resChange drawMode=alarm);
+    void lazyDraw(resChange drawMode=alarm);
 
     int boldSupported();    // Must be rewritten
     int italicsSupported();
@@ -103,11 +118,8 @@ namespace blessings {
     class ResolutionDisparity : public DrawError {};
     class TerminalModeError : public DrawError {};
 
-  protected:
-    MonitorCell <OutS> * grid;
-    TerminalIO <InS, OutS> * termIO;
-
-    int maxSize;
-    MonitorResolution res;
+  private:
+    void checkMode();
+    void checkResolution(resChange);
   };
 }
