@@ -1,5 +1,5 @@
-#include "symbolutf8.hpp"
-#include "utf8symbols.hpp"
+#include "symbol_utf8.hpp"
+#include "some_symbol_utf8_symbols.hpp"
 
 namespace blessings {
   template<>

@@ -5,4 +5,4 @@ namespace blessings {
   class WriteStreamLinux;
 }
 
-#include "symbolutf8.hpp"
+#include "write_stream_linux_symbol_utf8.hpp"

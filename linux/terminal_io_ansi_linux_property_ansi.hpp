@@ -8,12 +8,12 @@
 #include <queue>
 
 #include "../symbol/symbol.hpp"
-#include "../writestream.hpp"
-#include "../readstream.hpp"
-#include "../astructs.hpp"
+#include "../write_stream.hpp"
+#include "../read_stream.hpp"
+#include "../additional_structs.hpp"
 #include "../error.hpp"
-#include "terminalio.hpp"
-#include "../terminalio.hpp"
+#include "terminal_io_ansi_linux.hpp"
+#include "../terminal_io.hpp"
 
 namespace blessings {
   template <class InS, class OutS>

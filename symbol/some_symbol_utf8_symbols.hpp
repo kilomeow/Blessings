@@ -1,6 +1,6 @@
 #pragma once
 
-#include "symbolutf8.hpp"
+#include "symbol_utf8.hpp"
 
 namespace blessings {
   template <class Symbol>

@@ -3,11 +3,11 @@
 #include <chrono>
 #include <thread>
 
-#include "symbol/symbolutf8.hpp"
+#include "symbol/symbol_utf8.hpp"
 #include "symbol/symbol.hpp"
-#include "ansilinux/terminalio.hpp"
-#include "monitor.cpp"
-#include "astructs.hpp"
+#include "linux/terminal_io_ansi_linux.hpp"
+#include "monitor.hpp"
+#include "additional_structs.hpp"
 
 using namespace std;
 using namespace blessings;
@@ -17,7 +17,6 @@ typedef PropertyANSI P;
 typedef TerminalIOANSILinux<S, S, P> TL;
 typedef Monitor<S, S> M;
 typedef MonitorCell<S> Cell;
-
 
 int main() {
   TL term;

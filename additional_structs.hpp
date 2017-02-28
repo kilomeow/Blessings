@@ -1,7 +1,8 @@
 #pragma once
 
 namespace blessings {
-  struct MonitorResolution {
+  class MonitorResolution {
+  public:
     int width;
     int height;
 

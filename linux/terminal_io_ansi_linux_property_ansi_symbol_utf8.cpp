@@ -1,6 +1,7 @@
-#include "property.cpp"
+#include "terminal_io_ansi_linux_property_ansi_impl.hpp"
+#include "terminal_io_ansi_linux_property_ansi.hpp"
 #include "../symbol/symbol.hpp"
-#include "../symbol/symbolutf8.hpp"
+#include "../symbol/symbol_utf8.hpp"
 
 //Remove after Rama writes ReadStream
 #include <sys/select.h>

@@ -2,9 +2,9 @@
 
 #include <cstdio>
 
-#include "../symbol/symbolutf8.hpp"
-#include "../writestream.hpp"
-#include "writestream.hpp"
+#include "../symbol/symbol_utf8.hpp"
+#include "../write_stream.hpp"
+#include "write_stream_linux.hpp"
 #include "../error.hpp"
 
 namespace blessings {

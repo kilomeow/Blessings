@@ -3,9 +3,9 @@
 #include <queue>
 
 #include "symbol/symbol.hpp"
-#include "writestream.hpp"
-#include "readstream.hpp"
-#include "astructs.hpp"
+#include "write_stream.hpp"
+#include "read_stream.hpp"
+#include "additional_structs.hpp"
 
 namespace blessings {
   template <class InS, class OutS>

@@ -4,11 +4,11 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 
-#include "../symbol/utf8symbols.hpp"
+#include "../symbol/some_symbol_utf8_symbols.hpp"
 #include "../symbol/symbol.hpp"
-#include "property.hpp"
-#include "writestream.hpp"
-#include "../astructs.hpp"
+#include "terminal_io_ansi_linux_property_ansi.hpp"
+#include "write_stream_linux.hpp"
+#include "../additional_structs.hpp"
 
 namespace blessings {
   template<class InS, class OutS>

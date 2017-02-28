@@ -5,4 +5,4 @@ namespace blessings {
   class TerminalIOANSILinux;
 }
 
-#include "property.hpp"
+#include "terminal_io_ansi_linux_property_ansi.hpp"

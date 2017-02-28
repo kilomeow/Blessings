@@ -1,8 +1,7 @@
 #include "monitor.hpp"
-#include "astructs.hpp"
-#include "terminalio.hpp"
+#include "additional_structs.hpp"
+#include "terminal_io.hpp"
 #include "symbol/symbol.hpp"
-
 
 namespace blessings {
   template <class InS, class OutS>
@@ -182,15 +181,10 @@ namespace blessings {
   void Monitor<InS,OutS>::moveCursor(int x, int y) {
     termIO->moveCursor(x, y);
   }
-  
+
   template <class InS, class OutS>
   void Monitor<InS,OutS>::moveCursorTo(int x, int y) {
     termIO->moveCursorTo(x, y);
-  }
-
-  template <class InS, class OutS>
-  GridPos Monitor<InS,OutS>::getCursorPos() {
-    return termIO->getCursorPos();
   }
 
   template <class InS, class OutS>

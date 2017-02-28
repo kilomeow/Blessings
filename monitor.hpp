@@ -1,10 +1,9 @@
 #pragma once
 
-#include <utility> // ?
 #include <queue>
 
-#include "astructs.hpp"
-#include "terminalio.hpp"
+#include "additional_structs.hpp"
+#include "terminal_io.hpp"
 #include "symbol/symbol.hpp"
 
 namespace blessings {
@@ -69,7 +68,6 @@ namespace blessings {
 
     void moveCursor(int x, int y);
     void moveCursorTo(int x, int y);
-    GridPos getCursorPos();
 
     void hideCursor();
     void showCursor();

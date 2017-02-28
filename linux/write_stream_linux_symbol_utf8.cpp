@@ -2,8 +2,8 @@
 #include <cstring>
 #include <string>
 
-#include "symbolutf8.hpp"
-#include "../symbol/symbolutf8.hpp"
+#include "write_stream_linux_symbol_utf8.hpp"
+#include "../symbol/some_symbol_utf8_symbols.hpp"
 #include "../error.hpp"
 
 namespace blessings {
