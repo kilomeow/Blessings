@@ -33,6 +33,9 @@ int main() {
   bool ex=false;
 
   const P p(ColorANSI(3));
+  
+  monitor.tile(S("."), &p);
+  monitor.draw(M::resChange::ignore);
 
   for (int t=0;t<300;t++) {
     rewind(in);
@@ -66,7 +69,7 @@ int main() {
 
     if (ex) break;
 
-    monitor.draw(M::resChange::ignore);
+    monitor.lazyDraw(M::resChange::ignore);
     this_thread::sleep_for(chrono::milliseconds(50));
   }
 

@@ -27,7 +27,7 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  Monitor& Monitor<InS,OutS>& Monitor<InS,OutS>::operator=(const Monitor& monitor) {
+  Monitor<InS,OutS>& Monitor<InS,OutS>::operator=(const Monitor& monitor) {
     termIO = monitor.termIO;
     maxSize = monitor.maxSize;
     res = monitor.res;
@@ -212,7 +212,7 @@ namespace blessings {
 
   template <class InS, class OutS>
   void Monitor<InS,OutS>::moveCursorTo(GridPos pos) {
-    termIO->moveCursorTo(pos.x, pos.y);
+    termIO->moveCursorTo(pos.x+1, pos.y+1);
   }
 
   template <class InS, class OutS>
@@ -313,11 +313,11 @@ namespace blessings {
     Monitor::Iterator i = begin();
     while (!i.isEnd()) {
       if ((*i).unstaged) {
-        moveCursorTo(positionOf((*i).index()).x+1,
-                     positionOf((*i).index()).y+1);
+        moveCursorTo(positionOf(i.index()));
         termIO->print((*i).symb, (*i).prop);
         (*i).unstaged = false;
       }
+      i++;
     }
   }
 
