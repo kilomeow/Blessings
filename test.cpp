@@ -31,7 +31,7 @@ int main() {
   monitor.setResolution(50, 10);
   monitor.clearScreen();
 
-  FILE * in = fopen("in.txt", "r");
+  FILE * in = fopen("logo.txt", "r");
   int s;
   char c;
   bool ex=false;
