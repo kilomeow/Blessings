@@ -12,8 +12,8 @@ namespace blessings {
   struct MonitorCell {
     Symbol symb;
     Property* prop;
-    
-    MonitorCell(void) {}
+
+    MonitorCell() {}
     MonitorCell(Symbol s, Property* p) : symb(s), prop(p) {}
   };
 
