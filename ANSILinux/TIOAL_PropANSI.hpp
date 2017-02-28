@@ -51,7 +51,7 @@ namespace blessings {
     MonitorResolution getResolution(); //TODO: rewrite!
 
     //IO
-    void print(OutS, Property*);
+    void print(OutS, const Property*);
     void print(OutS);
     std::queue<InS> getSymbol(int n=1) {return std::queue<InS>();}; //TODO: rewrite!
     void clearInputBuffer() {};

@@ -20,7 +20,7 @@ namespace blessings {
     maxSize = monitor.maxSize;
     res = monitor.res;
     grid = new MonitorCell<OutS> [maxSize];
-    for (int i=0;i++;i<maxSize)
+    for (int i=0;i<maxSize;i++)
       grid[i] = monitor.grid[i];
   }
 
@@ -31,7 +31,7 @@ namespace blessings {
     res = monitor.res;
     delete [] grid;
     grid = new MonitorCell<OutS> [maxSize];
-    for (int i=0;i++;i<maxSize)
+    for (int i=0;i<maxSize;i++)
       grid[i] = monitor.grid[i];
   }
 
@@ -60,14 +60,14 @@ namespace blessings {
 
   template <class InS, class OutS>
   MonitorCell<OutS>& Monitor<InS,OutS>::operator[] (int p) {
-    if ((p<=0) || (p>=currentBound())) throw Monitor::Error();
+    if ((p<0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
 
   template <class InS, class OutS>
   MonitorCell<OutS> Monitor<InS,OutS>::operator[] (int p) const {
-    if ((p<=0) || (p>=currentBound())) throw Monitor::Error();
+    if ((p<0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
@@ -75,7 +75,7 @@ namespace blessings {
   template <class InS, class OutS>
   MonitorCell<OutS>& Monitor<InS,OutS>::operator() (int x, int y) {
     int p = x+y*res.width;
-    if ((p<=0) || (p>=currentBound())) throw Monitor::Error();
+    if ((p<0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
@@ -83,7 +83,7 @@ namespace blessings {
   template <class InS, class OutS>
   MonitorCell<OutS> Monitor<InS,OutS>::operator() (int x, int y) const {
     int p = x+y*res.width;
-    if ((p<=0) || (p>=currentBound())) throw Monitor::Error();
+    if ((p<0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
@@ -182,6 +182,11 @@ namespace blessings {
   void Monitor<InS,OutS>::moveCursor(int x, int y) {
     termIO->moveCursor(x, y);
   }
+  
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::moveCursorTo(int x, int y) {
+    termIO->moveCursorTo(x, y);
+  }
 
   template <class InS, class OutS>
   GridPos Monitor<InS,OutS>::getCursorPos() {
@@ -214,7 +219,7 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  void Monitor<InS,OutS>::printSymbol(OutS symb, Property* prop) {
+  void Monitor<InS,OutS>::printSymbol(OutS symb, const Property* prop) {
     termIO->print(symb, prop);
   }
 
@@ -245,7 +250,7 @@ namespace blessings {
 
   template <class InS, class OutS>
   void Monitor<InS,OutS>::draw(Monitor::resChange drawMode) {
-    if (termIO->isNonCanonicalMode() != 1) throw TerminalModeError();
+    if (termIO->isNonCanonical() != 1) throw TerminalModeError();
     if (termIO->isEchoInhibited() != 1) throw TerminalModeError();
     switch (drawMode) {
     case alarm: {
@@ -261,7 +266,7 @@ namespace blessings {
         break;
     }
     }
-    moveCursor(1, 1);
+    moveCursorTo(1, 1);
     printPage();
   }
 

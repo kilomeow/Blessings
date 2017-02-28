@@ -11,16 +11,17 @@ namespace blessings {
   template <class Symbol>
   struct MonitorCell {
     Symbol symb;
-    Property* prop;
+    const Property* prop;
 
     MonitorCell() {}
-    MonitorCell(Symbol s, Property* p) : symb(s), prop(p) {}
+    MonitorCell(Symbol s, const Property* p) : symb(s), prop(p) {}
   };
 
 
   template <class InS, class OutS>    // <InputSymbol, OutputSymbol>
   class Monitor {
   public:
+		Monitor() {}
     Monitor(TerminalIO <InS, OutS>* Term, int MaxSize);
     Monitor(const Monitor&);
     Monitor& operator=(const Monitor&);
@@ -42,6 +43,7 @@ namespace blessings {
       int stopPos;
 
     public:
+			Iterator() {};
       Iterator(MonitorCell<OutS>* grd, int pnt, int bnd);
       MonitorCell<OutS>& operator*();
       Iterator& operator++();
@@ -66,6 +68,7 @@ namespace blessings {
     void updateResolution();
 
     void moveCursor(int x, int y);
+    void moveCursorTo(int x, int y);
     GridPos getCursorPos();
 
     void hideCursor();
@@ -74,7 +77,7 @@ namespace blessings {
     void restoreCursorPos();
 
     std::queue<InS> getSymbol(int n=1);
-    void printSymbol(OutS, Property*);
+    void printSymbol(OutS, const Property*);
     void printSymbol(OutS);
 
     enum resChange {

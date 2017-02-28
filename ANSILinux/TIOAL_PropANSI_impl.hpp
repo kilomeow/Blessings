@@ -82,12 +82,12 @@ namespace blessings {
 
   template<class InS, class OutS>
   void TerminalIOANSILinux<InS, OutS, PropertyANSI>::print(\
-    OutS sym, Property* propRaw) {
+    OutS sym, const Property* propRaw) {
     if(!inited) throw BadModeError();
 
     if(propRaw==nullptr) throw ArgumentError();
 
-    PropertyANSI* prop=static_cast<PropertyANSI* >(propRaw);
+    const PropertyANSI* prop=static_cast<const PropertyANSI* >(propRaw);
 
     try {
       if(prop->bold) {
@@ -186,8 +186,7 @@ namespace blessings {
   }
 
   template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::print(\
-    OutS sym) {
+  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::print(OutS sym) {
     if(!inited) throw BadModeError();
 
     try {
