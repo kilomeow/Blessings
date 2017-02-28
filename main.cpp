@@ -1,6 +1,6 @@
-#include "Symbol/SymbolUTF8.hpp"
-#include "Symbol/Symbol.hpp"
-#include "ANSILinux/TerminalIOANSILinux.hpp"
+#include "symbol/symbolutf8.hpp"
+#include "symbol/symbol.hpp"
+#include "ansilinux/terminalio.hpp"
 
 using namespace blessings;
 

@@ -1,80 +1,97 @@
 lib: lib_shared lib_static
-build/Monitor.o: /home/shkiper/Код/Blessings/Monitor.cpp \
- /home/shkiper/Код/Blessings/Monitor.hpp \
- /home/shkiper/Код/Blessings/AdditionalStructs.hpp \
- /home/shkiper/Код/Blessings/TerminalIO.hpp \
- /home/shkiper/Код/Blessings/Symbol/Symbol.hpp \
- /home/shkiper/Код/Blessings/Symbol/../Error.hpp \
- /home/shkiper/Код/Blessings/WriteStream.hpp \
- /home/shkiper/Код/Blessings/ReadStream.hpp
-	mkdir -p build/
-	g++ --std=c++11 -fpic -c -o build/Monitor.o Monitor.cpp
-build/Symbol/SymbolUTF8.o: \
- /home/shkiper/Код/Blessings/Symbol/SymbolUTF8.cpp \
- /home/shkiper/Код/Blessings/Symbol/Symbol.hpp \
- /home/shkiper/Код/Blessings/Symbol/../Error.hpp \
- /home/shkiper/Код/Blessings/Symbol/SymbolUTF8.hpp
-	mkdir -p build/Symbol/
-	g++ --std=c++11 -fpic -c -o build/Symbol/SymbolUTF8.o Symbol/SymbolUTF8.cpp
-build/Symbol/SomeUTF8Symbols.o: \
- /home/shkiper/Код/Blessings/Symbol/SomeUTF8Symbols.cpp \
- /home/shkiper/Код/Blessings/Symbol/SymbolUTF8.hpp \
- /home/shkiper/Код/Blessings/Symbol/Symbol.hpp \
- /home/shkiper/Код/Blessings/Symbol/../Error.hpp \
- /home/shkiper/Код/Blessings/Symbol/SomeUTF8Symbols.hpp
-	mkdir -p build/Symbol/
-	g++ --std=c++11 -fpic -c -o build/Symbol/SomeUTF8Symbols.o Symbol/SomeUTF8Symbols.cpp
-build/Symbol/Symbol.o: /home/shkiper/Код/Blessings/Symbol/Symbol.cpp \
- /home/shkiper/Код/Blessings/Symbol/Symbol.hpp \
- /home/shkiper/Код/Blessings/Symbol/../Error.hpp
-	mkdir -p build/Symbol/
-	g++ --std=c++11 -fpic -c -o build/Symbol/Symbol.o Symbol/Symbol.cpp
-build/ANSILinux/TIOAL_PropANSI_SymbolUTF8.o: \
- /home/shkiper/Код/Blessings/ANSILinux/TIOAL_PropANSI_SymbolUTF8.cpp \
- /home/shkiper/Код/Blessings/ANSILinux/TIOAL_PropANSI_impl.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../Symbol/SomeUTF8Symbols.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../Symbol/SymbolUTF8.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../Symbol/Symbol.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../Symbol/../Error.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/TIOAL_PropANSI.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../WriteStream.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../ReadStream.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../AdditionalStructs.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/TerminalIOANSILinux.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../TerminalIO.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/WriteStreamLinux.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/WSL_SymbolUTF8.hpp
-	mkdir -p build/ANSILinux/
-	g++ --std=c++11 -fpic -c -o build/ANSILinux/TIOAL_PropANSI_SymbolUTF8.o ANSILinux/TIOAL_PropANSI_SymbolUTF8.cpp
-build/ANSILinux/WSL_SymbolUTF8.o: \
- /home/shkiper/Код/Blessings/ANSILinux/WSL_SymbolUTF8.cpp \
- /home/shkiper/Код/Blessings/ANSILinux/WSL_SymbolUTF8.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../Symbol/SymbolUTF8.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../Symbol/Symbol.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../Symbol/../Error.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../WriteStream.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/WriteStreamLinux.hpp
-	mkdir -p build/ANSILinux/
-	g++ --std=c++11 -fpic -c -o build/ANSILinux/WSL_SymbolUTF8.o ANSILinux/WSL_SymbolUTF8.cpp
-build/test.o: /home/shkiper/Код/Blessings/test.cpp \
- /home/shkiper/Код/Blessings/Symbol/SymbolUTF8.hpp \
- /home/shkiper/Код/Blessings/Symbol/Symbol.hpp \
- /home/shkiper/Код/Blessings/Symbol/../Error.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/TerminalIOANSILinux.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/TIOAL_PropANSI.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../WriteStream.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../ReadStream.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../AdditionalStructs.hpp \
- /home/shkiper/Код/Blessings/ANSILinux/../TerminalIO.hpp \
- /home/shkiper/Код/Blessings/Monitor.cpp \
- /home/shkiper/Код/Blessings/Monitor.hpp
+build/ansilinux/symbolutf8.o: \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/symbolutf8.cpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/symbolutf8.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../symbol/symbolutf8.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../symbol/symbol.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../symbol/../error.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../writestream.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/writestream.hpp
+	mkdir -p build/ansilinux/
+	g++ --std=c++11 -fpic -c -o build/ansilinux/symbolutf8.o ansilinux/symbolutf8.cpp
+build/ansilinux/propertyutf8.o: \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/propertyutf8.cpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/property.cpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../symbol/utf8symbols.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../symbol/symbolutf8.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../symbol/symbol.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../symbol/../error.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/property.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../writestream.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../readstream.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../astructs.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/terminalio.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../terminalio.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/writestream.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/symbolutf8.hpp
+	mkdir -p build/ansilinux/
+	g++ --std=c++11 -fpic -c -o build/ansilinux/propertyutf8.o ansilinux/propertyutf8.cpp
+build/ansilinux/property.o: \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/property.cpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../symbol/utf8symbols.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../symbol/symbolutf8.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../symbol/symbol.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../symbol/../error.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/property.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../writestream.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../readstream.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../astructs.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/terminalio.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../terminalio.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/writestream.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/symbolutf8.hpp
+	mkdir -p build/ansilinux/
+	g++ --std=c++11 -fpic -c -o build/ansilinux/property.o ansilinux/property.cpp
+build/test.o: /media/sf_HOME/Dest/Projects/Blessings/test.cpp \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/symbolutf8.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/symbol.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/../error.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/terminalio.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/property.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../writestream.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../readstream.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../astructs.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/ansilinux/../terminalio.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/monitor.cpp \
+ /media/sf_HOME/Dest/Projects/Blessings/monitor.hpp
 	mkdir -p build/
 	g++ --std=c++11 -fpic -c -o build/test.o test.cpp
-lib_static: build/Monitor.o build/Symbol/SymbolUTF8.o build/Symbol/SomeUTF8Symbols.o build/Symbol/Symbol.o build/ANSILinux/TIOAL_PropANSI_SymbolUTF8.o build/ANSILinux/WSL_SymbolUTF8.o build/test.o
+build/symbol/symbolutf8.o: \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/symbolutf8.cpp \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/symbol.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/../error.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/symbolutf8.hpp
+	mkdir -p build/symbol/
+	g++ --std=c++11 -fpic -c -o build/symbol/symbolutf8.o symbol/symbolutf8.cpp
+build/symbol/utf8symbols.o: \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/utf8symbols.cpp \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/symbolutf8.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/symbol.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/../error.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/utf8symbols.hpp
+	mkdir -p build/symbol/
+	g++ --std=c++11 -fpic -c -o build/symbol/utf8symbols.o symbol/utf8symbols.cpp
+build/symbol/symbol.o: \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/symbol.cpp \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/symbol.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/../error.hpp
+	mkdir -p build/symbol/
+	g++ --std=c++11 -fpic -c -o build/symbol/symbol.o symbol/symbol.cpp
+build/monitor.o: /media/sf_HOME/Dest/Projects/Blessings/monitor.cpp \
+ /media/sf_HOME/Dest/Projects/Blessings/monitor.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/astructs.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/terminalio.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/symbol.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/symbol/../error.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/writestream.hpp \
+ /media/sf_HOME/Dest/Projects/Blessings/readstream.hpp
+	mkdir -p build/
+	g++ --std=c++11 -fpic -c -o build/monitor.o monitor.cpp
+lib_static: build/ansilinux/symbolutf8.o build/ansilinux/propertyutf8.o build/ansilinux/property.o build/test.o build/symbol/symbolutf8.o build/symbol/utf8symbols.o build/symbol/symbol.o build/monitor.o
 	ar rcs blessings.a $^
-lib_shared: build/Monitor.o build/Symbol/SymbolUTF8.o build/Symbol/SomeUTF8Symbols.o build/Symbol/Symbol.o build/ANSILinux/TIOAL_PropANSI_SymbolUTF8.o build/ANSILinux/WSL_SymbolUTF8.o build/test.o
+lib_shared: build/ansilinux/symbolutf8.o build/ansilinux/propertyutf8.o build/ansilinux/property.o build/test.o build/symbol/symbolutf8.o build/symbol/utf8symbols.o build/symbol/symbol.o build/monitor.o
 	g++ --std=c++11 -shared -o blessings.so $^
-test: build/Monitor.o build/Symbol/SymbolUTF8.o build/Symbol/SomeUTF8Symbols.o build/Symbol/Symbol.o build/ANSILinux/TIOAL_PropANSI_SymbolUTF8.o build/ANSILinux/WSL_SymbolUTF8.o build/test.o
+test: build/ansilinux/symbolutf8.o build/ansilinux/propertyutf8.o build/ansilinux/property.o build/test.o build/symbol/symbolutf8.o build/symbol/utf8symbols.o build/symbol/symbol.o build/monitor.o
 	g++ --std=c++11  -o work -lstdc++ $^
 clean:
 	rm -rf build
@@ -83,33 +100,31 @@ clean:
 	rm -f blessings.so
 install:
 	mkdir -p $(HOME)/.prefix/usr/include/blessings/
-	cp TerminalIO.hpp $(HOME)/.prefix/usr/include/blessings/TerminalIO.hpp
+	cp error.hpp $(HOME)/.prefix/usr/include/blessings/error.hpp
 	mkdir -p $(HOME)/.prefix/usr/include/blessings/
-	cp ReadStream.hpp $(HOME)/.prefix/usr/include/blessings/ReadStream.hpp
+	cp astructs.hpp $(HOME)/.prefix/usr/include/blessings/astructs.hpp
+	mkdir -p $(HOME)/.prefix/usr/include/blessings/ansilinux/
+	cp ansilinux/terminalio.hpp $(HOME)/.prefix/usr/include/blessings/ansilinux/terminalio.hpp
+	mkdir -p $(HOME)/.prefix/usr/include/blessings/ansilinux/
+	cp ansilinux/symbolutf8.hpp $(HOME)/.prefix/usr/include/blessings/ansilinux/symbolutf8.hpp
+	mkdir -p $(HOME)/.prefix/usr/include/blessings/ansilinux/
+	cp ansilinux/property.hpp $(HOME)/.prefix/usr/include/blessings/ansilinux/property.hpp
+	mkdir -p $(HOME)/.prefix/usr/include/blessings/ansilinux/
+	cp ansilinux/writestream.hpp $(HOME)/.prefix/usr/include/blessings/ansilinux/writestream.hpp
 	mkdir -p $(HOME)/.prefix/usr/include/blessings/
-	cp WriteStream.hpp $(HOME)/.prefix/usr/include/blessings/WriteStream.hpp
-	mkdir -p $(HOME)/.prefix/usr/include/blessings/Symbol/
-	cp Symbol/Symbol.hpp $(HOME)/.prefix/usr/include/blessings/Symbol/Symbol.hpp
-	mkdir -p $(HOME)/.prefix/usr/include/blessings/Symbol/
-	cp Symbol/SymbolUTF8.hpp $(HOME)/.prefix/usr/include/blessings/Symbol/SymbolUTF8.hpp
-	mkdir -p $(HOME)/.prefix/usr/include/blessings/Symbol/
-	cp Symbol/SomeUTF8Symbols.hpp $(HOME)/.prefix/usr/include/blessings/Symbol/SomeUTF8Symbols.hpp
-	mkdir -p $(HOME)/.prefix/usr/include/blessings/ANSILinux/
-	cp ANSILinux/TIOAL_PropANSI_impl.hpp $(HOME)/.prefix/usr/include/blessings/ANSILinux/TIOAL_PropANSI_impl.hpp
-	mkdir -p $(HOME)/.prefix/usr/include/blessings/ANSILinux/
-	cp ANSILinux/TIOAL_PropANSI.hpp $(HOME)/.prefix/usr/include/blessings/ANSILinux/TIOAL_PropANSI.hpp
-	mkdir -p $(HOME)/.prefix/usr/include/blessings/ANSILinux/
-	cp ANSILinux/TerminalIOANSILinux.hpp $(HOME)/.prefix/usr/include/blessings/ANSILinux/TerminalIOANSILinux.hpp
-	mkdir -p $(HOME)/.prefix/usr/include/blessings/ANSILinux/
-	cp ANSILinux/WSL_SymbolUTF8.hpp $(HOME)/.prefix/usr/include/blessings/ANSILinux/WSL_SymbolUTF8.hpp
-	mkdir -p $(HOME)/.prefix/usr/include/blessings/ANSILinux/
-	cp ANSILinux/WriteStreamLinux.hpp $(HOME)/.prefix/usr/include/blessings/ANSILinux/WriteStreamLinux.hpp
+	cp writestream.hpp $(HOME)/.prefix/usr/include/blessings/writestream.hpp
 	mkdir -p $(HOME)/.prefix/usr/include/blessings/
-	cp Error.hpp $(HOME)/.prefix/usr/include/blessings/Error.hpp
+	cp readstream.hpp $(HOME)/.prefix/usr/include/blessings/readstream.hpp
+	mkdir -p $(HOME)/.prefix/usr/include/blessings/symbol/
+	cp symbol/symbolutf8.hpp $(HOME)/.prefix/usr/include/blessings/symbol/symbolutf8.hpp
+	mkdir -p $(HOME)/.prefix/usr/include/blessings/symbol/
+	cp symbol/symbol.hpp $(HOME)/.prefix/usr/include/blessings/symbol/symbol.hpp
+	mkdir -p $(HOME)/.prefix/usr/include/blessings/symbol/
+	cp symbol/utf8symbols.hpp $(HOME)/.prefix/usr/include/blessings/symbol/utf8symbols.hpp
 	mkdir -p $(HOME)/.prefix/usr/include/blessings/
-	cp Monitor.hpp $(HOME)/.prefix/usr/include/blessings/Monitor.hpp
+	cp monitor.hpp $(HOME)/.prefix/usr/include/blessings/monitor.hpp
 	mkdir -p $(HOME)/.prefix/usr/include/blessings/
-	cp AdditionalStructs.hpp $(HOME)/.prefix/usr/include/blessings/AdditionalStructs.hpp
+	cp terminalio.hpp $(HOME)/.prefix/usr/include/blessings/terminalio.hpp
 	mkdir -p $(HOME)/.prefix/usr/lib/
 	cp blessings.a $(HOME)/.prefix/usr/lib/blessings.a
 	cp blessings.so $(HOME)/.prefix/usr/lib/blessings.so

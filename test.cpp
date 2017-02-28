@@ -3,11 +3,11 @@
 #include <chrono>
 #include <thread>
 
-#include "Symbol/SymbolUTF8.hpp"
-#include "Symbol/Symbol.hpp"
-#include "ANSILinux/TerminalIOANSILinux.hpp"
-#include "Monitor.cpp"
-#include "AdditionalStructs.hpp"
+#include "symbol/symbolutf8.hpp"
+#include "symbol/symbol.hpp"
+#include "ansilinux/terminalio.hpp"
+#include "monitor.cpp"
+#include "astructs.hpp"
 
 using namespace std;
 using namespace blessings;
@@ -42,7 +42,7 @@ int main() {
     rewind(in);
     s = 0;
 
-	  while (s<500) {
+    while (s<500) {
       for (int k=0;k<=t;k++) fscanf(in, "%c", &c);
 
       for (int k=0;k<50;k++) {
@@ -66,13 +66,13 @@ int main() {
       if (ex) break;
 
       while (c !=*"\n") fscanf(in, "%c", &c);
-	  }
+    }
 
     if (ex) break;
 
-	  monitor.draw(M::resChange::ignore);
-	  this_thread::sleep_for(chrono::milliseconds(50));
-	}
+    monitor.draw(M::resChange::ignore);
+    this_thread::sleep_for(chrono::milliseconds(50));
+  }
 
   fclose(in);
 
