@@ -4,4 +4,7 @@
 
 namespace blessings {
   template class Monitor<SymbolUTF8, SymbolUTF8>;
+  
+  template <class Symbol>
+  bool MonitorCell<Symbol>::hardopt=false;
 }

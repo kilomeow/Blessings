@@ -10,7 +10,7 @@ namespace blessings {
     maxSize = MaxSize;
     grid = new MonitorCell<OutS> [maxSize];
     res.width=1; res.height=1;
-    MonitorCell<InS>::hardopt = false;
+    MonitorCell<OutS>::hardopt = false;
   }
   
   template <class InS, class OutS>
@@ -349,7 +349,7 @@ namespace blessings {
   
   template <class InS, class OutS>
   void Monitor<InS,OutS>::hardOptimization(bool p) {
-    MonitorCell<InS>::hardopt = false;
+    MonitorCell<OutS>::hardopt = false;
   }
 
   template <class InS, class OutS>

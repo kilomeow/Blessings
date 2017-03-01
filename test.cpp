@@ -30,7 +30,9 @@ int main() {
   
   monitor.setResolution(50, 10);
   monitor.startWork();
-
+  
+  monitor.hardOptimization(true);
+  
   monitor.tile(S("."), &P::defaultProperty);
   monitor.draw(M::resChange::ignore);
   
