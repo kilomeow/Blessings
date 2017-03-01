@@ -20,60 +20,75 @@ typedef MonitorCell<S> Cell;
 
 int main() {
   TL term;
+  const P yell(ColorANSI(3));
 
   term.Init();
 
   M monitor(&term, 2000);
   monitor.setResolution(50, 10);
-  monitor.clearScreen();
-
-  FILE * in = fopen("logo.txt", "r");
-  int s;
-  char c;
-  bool ex=false;
-
-  const P p(ColorANSI(3));
+  monitor.startWork();
   
-  monitor.tile(S("."), &p);
+  monitor.tile(S("."), &P::defaultProperty);
   monitor.draw(M::resChange::ignore);
-
-  for (int t=0;t<300;t++) {
-    rewind(in);
-    s = 0;
-
-    while (s<500) {
-      for (int k=0;k<=t;k++) fscanf(in, "%c", &c);
-
-      for (int k=0;k<50;k++) {
-        if (c==*"\n") ex = true;
-        if (ex) break;
-
-        //if (c!=*".") {
-        //  const P p(ColorANSI(rand()%6+1));
-        //  monitor[s] = Cell(S(c), &p);
-        //} else {
-        //  const P p();
-        //  monitor[s] = Cell(S(c), &p);
-        //}
-
-        monitor[s] = Cell(S(c), &p);
-
-        fscanf(in, "%c", &c);
-        s++;
-      }
-
-      if (ex) break;
-
-      while (c !=*"\n") fscanf(in, "%c", &c);
-    }
-
-    if (ex) break;
-
+  
+  for (int i=0; i<(500-116); i++) {
+    monitor(i/8+1, i%8+1) = Cell(S('#'), &yell);
     monitor.lazyDraw(M::resChange::ignore);
-    this_thread::sleep_for(chrono::milliseconds(50));
+    // monitor.draw(M::resChange::ignore);
+    // feel the difference
+    this_thread::sleep_for(chrono::milliseconds(3));
   }
+  
+  
+  monitor.endWork();
 
-  fclose(in);
+  //FILE * in = fopen("logo.txt", "r");
+  //int s;
+  //char c;
+  //bool ex=false;
+
+  //const P p(ColorANSI(3));
+  
+  //monitor.tile(S("."), &p);
+  //monitor.draw(M::resChange::ignore);
+
+  //for (int t=0;t<300;t++) {
+    //rewind(in);
+    //s = 0;
+
+    //while (s<500) {
+      //for (int k=0;k<=t;k++) fscanf(in, "%c", &c);
+
+      //for (int k=0;k<50;k++) {
+        //if (c==*"\n") ex = true;
+        //if (ex) break;
+
+        ////if (c!=*".") {
+        ////  const P p(ColorANSI(rand()%6+1));
+        ////  monitor[s] = Cell(S(c), &p);
+        ////} else {
+        ////  const P p();
+        ////  monitor[s] = Cell(S(c), &p);
+        ////}
+
+        //monitor[s] = Cell(S(c), &p);
+
+        //fscanf(in, "%c", &c);
+        //s++;
+      //}
+
+      //if (ex) break;
+
+      //while (c !=*"\n") fscanf(in, "%c", &c);
+    //}
+
+    //if (ex) break;
+
+    //monitor.lazyDraw(M::resChange::ignore);
+    //this_thread::sleep_for(chrono::milliseconds(50));
+  //}
+
+  //fclose(in);
 
   return 0;
 }

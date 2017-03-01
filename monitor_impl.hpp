@@ -11,9 +11,11 @@ namespace blessings {
     maxSize = MaxSize;
     grid = new MonitorCell<OutS> [maxSize];
     res.width=1; res.height=1;
-    termIO->setNonCanonicalMode();
-    termIO->setEchoInhibition();
-    termIO->hideCursor();
+  }
+  
+  template <class InS, class OutS>
+  Monitor<InS,OutS>::~Monitor() {
+    delete [] grid;
   }
 
   template <class InS, class OutS>
@@ -37,17 +39,31 @@ namespace blessings {
       grid[i] = monitor.grid[i];
     return (*this);
   }
-
+  
   template <class InS, class OutS>
-  Monitor<InS,OutS>::~Monitor() {
-    delete [] grid;
+  void Monitor<InS,OutS>::startWork() {
+    // termIO->resetDeviceMode();
+    termIO->setNonCanonicalMode();
+    termIO->setEchoInhibition();
+    termIO->hideCursor();
+    clearScreen();
+    moveCursorTo(1, 1);
+  }
+  
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::endWork() {
+    termIO->setCanonicalMode();
+    termIO->setEchoForward();
+    termIO->showCursor();
+    clearScreen();
+    moveCursorTo(1, 1);
   }
 
   template <class InS, class OutS>
   GridPos Monitor<InS,OutS>::positionOf(int index) const {
     GridPos gp;
     gp.x = index%res.width;
-    gp.y = index/res.height;
+    gp.y = index/res.width;
     return gp;
   }
 
@@ -292,7 +308,7 @@ namespace blessings {
     Monitor::Iterator i = begin();
     while (!i.isEnd()) {
       termIO->print((*i).symb, (*i).prop);
-      (*i).unstaged = false;
+      (*i).setStaged();
       i++;
       if (i.index()%res.width==0) termIO->newLine();
     }
@@ -315,7 +331,7 @@ namespace blessings {
       if ((*i).unstaged) {
         moveCursorTo(positionOf(i.index()));
         termIO->print((*i).symb, (*i).prop);
-        (*i).unstaged = false;
+        (*i).setStaged();
       }
       i++;
     }

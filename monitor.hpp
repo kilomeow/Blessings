@@ -15,9 +15,17 @@ namespace blessings {
 
     MonitorCell() {}
     MonitorCell(Symbol s, const Property* p) : symb(s), prop(p) {}
+    
     MonitorCell& operator=(const MonitorCell& cell) {
       symb = cell.symb;
       prop = cell.prop;
+      unstaged = true;
+    }
+    
+    void setStaged() {
+      unstaged = false;
+    }
+    void setUnstaged() {
       unstaged = true;
     }
   };
@@ -35,10 +43,14 @@ namespace blessings {
   public:
     Monitor() {}
     Monitor(TerminalIO <InS, OutS>* Term, int MaxSize);
+    ~Monitor();
+    
     Monitor(const Monitor&);
     Monitor& operator=(const Monitor&);
-    ~Monitor();
-
+    
+    void startWork();
+    void endWork();
+    
     GridPos positionOf(int) const;
     int indexOf(GridPos) const;
     int currentBound() const;
@@ -107,7 +119,7 @@ namespace blessings {
     void printPage();
     void draw(resChange drawMode=alarm);
     void lazyDraw(resChange drawMode=alarm);
-
+    
     int boldSupported();    // Must be rewritten
     int italicsSupported();
 
