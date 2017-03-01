@@ -189,8 +189,12 @@ namespace blessings {
   }
 
   bool operator==(const SymbolUTF8& a, const SymbolUTF8& b) {
+    int aSize=a.getSize();
+    int bSize=b.getSize();
+    if(aSize!=bSize) return false;
+
     bool ret=true;
-    for (int i=0; i<4; ++i) {
+    for (int i=0; i<aSize; ++i) {
       if (a.arr[i]!=b.arr[i]) {
         ret=false;
         break;
@@ -201,8 +205,12 @@ namespace blessings {
   }
 
   bool operator!=(const SymbolUTF8& a, const SymbolUTF8& b) {
+    int aSize=a.getSize();
+    int bSize=b.getSize();
+    if(aSize!=bSize) return true;
+
     bool ret=false;
-    for (int i=0; i<4; ++i) {
+    for (int i=0; i<aSize; ++i) {
       if (a.arr[i]!=b.arr[i]) {
         ret=true;
         break;

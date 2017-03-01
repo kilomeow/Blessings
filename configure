@@ -5,13 +5,13 @@ import os
 
 gcc=False
 ignoreList=[]
-libFileIgnoreList=["main.cpp"]
+libFileIgnoreList=["test.cpp"]
 libs=["stdc++"]
 compilerKeys=[]
 includeDirs=[]
 libDirs=[]
-outputStaticLibName="blessings.a"
-outputSharedLibName="blessings.so"
+outputStaticLibName="libblessings_static.a"
+outputSharedLibName="libblessings_shared.so"
 prefix="$(HOME)/.prefix"
 includeDirName="blessings" #shold be nonempty
 

@@ -20,6 +20,7 @@ typedef MonitorCell<S> Cell;
 
 int main() {
   TL term;
+
   const P yell(ColorANSI(3));
 
   term.Init();
@@ -29,7 +30,7 @@ int main() {
   
   monitor.setResolution(50, 10);
   monitor.startWork();
-  
+
   monitor.tile(S("."), &P::defaultProperty);
   monitor.draw(M::resChange::ignore);
   
@@ -49,7 +50,7 @@ int main() {
   //bool ex=false;
 
   //const P p(ColorANSI(3));
-  
+
   //monitor.tile(S("."), &p);
   //monitor.draw(M::resChange::ignore);
 
