@@ -25,7 +25,7 @@ namespace blessings {
     else if (!((sym[0]&0b11111000)^0b11110000)) size=4;
     else throw InitError();
 
-    if (strlen(sym)!=size) throw InitError();
+    if (strlen(sym)!=static_cast<size_t>(size)) throw InitError();
 
     switch(size) {
     case 4:
@@ -82,7 +82,7 @@ namespace blessings {
     else if (!((sym[0]&0b11111000)^0b11110000)) size=4;
     else throw InitError();
 
-    if (sym.size()!=size) throw InitError();
+    if (sym.size()!=static_cast<size_t>(size)) throw InitError();
 
     switch(size) {
     case 4:
@@ -127,11 +127,7 @@ namespace blessings {
   }
 
   std::ostream& operator<<(std::ostream& stream, const SymbolUTF8& sym) {
-    int size;
-    if (!(sym.arr[0]&0b10000000)) size=1;
-    else if (!((sym.arr[0]&0b11100000)^0b11000000)) size=2;
-    else if (!((sym.arr[0]&0b11110000)^0b11100000)) size=3;
-    else if (!((sym.arr[0]&0b11111000)^0b11110000)) size=4;
+    int size=sym.getSize();
 
     for (int i=0; i<size; ++i) {
       try {
@@ -276,7 +272,7 @@ namespace blessings {
     else if (!((ret.first.arr[0]&0b11111000)^0b11110000)) size=4;
     else throw SymbolUTF8::InitError();
 
-    if (n<size) throw SymbolUTF8::InitError();
+    if (n<static_cast<size_t>(size)) throw SymbolUTF8::InitError();
 
     ret.second=str+size;
 
@@ -429,7 +425,7 @@ namespace blessings {
   StringUTF8 operator "" _sUTF8(const char* str, size_t n) {
     StringUTF8 ret;
 
-    const char* p;
+    const char* p=str;
     while (p!=str+n) {
       auto temp=getSymbol<SymbolUTF8>(str, n-(p-str));
 

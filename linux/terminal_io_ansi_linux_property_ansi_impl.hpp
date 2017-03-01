@@ -247,7 +247,7 @@ namespace blessings {
         ws->write(SymbolTable<OutS>::ESCSymbol);
         ws->write(SymbolTable<OutS>::openBracket);
 
-        for(int i=0; i<xAbsStr.size(); ++i) {
+        for(size_t i=0; i<xAbsStr.size(); ++i) {
           ws->write(xAbsStr[i]);
         }
 
@@ -259,7 +259,7 @@ namespace blessings {
         ws->write(SymbolTable<OutS>::ESCSymbol);
         ws->write(SymbolTable<OutS>::openBracket);
 
-        for(int i=0; i<yAbsStr.size(); ++i) {
+        for(size_t i=0; i<yAbsStr.size(); ++i) {
           ws->write(yAbsStr[i]);
         }
 
@@ -287,13 +287,13 @@ namespace blessings {
       ws->write(SymbolTable<OutS>::ESCSymbol);
       ws->write(SymbolTable<OutS>::openBracket);
 
-      for(int i=0; i<yStr.size(); ++i) {
+      for(size_t i=0; i<yStr.size(); ++i) {
         ws->write(yStr[i]);
       }
 
       ws->write(SymbolTable<OutS>::semicolon);
 
-      for(int i=0; i<xStr.size(); ++i) {
+      for(size_t i=0; i<xStr.size(); ++i) {
         ws->write(xStr[i]);
       }
 

@@ -25,15 +25,15 @@ namespace blessings {
   }
 
   void WriteStreamLinux<SymbolUTF8>::write(const char* str) {
-    int len=strlen(str);
-    for (int i=0; i<len; ++i) {
+    size_t len=strlen(str);
+    for (size_t i=0; i<len; ++i) {
       int temp=fputc(str[i], file);
       if (temp==EOF) throw WriteError();
     }
   }
 
   void WriteStreamLinux<SymbolUTF8>::write(std::string str) {
-    for (int i=0; i<str.size(); ++i) {
+    for (size_t i=0; i<str.size(); ++i) {
       int temp=fputc(str[i], file);
       if (temp==EOF) throw WriteError();
     }
