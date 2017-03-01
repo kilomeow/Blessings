@@ -43,7 +43,7 @@ namespace blessings {
 
   //Property
   struct Property {
-    virtual bool compare(const Property*)=0;
+    virtual bool compare(const Property*)=0 const;
   };
 
   struct PropertyANSI : public Property {
@@ -52,7 +52,7 @@ namespace blessings {
     bool italics;
     bool bold;
 
-    bool compare(const Property*);
+    bool compare(const Property*) const;
     static const PropertyANSI defaultProperty;
 
     PropertyANSI(ColorANSI clr=ColorANSI::NONE, \
@@ -63,7 +63,7 @@ namespace blessings {
   bool operator==(const PropertyANSI&, const PropertyANSI&);
   bool operator!=(const PropertyANSI&, const PropertyANSI&);
 
-  inline bool PropertyANSI::compare(const Property* prop) {
+  inline bool PropertyANSI::compare(const Property* prop) const {
     return *this==*static_cast<const PropertyANSI*>(prop);
   }
 
