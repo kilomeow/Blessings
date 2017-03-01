@@ -42,14 +42,17 @@ namespace blessings {
 
 
   //Property
-  struct Property {};
+  struct Property {
+    virtual bool operator==(const Property&)=0;
+  };
 
   struct PropertyANSI : public Property {
     ColorANSI color;
     ColorANSI backgroundColor;
     bool italics;
     bool bold;
-
+    
+    bool operator==(const PropertyANSI&);
     static const PropertyANSI defaultProperty;
 
     PropertyANSI(ColorANSI clr=ColorANSI::NONE, \
