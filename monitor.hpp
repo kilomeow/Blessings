@@ -7,19 +7,20 @@
 #include "symbol/symbol.hpp"
 
 namespace blessings {
+  
   template <class Symbol>
   struct MonitorCell {
     Symbol symb;
     const Property* prop;
     
+    static bool hardopt;
     bool unstaged = false;
-    static bool compare;
 
     MonitorCell() {}
     MonitorCell(Symbol s, const Property* p) : symb(s), prop(p) {}
     
     MonitorCell& operator=(const MonitorCell& cell) {
-      if (compare && (symb==cell.symb) && ((*prop)==(*cell.prop))) {
+      if (hardopt && (symb==cell.symb) && (prop->compare(cell.prop))) {
         // do nothing
       } else {
         symb = cell.symb;
@@ -145,4 +146,5 @@ namespace blessings {
     void checkMode();
     void checkResolution(resChange);
   };
+  
 }
