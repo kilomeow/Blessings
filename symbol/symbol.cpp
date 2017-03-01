@@ -2,18 +2,18 @@
 #include "../error.hpp"
 
 namespace blessings {
-  ColorANSI ColorANSI::DefaultColor=ColorANSI(NONE);
-  ColorRGB ColorRGB::DefaultColor=ColorRGB::BLACK;
-
-  const ColorRGB ColorRGB::WHITE=ColorRGB(255,255,255);
-  const ColorRGB ColorRGB::BLACK=ColorRGB(0,0,0);
+  const ColorANSI ColorANSI::DefaultColor=ColorANSI(NONE);
 
   const struct PropertyANSI PropertyANSI::defaultProperty=PropertyANSI();
 
-  ColorRGB::ColorRGB(int red, int green, int blue) : r(red), g(green), b(blue) {
-    if (red<0 || red>255 || green<0 || green>255 || blue<0 || blue>255) {
-      throw InitError();
-    }
+  bool operator==(const PropertyANSI& a, const PropertyANSI& b) {
+    return a.italics==b.italics && b.bold==b.bold && a.color==b.color && \
+      a.backgroundColor==b.backgroundColor;
+  }
+
+  bool operator!=(const PropertyANSI& a, const PropertyANSI& b) {
+    return a.italics!=b.italics || b.bold!=b.bold || a.color!=b.color || \
+      a.backgroundColor!=b.backgroundColor;
   }
 
   PropertyType::PropertyType(Type t) {

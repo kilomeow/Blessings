@@ -24,28 +24,21 @@ namespace blessings {
     enum ColorT {BLACK=0, RED=1, GREEN=2, YELLOW=3, BLUE=4, MAGENTA=5, CYAN=6, WHITE=7, NONE=8};
     ColorT color;
 
-    ColorANSI(ColorT col=BLACK) : color(col) {}
+    ColorANSI(ColorT col=NONE) : color(col) {}
     ColorANSI(int c) : color(ColorT(c)) {}
 
-    static ColorANSI DefaultColor;
+    operator ColorT() {return color;}
+
+    const static ColorANSI DefaultColor;
   };
 
+  inline bool operator==(const ColorANSI& a, const ColorANSI& b) {
+    return a.color==b.color;
+  }
 
-  struct ColorRGB {
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
-
-    class Error : public BlessingsError {};
-    class InitError : public Error {};
-
-    ColorRGB(int red=0, int green=0, int blue=0);
-
-    static const ColorRGB WHITE;
-    static const ColorRGB BLACK;
-
-    static ColorRGB DefaultColor;
-  };
+  inline bool operator!=(const ColorANSI& a, const ColorANSI& b) {
+    return a.color!=b.color;
+  }
 
 
   //Property
@@ -63,6 +56,9 @@ namespace blessings {
       ColorANSI bgclr=ColorANSI::NONE, bool itl=false, bool bld=false) :
       color(clr), backgroundColor(bgclr), italics(itl), bold(bld) {}
   };
+
+  bool operator==(const PropertyANSI&, const PropertyANSI&);
+  bool operator!=(const PropertyANSI&, const PropertyANSI&);
 
   struct PropertyType {
     class Error;

@@ -20,6 +20,7 @@ typedef MonitorCell<S> Cell;
 
 int main() {
   TL term;
+
   const P yell(ColorANSI(3));
 
   term.Init();
@@ -27,7 +28,7 @@ int main() {
   M monitor(&term, 2000);
   monitor.setResolution(50, 10);
   monitor.startWork();
-  
+
   monitor.tile(S("."), &P::defaultProperty);
   monitor.draw(M::resChange::ignore);
   
@@ -38,8 +39,8 @@ int main() {
     // feel the difference
     this_thread::sleep_for(chrono::milliseconds(3));
   }
-  
-  
+
+
   monitor.endWork();
 
   //FILE * in = fopen("logo.txt", "r");
@@ -48,7 +49,7 @@ int main() {
   //bool ex=false;
 
   //const P p(ColorANSI(3));
-  
+
   //monitor.tile(S("."), &p);
   //monitor.draw(M::resChange::ignore);
 
