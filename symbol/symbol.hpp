@@ -43,7 +43,7 @@ namespace blessings {
 
   //Property
   struct Property {
-    virtual bool compare(const Property*)=0 const;
+    virtual bool compare(const Property*) const=0;
   };
 
   struct PropertyANSI : public Property {
