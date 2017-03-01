@@ -11,15 +11,22 @@ namespace blessings {
   struct MonitorCell {
     Symbol symb;
     const Property* prop;
+    
     bool unstaged = false;
+    static bool compare;
 
     MonitorCell() {}
     MonitorCell(Symbol s, const Property* p) : symb(s), prop(p) {}
     
     MonitorCell& operator=(const MonitorCell& cell) {
-      symb = cell.symb;
-      prop = cell.prop;
-      unstaged = true;
+      if (compare && (symb==cell.symb) && ((*prop)==(*cell.prop))) {
+        // do nothing
+      } else {
+        symb = cell.symb;
+        prop = cell.prop;
+        unstaged = true;
+      }
+      return (*this);
     }
     
     void setStaged() {
@@ -42,11 +49,14 @@ namespace blessings {
 
   public:
     Monitor() {}
-    Monitor(TerminalIO <InS, OutS>* Term, int MaxSize);
+    Monitor(int MaxSize);
     ~Monitor();
     
     Monitor(const Monitor&);
     Monitor& operator=(const Monitor&);
+    
+    void connect(TerminalIO <InS, OutS>*);
+    void disconnect();
     
     void startWork();
     void endWork();
@@ -119,6 +129,7 @@ namespace blessings {
     void printPage();
     void draw(resChange drawMode=alarm);
     void lazyDraw(resChange drawMode=alarm);
+    void hardOptimization(bool);
     
     int boldSupported();    // Must be rewritten
     int italicsSupported();

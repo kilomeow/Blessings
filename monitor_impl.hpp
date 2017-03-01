@@ -5,12 +5,12 @@
 
 namespace blessings {
   template <class InS, class OutS>
-  Monitor<InS,OutS>::Monitor(TerminalIO<InS,OutS>* Term, int MaxSize) {
+  Monitor<InS,OutS>::Monitor(int MaxSize) {
     if (MaxSize <= 0) throw Error();   // ::Error("wrong MaxSize")
-    termIO = Term;
     maxSize = MaxSize;
     grid = new MonitorCell<OutS> [maxSize];
     res.width=1; res.height=1;
+    MonitorCell<OutS>::compare = false;
   }
   
   template <class InS, class OutS>
@@ -38,6 +38,16 @@ namespace blessings {
     for (int i=0;i<maxSize;i++)
       grid[i] = monitor.grid[i];
     return (*this);
+  }
+  
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::connect(TerminalIO<InS,OutS>* Term) {
+    termIO = Term;
+  }
+  
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::disconnect() {
+    termIO = TerminalIO<InS,OutS>();
   }
   
   template <class InS, class OutS>
@@ -335,6 +345,11 @@ namespace blessings {
       }
       i++;
     }
+  }
+  
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::hardOptimization(bool p) {
+    MonitorCell<OutS>::compare = p;
   }
 
   template <class InS, class OutS>
