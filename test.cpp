@@ -24,7 +24,9 @@ int main() {
 
   term.Init();
 
-  M monitor(&term, 2000);
+  M monitor(1000);
+  monitor.connect(&term);
+  
   monitor.setResolution(50, 10);
   monitor.startWork();
   
@@ -38,7 +40,6 @@ int main() {
     // feel the difference
     this_thread::sleep_for(chrono::milliseconds(3));
   }
-  
   
   monitor.endWork();
 
