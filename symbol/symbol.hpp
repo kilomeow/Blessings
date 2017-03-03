@@ -1,24 +1,9 @@
 #pragma once
 
-#include <string>
-#include <cstdint>
-#include <utility>
-
 #include "../error.hpp"
+//#include "../concepts.hpp"
 
 namespace blessings {
-  template <class SymbolType>
-  SymbolType readSymbol(FILE*);
-
-  template <class SymbolType>
-  void writeSymbol(const SymbolType&, FILE*);
-
-  template <class SymbolType>
-  std::pair<SymbolType, const char*> getSymbol(const char* str);
-  template <class SymbolType>
-  std::pair<SymbolType, const char*> getSymbol(const char* str, size_t n);
-
-
   //Color
   struct ColorANSI {
     enum ColorT {BLACK=0, RED=1, GREEN=2, YELLOW=3, BLUE=4, MAGENTA=5, CYAN=6, WHITE=7, NONE=8};

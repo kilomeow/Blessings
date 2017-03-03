@@ -1,5 +1,5 @@
-#include "symbol.hpp"
 #include "symbol_utf8.hpp"
+#include "symbol_utf8_impl.hpp"
 
 #include <string>
 #include <iostream>
@@ -10,9 +10,53 @@
 using namespace std;
 
 namespace blessings {
-  SymbolUTF8::SymbolUTF8(char c) {
-    if (c&0b10000000) throw InitError();
+  SymbolUTF8::SymbolUTF8(char c) noexcept {
+    if (c&0b10000000) {
+      arr[0]=0b11000000|(c>>6);
+      arr[1]=0b10000000|(c&0b00111111);
+    }
     else arr[0]=c;
+  }
+
+  SymbolUTF8::SymbolUTF8(char32_t x) {
+    int size;
+    if (x&0xff000000) size=4;
+    else if (x&0x00ff0000) size=3;
+    else if (x&0x0000ff00) size=2;
+    else size=1;
+
+    Converter conv;
+    conv.ch=x;
+
+    switch(size) {
+    case 1:
+      arr[0]=conv.arr[0];
+      if (arr[0]&0b10000000) throw InitError();
+      break;
+    case 2:
+      arr[0]=conv.arr[1];
+      arr[1]=conv.arr[0];
+      if ((arr[0]&0b11100000)^0b11000000) throw InitError();
+      if ((arr[1]&0b11000000)^0b10000000) throw InitError();
+      break;
+    case 3:
+      arr[0]=conv.arr[2];
+      arr[1]=conv.arr[1];
+      arr[2]=conv.arr[0];
+      if ((arr[0]&0b11110000)^0b11100000) throw InitError();
+      if ((arr[1]&0b11000000)^0b10000000) throw InitError();
+      if ((arr[2]&0b11000000)^0b10000000) throw InitError();
+      break;
+    case 4:
+      arr[0]=conv.arr[3];
+      arr[1]=conv.arr[2];
+      arr[2]=conv.arr[1];
+      arr[3]=conv.arr[0];
+      if ((arr[0]&0b11111000)^0b11110000) throw InitError();
+      if ((arr[1]&0b11000000)^0b10000000) throw InitError();
+      if ((arr[2]&0b11000000)^0b10000000) throw InitError();
+      if ((arr[3]&0b11000000)^0b10000000) throw InitError();
+    }
   }
 
   SymbolUTF8::SymbolUTF8(const char* sym) {
@@ -39,41 +83,6 @@ namespace blessings {
     for (int i=0; i<size; ++i) arr[i]=sym[i];
   }
 
-  SymbolUTF8::SymbolUTF8(int32_t x) {
-    int size;
-    if (x&0xff000000) size=4;
-    else if (x&0x00ff0000) size=3;
-    else if (x&0x0000ff00) size=2;
-    else size=1;
-
-    switch(size) {
-    case 1:
-      arr[0]=static_cast<char>(x);
-      if (arr[0]&0b10000000) throw InitError();
-    case 2:
-      arr[0]=static_cast<char>(x>>8);
-      arr[1]=static_cast<char>(x&0x000000ff);
-      if ((arr[0]&0b11100000)^0b11000000) throw InitError();
-      if ((arr[1]&0b11000000)^0b10000000) throw InitError();
-    case 3:
-      arr[0]=static_cast<char>(x>>16);
-      arr[1]=static_cast<char>((x>>8)&0x000000ff);
-      arr[2]=static_cast<char>(x&0x000000ff);
-      if ((arr[0]&0b11110000)^0b11100000) throw InitError();
-      if ((arr[1]&0b11000000)^0b10000000) throw InitError();
-      if ((arr[2]&0b11000000)^0b10000000) throw InitError();
-    case 4:
-      arr[0]=static_cast<char>(x>>24);
-      arr[1]=static_cast<char>((x>>16)&0x000000ff);
-      arr[2]=static_cast<char>((x>>8)&0x000000ff);
-      arr[3]=static_cast<char>(x&0x000000ff);
-      if ((arr[0]&0b11111000)^0b11110000) throw InitError();
-      if ((arr[1]&0b11000000)^0b10000000) throw InitError();
-      if ((arr[2]&0b11000000)^0b10000000) throw InitError();
-      if ((arr[3]&0b11000000)^0b10000000) throw InitError();
-    }
-  }
-
   SymbolUTF8::SymbolUTF8(std::string sym) {
     int size;
     if (!(sym[0]&0b10000000)) size=1;
@@ -96,6 +105,44 @@ namespace blessings {
     for (uint8_t i=0; i<size; ++i) arr[i]=sym[i];
   }
 
+  SymbolUTF8::SymbolUTF8(uint32_t x) {
+    int size;
+    if (x<0x7F) size=1;
+    else if (x<0x7FF) size=2;
+    else if (x<0xFFFF) size=3;
+    else if (x<0x1FFFFF) size=4;
+    else throw InitError();
+
+    Converter conv;
+    conv.ui=x;
+
+    switch(size) {
+    case 1:
+      arr[0]=conv.arr[0];
+      break;
+    case 2:
+      arr[1]=(conv.arr[0]&0b00111111)|0b10000000;
+      conv.ui>>=6;
+      arr[0]=(conv.arr[0]&0b00011111)|0b11000000;
+      break;
+    case 3:
+      arr[2]=(conv.arr[0]&0b00111111)|0b10000000;
+      conv.ui>>=6;
+      arr[1]=(conv.arr[0]&0b00111111)|0b10000000;
+      conv.ui>>=6;
+      arr[0]=(conv.arr[0]&0b00001111)|0b11100000;
+      break;
+    case 4:
+      arr[3]=(conv.arr[0]&0b00111111)|0b10000000;
+      conv.ui>>=6;
+      arr[2]=(conv.arr[0]&0b00111111)|0b10000000;
+      conv.ui>>=6;
+      arr[1]=(conv.arr[0]&0b00111111)|0b10000000;
+      conv.ui>>=6;
+      arr[0]=(conv.arr[0]&0b00000111)|0b11110000;
+    }
+  }
+
   SymbolUTF8::SymbolUTF8(const SymbolUTF8& sym) {
     for (int i=0; i<4; ++i) arr[i]=sym.arr[i];
   }
@@ -107,16 +154,10 @@ namespace blessings {
     return (*this);
   }
 
-  char& SymbolUTF8::operator[](int pos) {
-    if (pos>=4 || pos<0) throw AccessError();
+  char SymbolUTF8::operator()(int i) const {
+    if(i<0 || i>3) throw AccessError();
 
-    return arr[pos];
-  }
-
-  char SymbolUTF8::operator[](int pos) const {
-    if (pos>=4 || pos<0) throw AccessError();
-
-    return arr[pos];
+    return arr[i];
   }
 
   int SymbolUTF8::getSize() const {
@@ -139,6 +180,15 @@ namespace blessings {
     }
 
     return stream;
+  }
+
+  std::pair<SymbolUTF8, const char*> SymbolUTF8::getSymbol(const char* str) {
+    return getSymbol(str, str+strlen(str));
+  }
+
+  std::pair<SymbolUTF8, const char*> SymbolUTF8::getSymbol(const char* str,\
+  size_t n) {
+    return getSymbol(str, str+n);
   }
 
   std::istream& operator>>(std::istream& stream, SymbolUTF8& sym) {
@@ -216,17 +266,15 @@ namespace blessings {
     return ret;
   }
 
-  template <>
-  void writeSymbol<SymbolUTF8>(const SymbolUTF8& sym, FILE* file) {
-    int size=sym.getSize();
+  void SymbolUTF8::writeToFile(FILE* file) {
+    int size=getSize();
     for (int i=0; i<size; ++i) {
-      int temp=fputc(static_cast<int>(sym.arr[i]), file);
+      int temp=fputc(static_cast<int>(arr[i]), file);
       if (temp==EOF) throw SymbolUTF8::IOError();
     }
   }
 
-  template <>
-  SymbolUTF8 readSymbol<SymbolUTF8>(FILE* file) {
+  SymbolUTF8 SymbolUTF8::readFromFile(FILE* file) {
     int temp=getc(file);
     if (temp==EOF) throw SymbolUTF8::IOError();
 
@@ -252,83 +300,55 @@ namespace blessings {
     return ret;
   }
 
-  template <>
-  pair<SymbolUTF8, const char*> getSymbol<SymbolUTF8>(const char* str) {
-    size_t n=strlen(str);
-    return getSymbol<SymbolUTF8>(str, n);
-  }
-
-  template <>
-  pair<SymbolUTF8, const char*> getSymbol<SymbolUTF8>(const char* str, size_t n) {
-    if (n==0) throw SymbolUTF8::InitError();
-
-    pair<SymbolUTF8, const char*> ret; //UTF-8 space symbol, 1 byte
-    ret.first.arr[0]=str[0];
-
-    int size;
-    if (!(ret.first.arr[0]&0b10000000)) size=1;
-    else if (!((ret.first.arr[0]&0b11100000)^0b11000000)) size=2;
-    else if (!((ret.first.arr[0]&0b11110000)^0b11100000)) size=3;
-    else if (!((ret.first.arr[0]&0b11111000)^0b11110000)) size=4;
-    else throw SymbolUTF8::InitError();
-
-    if (n<static_cast<size_t>(size)) throw SymbolUTF8::InitError();
-
-    ret.second=str+size;
-
-    for (int i=1; i<size; ++i) {
-      ret.first.arr[i]=str[i];
-
-      if ((ret.first.arr[i]&0b11000000)^0b10000000) throw SymbolUTF8::InitError();
-    }
-
-    return ret;
-  }
-
-  SymbolUTF8::operator int32_t() {
+  SymbolUTF8::operator char32_t() {
     int size=getSize();
 
-    int32_t ret=0;
+    Converter conv;
+    conv.ch=0;
+
     char* ch=arr;
     while (size) {
-      ret<<=8;
-      ret+=*ch;
+      conv.ch<<=8;
+      conv.arr[0]=*ch;
 
       --size;
       ++ch;
     }
 
-    return ret;
+    return conv.ch;
   }
 
   uint32_t SymbolUTF8::getUnicode() const {
     int size=getSize();
 
-    uint32_t ret=0;
+    Converter conv;
+    conv.ui=0;
+
     switch(size) {
     case 1:
-      return static_cast<uint32_t>(arr[0]);
+      conv.arr[0]=arr[0];
+      return conv.ui;
     case 2:
-      ret=static_cast<uint32_t>(arr[0]&0b00011111);
-      ret<<=5;
-      ret+=static_cast<uint32_t>(arr[1]&0b00111111);
-      return ret;
+      conv.arr[0]=arr[0]&0b00011111;
+      conv.ui<<=6;
+      conv.arr[0]|=arr[1]&0b00111111;
+      return conv.ui;
     case 3:
-      ret=static_cast<uint32_t>(arr[0]&0b00001111);
-      ret<<=4;
-      ret+=static_cast<uint32_t>(arr[1]&0b00111111);
-      ret<<=6;
-      ret+=static_cast<uint32_t>(arr[2]&0b00111111);
-      return ret;
+      conv.arr[0]=arr[0]&0b00001111;
+      conv.ui<<=6;
+      conv.arr[0]|=arr[1]&0b00111111;
+      conv.ui<<=6;
+      conv.arr[0]|=arr[2]&0b00111111;
+      return conv.ui;
     case 4:
-      ret=static_cast<uint32_t>(arr[0]&0b00000111);
-      ret<<=5;
-      ret+=static_cast<uint32_t>(arr[1]&0b00111111);
-      ret<<=6;
-      ret+=static_cast<uint32_t>(arr[2]&0b00111111);
-      ret<<=6;
-      ret+=static_cast<uint32_t>(arr[3]&0b00111111);
-      return ret;
+      conv.arr[0]=arr[0]&0b00000111;
+      conv.ui<<=6;
+      conv.arr[0]|=arr[1]&0b00111111;
+      conv.ui<<=6;
+      conv.arr[0]|=arr[2]&0b00111111;
+      conv.ui<<=6;
+      conv.arr[0]|=arr[3]&0b00111111;
+      return conv.ui;
     }
   }
 
@@ -339,100 +359,5 @@ namespace blessings {
     }
 
     return false;
-  }
-
-  SymbolUTF8* SymbolUTF8_traits::assign(SymbolUTF8* p, size_t count, SymbolUTF8 a) {
-    for (size_t i=0; i<count; ++i) p[i]=a;
-    return p;
-  }
-
-  SymbolUTF8* SymbolUTF8_traits::move(SymbolUTF8* dest, const SymbolUTF8* src, size_t count) {
-    auto temp=new SymbolUTF8[count];
-    for (size_t i=0; i<count; ++i) temp[i]=src[i];
-    for (size_t i=0; i<count; ++i) dest[i]=temp[i];
-    delete [] temp;
-
-    return dest;
-  }
-
-  SymbolUTF8* SymbolUTF8_traits::copy(SymbolUTF8* dest, const SymbolUTF8* src, size_t count) {
-    for (size_t i=0; i<count; ++i) dest[i]=src[i];
-
-    return dest;
-  }
-
-  int32_t SymbolUTF8_traits::compare(const SymbolUTF8* s1, const SymbolUTF8* s2, size_t count) {
-    for (size_t i=0; i<count; ++i) {
-      if (s1[i].getUnicode()<s2[i].getUnicode()) return -1;
-      else if (s2[i].getUnicode()>s2[i].getUnicode()) return 1;
-    }
-
-    return 0;
-  }
-
-  size_t SymbolUTF8_traits::length(const SymbolUTF8* s) {
-    size_t ret=0;
-    while (s[ret]!=SymbolUTF8()) ++ret;
-    return ret;
-  }
-
-  const SymbolUTF8* SymbolUTF8_traits::find(const SymbolUTF8* p, size_t count, const SymbolUTF8& ch) {
-    for (size_t i=0; i<count; ++i) if (p[i]==ch) return p+i;
-    return nullptr;
-  }
-
-  SymbolUTF8 SymbolUTF8_traits::to_char_type(int32_t c) {
-    return SymbolUTF8(c);
-  }
-
-  int32_t SymbolUTF8_traits::to_int_type(SymbolUTF8 c) {
-    return static_cast<int32_t>(c);
-  }
-
-  std::ostream& operator<<(std::ostream& stream, const StringUTF8& str) {
-    for (auto it=str.begin(); it!=str.end(); ++it) stream << (*it);
-    return stream;
-  }
-
-  std::istream& operator>>(std::istream& stream, StringUTF8& str) {
-    SymbolUTF8 sym;
-    str.clear();
-
-    while (stream) {
-      stream >> sym;
-      if (!sym.isSpace()) {
-        for (int i=sym.getSize()-1; i>=0; --i) {
-          stream.putback(sym[i]);
-        }
-        break;
-      }
-    }
-
-    while (stream) {
-      stream >> sym;
-      if (sym.isSpace()) {
-        for (int i=sym.getSize()-1; i>=0; --i) {
-          stream.putback(sym[i]);
-        }
-        break;
-      }
-      str.push_back(sym);
-    }
-
-    return stream;
-  }
-
-  StringUTF8 operator "" _sUTF8(const char* str, size_t n) {
-    StringUTF8 ret;
-
-    const char* p=str;
-    while (p!=str+n) {
-      auto temp=getSymbol<SymbolUTF8>(str, n-(p-str));
-
-      ret.push_back(temp.first);
-      p=temp.second;
-    }
-
-    return ret;
   }
 }

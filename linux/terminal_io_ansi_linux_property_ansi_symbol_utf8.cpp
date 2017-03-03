@@ -23,7 +23,7 @@ namespace blessings {
     while (select(1, &readfds, NULL, NULL, &tv) && i<n) {
       ++i;
 
-      ret.push(readSymbol<SymbolUTF8>(stdin));
+      ret.push(SymbolUTF8::readFromFile(stdin));
     }
 
     return ret;

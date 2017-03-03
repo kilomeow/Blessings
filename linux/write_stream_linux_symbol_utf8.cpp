@@ -12,7 +12,7 @@ namespace blessings {
 
   void WriteStreamLinux<SymbolUTF8>::write(SymbolUTF8 sym) {
     try {
-      writeSymbol(sym, file);
+      sym.writeToFile(file);
     }
     catch (...) {
       throw WriteError();
