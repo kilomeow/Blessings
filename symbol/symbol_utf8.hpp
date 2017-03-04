@@ -9,7 +9,10 @@
 
 namespace blessings {
   class SymbolUTF8 { //Only for little-endian systems!
-    char arr[4]; //char in c++ is always 1 byte
+    char arr_[4]; //char in c++ is always 1 byte
+    int8_t size_;
+
+    operator uint32_t() const;
   public:
     class Error;
     class IOError;
@@ -17,33 +20,34 @@ namespace blessings {
     class AccessError;
 
     union Converter {
-      char arr[4];
+      char arr_[4];
       char32_t ch;
       int32_t i;
       uint32_t ui;
     };
 
-    SymbolUTF8() noexcept {arr[0]=static_cast<char>(0x0);};
-    explicit SymbolUTF8(char c) noexcept;
+    SymbolUTF8() noexcept {arr_[0]=static_cast<char>(0x0);};
+    SymbolUTF8(char c) noexcept;
     explicit SymbolUTF8(const char* sym);
+    explicit SymbolUTF8(const char* sym, int size);
     explicit SymbolUTF8(char32_t); //from char32_t utf-8 symbol
     explicit SymbolUTF8(uint32_t); //from Unicode number
-    explicit SymbolUTF8(std::string sym);
+    explicit SymbolUTF8(const std::string& sym);
+    explicit SymbolUTF8(const std::initializer_list<char>&);
 
     SymbolUTF8(const SymbolUTF8&);
     const SymbolUTF8& operator=(const SymbolUTF8&);
 
     char operator()(int i) const;
 
-    std::string getString() const;
+    std::string toString() const;
+    const char* data() const {return arr_;};
 
-    int getSize() const;
+    int size() const {return size_;};
 
-    uint32_t getUnicode() const;
+    uint32_t unicode() const;
 
     operator char32_t();
-
-    bool isSpace() const;
 
     friend bool operator==(const SymbolUTF8&, const SymbolUTF8&);
     friend bool operator!=(const SymbolUTF8&, const SymbolUTF8&);

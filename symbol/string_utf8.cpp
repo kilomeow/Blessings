@@ -1,7 +1,13 @@
 #include <iostream>
+#include <string>
+#include <cstring>
+#include <locale>
 
 #include "string_utf8.hpp"
 #include "symbol_utf8.hpp"
+#include "symbol_utf8_impl.hpp"
+
+using namespace std;
 
 namespace blessings {
   SymbolUTF8* SymbolUTF8Traits::assign(SymbolUTF8* p, size_t count, SymbolUTF8 a) {
@@ -26,8 +32,8 @@ namespace blessings {
 
   int32_t SymbolUTF8Traits::compare(const SymbolUTF8* s1, const SymbolUTF8* s2, size_t count) {
     for (size_t i=0; i<count; ++i) {
-      if (s1[i].getUnicode()<s2[i].getUnicode()) return -1;
-      else if (s2[i].getUnicode()>s2[i].getUnicode()) return 1;
+      if (s1[i].unicode()<s2[i].unicode()) return -1;
+      else if (s2[i].unicode()>s2[i].unicode()) return 1;
     }
 
     return 0;
@@ -65,10 +71,12 @@ namespace blessings {
     SymbolUTF8 sym;
     str.clear();
 
+    locale loc("");
+
     while (stream) {
       stream >> sym;
-      if (!sym.isSpace()) {
-        for (int i=sym.getSize()-1; i>=0; --i) {
+      if (!isspace(static_cast<char32_t>(sym), loc)) {
+        for (int i=sym.size()-1; i>=0; --i) {
           stream.putback(sym(i));
         }
         break;
@@ -77,8 +85,8 @@ namespace blessings {
 
     while (stream) {
       stream >> sym;
-      if (sym.isSpace()) {
-        for (int i=sym.getSize()-1; i>=0; --i) {
+      if (!isspace(static_cast<char32_t>(sym), loc)) {
+        for (int i=sym.size()-1; i>=0; --i) {
           stream.putback(sym(i));
         }
         break;
@@ -101,5 +109,77 @@ namespace blessings {
     }
 
     return ret;
+  }
+
+  string StringUTF8::toString() {
+    string ret;
+
+    size_t retSize=0;
+    for(auto it=begin(); it!=end(); ++it) retSize+=it->size();
+
+    ret.reserve(retSize);
+    for(auto it=begin(); it!=end(); ++it) ret.append(it->data(), it->size());
+
+    return ret;
+  }
+
+  char* StringUTF8::toCharString() {
+    char* ret;
+
+    size_t retSize=0;
+    for(auto it=begin(); it!=end(); ++it) retSize+=it->size();
+
+    ret=new char [retSize+1];
+    ret[retSize]='\0';
+
+    size_t currPos=0;
+    const char* data;
+    size_t size;
+    for(auto it=begin(); it!=end(); ++it) {
+      data=it->data();
+      size=it->size();
+
+      for(int i=0; i<size; ++i) ret[currPos+i]=data[i];
+      currPos+=size;
+    }
+
+    return ret;
+  }
+
+  StringUTF8::StringUTF8(const char* str) {
+    size_t size=strlen(str);
+
+    const char* p=str;
+    while (p!=str+size) {
+      pair<SymbolUTF8, const char*> temp;
+      try {
+        temp=SymbolUTF8::getSymbol(p, str+size);
+      }
+      catch(SymbolUTF8::InitError&) {
+        throw NonUTF8StringGiven();
+      }
+
+      basic_string<SymbolUTF8, SymbolUTF8Traits>::push_back(temp.first);
+      p=temp.second;
+    }
+  }
+
+  StringUTF8::StringUTF8(const string& str) :
+  basic_string<SymbolUTF8, SymbolUTF8Traits>() {
+    size_t size=str.size();
+
+    auto it=str.begin();
+    while (it!=str.end()) {
+      pair<SymbolUTF8, decltype(it)> temp;
+      try {
+        temp=SymbolUTF8::getSymbol(it, str.end());
+      }
+      catch(SymbolUTF8::InitError&) {
+        throw NonUTF8StringGiven();
+      }
+
+      basic_string<SymbolUTF8, SymbolUTF8Traits>::push_back(temp.first);
+      it=temp.second;
+    }
   }
 }

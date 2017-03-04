@@ -10,7 +10,8 @@ build/symbol/string_utf8.o: \
  /home/shkiper/Код/Blessings/symbol/string_utf8.cpp \
  /home/shkiper/Код/Blessings/symbol/string_utf8.hpp \
  /home/shkiper/Код/Blessings/symbol/symbol_utf8.hpp \
- /home/shkiper/Код/Blessings/symbol/../error.hpp
+ /home/shkiper/Код/Blessings/symbol/../error.hpp \
+ /home/shkiper/Код/Blessings/symbol/symbol_utf8_impl.hpp
 	mkdir -p build/symbol/
 	clang --std=c++11 -fpic -c -o build/symbol/string_utf8.o symbol/string_utf8.cpp
 build/symbol/symbol_utf8.o: \
@@ -25,10 +26,17 @@ build/symbol/symbol.o: /home/shkiper/Код/Blessings/symbol/symbol.cpp \
  /home/shkiper/Код/Blessings/symbol/../error.hpp
 	mkdir -p build/symbol/
 	clang --std=c++11 -fpic -c -o build/symbol/symbol.o symbol/symbol.cpp
-build/test2.o: /home/shkiper/Код/Blessings/test2.cpp \
+build/test_string_utf8.o: \
+ /home/shkiper/Код/Blessings/test_string_utf8.cpp \
+ /home/shkiper/Код/Blessings/test_string_utf8.hpp \
+ /home/shkiper/Код/Blessings/symbol/string_utf8.hpp \
  /home/shkiper/Код/Blessings/symbol/symbol_utf8.hpp \
- /home/shkiper/Код/Blessings/symbol/../error.hpp \
- /home/shkiper/Код/Blessings/symbol/string_utf8.hpp
+ /home/shkiper/Код/Blessings/symbol/../error.hpp
+	mkdir -p build/
+	clang --std=c++11 -fpic -c -o build/test_string_utf8.o test_string_utf8.cpp
+build/test2.o: /home/shkiper/Код/Blessings/test2.cpp \
+ /home/shkiper/Код/Blessings/test_symbol_utf8.hpp \
+ /home/shkiper/Код/Blessings/test_string_utf8.hpp
 	mkdir -p build/
 	clang --std=c++11 -fpic -c -o build/test2.o test2.cpp
 build/monitor_symbol_utf8.o: \
@@ -71,11 +79,18 @@ build/linux/write_stream_linux_symbol_utf8.o: \
  /home/shkiper/Код/Blessings/linux/../symbol/some_symbol_utf8_symbols.hpp
 	mkdir -p build/linux/
 	clang --std=c++11 -fpic -c -o build/linux/write_stream_linux_symbol_utf8.o linux/write_stream_linux_symbol_utf8.cpp
-lib_static: build/symbol/some_symbol_utf8_symbols.o build/symbol/string_utf8.o build/symbol/symbol_utf8.o build/symbol/symbol.o build/test2.o build/monitor_symbol_utf8.o build/linux/terminal_io_ansi_linux_property_ansi_symbol_utf8.o build/linux/write_stream_linux_symbol_utf8.o
+build/test_symbol_utf8.o: \
+ /home/shkiper/Код/Blessings/test_symbol_utf8.cpp \
+ /home/shkiper/Код/Blessings/symbol/symbol_utf8.hpp \
+ /home/shkiper/Код/Blessings/symbol/../error.hpp \
+ /home/shkiper/Код/Blessings/test_symbol_utf8.hpp
+	mkdir -p build/
+	clang --std=c++11 -fpic -c -o build/test_symbol_utf8.o test_symbol_utf8.cpp
+lib_static: build/symbol/some_symbol_utf8_symbols.o build/symbol/string_utf8.o build/symbol/symbol_utf8.o build/symbol/symbol.o build/test_string_utf8.o build/test2.o build/monitor_symbol_utf8.o build/linux/terminal_io_ansi_linux_property_ansi_symbol_utf8.o build/linux/write_stream_linux_symbol_utf8.o build/test_symbol_utf8.o
 	ar rcs libblessings_static.a $^
-lib_shared: build/symbol/some_symbol_utf8_symbols.o build/symbol/string_utf8.o build/symbol/symbol_utf8.o build/symbol/symbol.o build/test2.o build/monitor_symbol_utf8.o build/linux/terminal_io_ansi_linux_property_ansi_symbol_utf8.o build/linux/write_stream_linux_symbol_utf8.o
+lib_shared: build/symbol/some_symbol_utf8_symbols.o build/symbol/string_utf8.o build/symbol/symbol_utf8.o build/symbol/symbol.o build/test_string_utf8.o build/test2.o build/monitor_symbol_utf8.o build/linux/terminal_io_ansi_linux_property_ansi_symbol_utf8.o build/linux/write_stream_linux_symbol_utf8.o build/test_symbol_utf8.o
 	clang --std=c++11 -shared -o libblessings_shared.so $^
-test: build/symbol/some_symbol_utf8_symbols.o build/symbol/string_utf8.o build/symbol/symbol_utf8.o build/symbol/symbol.o build/test2.o build/monitor_symbol_utf8.o build/linux/terminal_io_ansi_linux_property_ansi_symbol_utf8.o build/linux/write_stream_linux_symbol_utf8.o
+test: build/symbol/some_symbol_utf8_symbols.o build/symbol/string_utf8.o build/symbol/symbol_utf8.o build/symbol/symbol.o build/test_string_utf8.o build/test2.o build/monitor_symbol_utf8.o build/linux/terminal_io_ansi_linux_property_ansi_symbol_utf8.o build/linux/write_stream_linux_symbol_utf8.o build/test_symbol_utf8.o
 	clang --std=c++11 -o work -lstdc++ $^
 clean:
 	rm -rf build
@@ -105,6 +120,8 @@ install:
 	cp monitor.hpp $(HOME)/.prefix/usr/include/blessings/monitor.hpp
 	mkdir -p $(HOME)/.prefix/usr/include/blessings/
 	cp additional_structs.hpp $(HOME)/.prefix/usr/include/blessings/additional_structs.hpp
+	mkdir -p $(HOME)/.prefix/usr/include/blessings/
+	cp test_string_utf8.hpp $(HOME)/.prefix/usr/include/blessings/test_string_utf8.hpp
 	mkdir -p $(HOME)/.prefix/usr/include/blessings/linux/
 	cp linux/terminal_io_ansi_linux.hpp $(HOME)/.prefix/usr/include/blessings/linux/terminal_io_ansi_linux.hpp
 	mkdir -p $(HOME)/.prefix/usr/include/blessings/linux/
@@ -117,6 +134,8 @@ install:
 	cp linux/terminal_io_ansi_linux_property_ansi_impl.hpp $(HOME)/.prefix/usr/include/blessings/linux/terminal_io_ansi_linux_property_ansi_impl.hpp
 	mkdir -p $(HOME)/.prefix/usr/include/blessings/
 	cp error.hpp $(HOME)/.prefix/usr/include/blessings/error.hpp
+	mkdir -p $(HOME)/.prefix/usr/include/blessings/
+	cp test_symbol_utf8.hpp $(HOME)/.prefix/usr/include/blessings/test_symbol_utf8.hpp
 	mkdir -p $(HOME)/.prefix/usr/lib/
 	cp libblessings_static.a $(HOME)/.prefix/usr/lib/libblessings_static.a
 	cp libblessings_shared.so $(HOME)/.prefix/usr/lib/libblessings_shared.so

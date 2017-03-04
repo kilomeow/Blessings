@@ -9,24 +9,23 @@ namespace blessings {
     if(begin==end) throw SymbolUTF8::InitError();
 
     std::pair<SymbolUTF8, CharIteratorT> ret;
-    ret.first.arr[0]=*begin;
+    ret.first.arr_[0]=*begin;
 
-    int size;
-    if (!(ret.first.arr[0]&0b10000000)) size=1;
-    else if (!((ret.first.arr[0]&0b11100000)^0b11000000)) size=2;
-    else if (!((ret.first.arr[0]&0b11110000)^0b11100000)) size=3;
-    else if (!((ret.first.arr[0]&0b11111000)^0b11110000)) size=4;
+    if (!(ret.first.arr_[0]&0b10000000)) ret.first.size_=1;
+    else if (!((ret.first.arr_[0]&0b11100000)^0b11000000)) ret.first.size_=2;
+    else if (!((ret.first.arr_[0]&0b11110000)^0b11100000)) ret.first.size_=3;
+    else if (!((ret.first.arr_[0]&0b11111000)^0b11110000)) ret.first.size_=4;
     else throw SymbolUTF8::InitError();
 
     ++begin;
     ret.second=begin;
 
-    for (int i=1; i<size; ++i, ++ret.second) {
+    for (int i=1; i<ret.first.size_; ++i, ++ret.second) {
       if(begin==end) throw SymbolUTF8::InitError();
 
-      ret.first.arr[i]=*begin;
+      ret.first.arr_[i]=*begin;
 
-      if ((ret.first.arr[i]&0b11000000)^0b10000000) throw SymbolUTF8::InitError();
+      if ((ret.first.arr_[i]&0b11000000)^0b10000000) throw SymbolUTF8::InitError();
     }
 
     return ret;
