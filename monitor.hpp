@@ -44,19 +44,41 @@ namespace blessings {
 
     public:
       Iterator() {};
-      Iterator(Cell<OutS>* grd, int pnt, int bnd);
+      Iterator(Cell<OutS>* Grid, int ptr, int bound);
+      Iterator(const Iterator&);
+      Iterator& operator=(const Iterator&);
+      ~Iterator();
+
       Cell<OutS>& operator*();
+
       Iterator& operator++();
       Iterator operator++(int);
+      Iterator& operator--();
+      Iterator operator--(int);
+
+      bool operator==(const Iterator&);
+      bool operator!=(const Iterator&);
+      bool operator>=(const Iterator&);
+      bool operator<=(const Iterator&);
+      bool operator>(const Iterator&);
+      bool operator<(const Iterator&);
+
+      Iterator operator+(int);
+      Iterator operator-(int);
+      void operator+=(int);
+      void operator-=(int);
 
       int index();
-      //bool isBegin();
+      bool isBegin();
       bool isEnd();
 
-      //void rewind();
+      void rewind();
 
       class Error {};
       class EndError : public Error {};
+
+    private:
+      bool comparable(const Iterator&);
     };
 
     void connect(TerminalIO <InS, OutS>*);

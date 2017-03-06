@@ -162,13 +162,30 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  Monitor<InS,OutS>::Iterator::Iterator(MonitorCell<OutS>* grd, int pnt, int bnd) {
+  Monitor<InS,OutS>::Iterator::Iterator(MonitorCell<OutS>* Grid, int ptr, int bound) {
     if ((pnt<0) || (pnt>bnd)) throw Monitor::Iterator::Error();
     //Monitor::Iterator::Error("pointer out of range");
-    grid = grd;
-    pointer = pnt;
-    stopPos = bnd;
+    grid = Grid;
+    pointer = ptr;
+    stopPos = bound;
   }
+
+  template <class InS, class OutS>
+  Monitor<InS,OutS>::Iterator(const Iterator& it) {
+    grid = it.grid;
+    pointer = it.pointer;
+    stopPos = it.stopPos;
+  }
+
+  template <class InS, class OutS>
+  typename Monitor<InS,OutS>::Iterator& Monitor<InS,OutS>::Iterator::operator=(const Iterator& it) {
+    grid = it.grid;
+    pointer = it.pointer;
+    stopPos = it.stopPos;
+  }
+
+  template <class InS, class OutS>
+  Monitor<InS,OutS>::~Iterator() {}
 
   template <class InS, class OutS>
   typename Monitor<InS,OutS>::Cell<OutS>& Monitor<InS,OutS>::Iterator::operator*() {
@@ -195,13 +212,100 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
+  typename Monitor<InS,OutS>::Iterator& Monitor<InS,OutS>::Iterator::operator--() {
+    if (pointer==0) throw Monitor::Iterator::EndError();
+    //Monitor::Iterator::EndError("pointer is at end");
+    pointer--;
+    return (*this);
+  }
+
+  template <class InS, class OutS>
+  typename Monitor<InS,OutS>::Iterator Monitor<InS,OutS>::Iterator::operator--(int a) {
+    if (pointer==0) throw Monitor::Iterator::EndError();
+    //Monitor::Iterator::EndError("pointer is at end");
+    Monitor::Iterator i = (*this);
+    --(*this);
+    return i;
+  }
+
+  template <class InS, class OutS>
+  typename Monitor<InS,OutS>::Iterator Monitor<InS,OutS>::Iterator::operator+(int k) {
+    int newptr = pointer+k;
+    if ((newptr < 0) || (newptr > stopPos)) throw Monitor::Iterator::Error;
+    Iterator it(grid, newptr, stopPos);
+    return it;
+  }
+
+  template <class InS, class OutS>
+  typename Monitor<InS,OutS>::Iterator Monitor<InS,OutS>::Iterator::operator-(int k) {
+    return this->operator+(-k);
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::Iterator::operator+=(int k) {
+    this->operator=(this->operator+(k));
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::Iterator::operator-=(int k) {
+    this->operator=(this->operator-(k));
+  }
+
+  template <class InS, class OutS>
   int Monitor<InS,OutS>::Iterator::index() {
     return pointer;
   }
 
   template <class InS, class OutS>
   bool Monitor<InS,OutS>::Iterator::isEnd() {
+    return (pointer==0);
+  }
+
+  template <class InS, class OutS>
+  bool Monitor<InS,OutS>::Iterator::isEnd() {
     return (pointer==stopPos);
+  }
+
+  template <class InS, class OutS>
+  void Monitor<InS,OutS>::Iterator::rewind() {
+    pointer=0;
+  }
+
+  template <class InS, class OutS>
+  bool Monitor<InS,OutS>::Iterator::operator==(const Iterator& it) {
+    if (!comparable(it)) throw Monitor::Iterator::Error();
+    return (pointer == it.pointer);
+  }
+
+  template <class InS, class OutS>
+  bool Monitor<InS,OutS>::Iterator::operator!=(const Iterator& it) {
+    return !((*this) == it);
+  }
+
+  template <class InS, class OutS>
+  bool Monitor<InS,OutS>::Iterator::operator>=(const Iterator& it) {
+    if (!comparable(it)) throw Monitor::Iterator::Error();
+    return (pointer >= it.pointer);
+  }
+
+  template <class InS, class OutS>
+  bool Monitor<InS,OutS>::Iterator::operator<=(const Iterator& it) {
+    if (!comparable(it)) throw Monitor::Iterator::Error();
+    return (pointer <= it.pointer);
+  }
+
+  template <class InS, class OutS>
+  bool Monitor<InS,OutS>::Iterator::operator>(const Iterator& it) {
+    return (((*this)!=it) && ((*this)>=it));
+  }
+
+  template <class InS, class OutS>
+  bool Monitor<InS,OutS>::Iterator::operator<(const Iterator& it) {
+    return (((*this)!=it) && ((*this)<=it));
+  }
+
+  bool Monitor<InS,OutS>::Iterator::comparable(const Iterator& it) {
+    return ((grid==it.grid) && (stopPos==it.stopPos));
   }
 
   template <class InS, class OutS>
