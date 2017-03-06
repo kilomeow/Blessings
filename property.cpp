@@ -5,6 +5,8 @@ namespace blessings {
 
   const PropertyANSI PropertyANSI::empty=PropertyANSI(ColorANSI::NONE,
     ColorANSI::NONE, false, false);
+  const PropertyANSI PropertyANSI::highlight=PropertyANSI(ColorANSI::NONE,
+    ColorANSI::WHITE, false, false);
 
   bool operator==(const PropertyANSI& a, const PropertyANSI& b) {
     return a.italics==b.italics && a.bold==b.bold && a.color==b.color && \
