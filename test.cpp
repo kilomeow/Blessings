@@ -2,6 +2,7 @@
 #include <string>
 #include <chrono>
 #include <thread>
+#include <queue>
 
 #include "symbol_utf8/symbol_utf8.hpp"
 #include "property.hpp"
@@ -14,14 +15,14 @@ using namespace blessings;
 
 typedef SymbolUTF8 S;
 typedef PropertyANSI P;
-typedef TerminalIOANSILinux<S, S, P> TL;
-typedef Monitor<S, S> M;
-typedef Monitor::Cell<S> Cell;
+typedef TerminalIOANSILinux<S, S, queue<S>, queue<S>, P> TL;
+typedef Monitor<S, S, P> M;
+typedef M::Cell<S, P> Cell;
 
 int main() {
   TL term;
 
-  const P yell(ColorANSI(3));
+  P yell(ColorANSI(3));
 
   term.Init();
 
@@ -33,14 +34,13 @@ int main() {
 
   monitor.hardOptimization(true);
 
-  monitor.tile(S("."), &P::defaultProperty);
+  monitor.tile(S("."), P::defaultProperty);
   monitor.draw(M::resChange::ignore);
 
   for (int i=0; i<(500-116); i++) {
-    monitor(i/8+1, i%8+1) = Cell(S('#'), &yell);
+    monitor(i/8+1, i%8+1) = Cell(S('#'), yell);
     monitor.lazyDraw(M::resChange::ignore);
     // monitor.draw(M::resChange::ignore);
-    // feel the difference
     this_thread::sleep_for(chrono::milliseconds(3));
   }
 
@@ -95,4 +95,5 @@ int main() {
   //fclose(in);
 
   return 0;
+  
 }
