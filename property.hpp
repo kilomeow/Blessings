@@ -36,14 +36,7 @@ namespace blessings {
     bool italics;
     bool bold;
 
-    static const PropertyANSI defaultProperty;
-
-    PropertyANSI() {
-      color=defaultProperty.color;
-      backgroundColor=defaultProperty.backgroundColor;
-      italics=defaultProperty.italics;
-      bold=defaultProperty.bold;
-    }
+    static const PropertyANSI empty;
 
     PropertyANSI(ColorANSI clr=ColorANSI::NONE, \
       ColorANSI bgclr=ColorANSI::NONE, bool itl=false, bool bld=false) :

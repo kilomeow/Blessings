@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "symbol/symbol_utf8.hpp"
+#include "symbol_utf8.hpp"
 #include "test_symbol_utf8.hpp"
 
 using namespace std;

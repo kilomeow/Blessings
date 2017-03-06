@@ -5,8 +5,7 @@
 #include "additional_structs.hpp"
 
 namespace blessings {
-  template <typename InS, typename OutS, typename InStr, typename OutStr,
-    typename Property>
+  template <typename InS, typename OutS, typename Property>
   class TerminalIO {
   public:
     //Device info
@@ -15,10 +14,8 @@ namespace blessings {
     //IO
     virtual void print(OutS, const Property&)=0;
     virtual void print(OutS)=0;
-    virtual void print(const OutStr&)=0;
 
     virtual std::queue<InS> getSymbol(int n)=0;
-    virtual InStr getString(GridPos start)=0;
     virtual void clearInputBuffer()=0;
 
     //Screen state
@@ -34,12 +31,6 @@ namespace blessings {
 
     virtual void saveCursorPos()=0;
     virtual void restoreCursorPos()=0;
-
-    //Terminal info
-    virtual int boldSupported()=0;
-    virtual int italicsSupported()=0;
-
-    virtual PropertyType getPropertyType()=0;
 
     //Terminal state
     virtual void setNonCanonicalMode()=0;

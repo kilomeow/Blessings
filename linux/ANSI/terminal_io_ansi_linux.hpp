@@ -7,17 +7,14 @@
 #include <cstdio>
 #include <queue>
 
-#include "../additional_structs.hpp"
-#include "../error.hpp"
-#include "terminal_io_ansi_linux.hpp"
-#include "../terminal_io.hpp"
+#include "../../additional_structs.hpp"
+#include "../../error.hpp"
+#include "../../terminal_io.hpp"
+#include "../write_stream_linux.hpp"
 
 namespace blessings {
-  template <typename InS, typename OutS, typename InStr, typename OutStr,
-    typename Property>
-  class TerminalIOANSILinux :
-    public TerminalIO<InS, OutS, InStr, OutStr, Property> {
-
+  template <typename InS, typename OutS, typename Property>
+  class TerminalIOANSILinux : public TerminalIO<InS, OutS, Property> {
     bool inited;
     int nonCanonicalMode;
     int echoInhibited;
@@ -31,35 +28,33 @@ namespace blessings {
     FILE* file;
 
     Property currentProperty;
-    
-    TerminalIO(const TerminalIO&);
-    TerminalIO& operator=(const TerminalIO&);
+
+    TerminalIOANSILinux(const TerminalIOANSILinux&);
+    TerminalIOANSILinux& operator=(const TerminalIOANSILinux&);
   public:
     class Error : public BlessingsError {};
     class InitError : public Error {};
-    class ReInitAttemptError : public Error {};
-    class NotInitedError : public Error {};
-    class ArgumentError : public Error {};
+    class ReInitAttempt : public Error {};
     class IOError : public Error {};
     class DeviceError : public Error {};
-    class BadModeError : public Error {};
+    class BadMode : public Error {};
+    class ArgumentError : public Error {};
 
     TerminalIOANSILinux();
 
     ~TerminalIOANSILinux();
 
-    void Init(std::string path="");
+    void init(std::string path="");
+    void disconnect();
 
     //Device info
-    MonitorResolution getResolution(); //TODO: rewrite!
+    MonitorResolution getResolution();
 
     //IO
     void print(OutS, const Property&);
     void print(OutS);
-    void print(const OutStr&);
-    
+
     std::queue<InS> getSymbol(int n=1) {return std::queue<InS>();}; //TODO: rewrite!
-    InStr getString(GridPos start);
     void clearInputBuffer() {};
 
     //Screen state
@@ -76,14 +71,8 @@ namespace blessings {
     void saveCursorPos();
     void restoreCursorPos();
 
-    void setSGR(const Property&)
+    void setSGR(const Property&);
     void resetSGR();
-
-    //Terminal info
-    int boldSupported() {return 0;};
-    int italicsSupported() {return 0;};
-
-    PropertyType getPropertyType() {return PropertyType(PropertyType::ANSI);};
 
     //Terminal state
     void setNonCanonicalMode();
