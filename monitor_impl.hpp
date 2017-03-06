@@ -45,7 +45,7 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void Monitor<InS,OutS,Prop>::connect(TerminalIO<InS,OutS>* Term) {
+  void Monitor<InS,OutS,Prop>::connect(TerminalIO<InS,OutS,Prop>* Term) {
     termIO = Term;
   }
 
@@ -141,14 +141,14 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  Monitor<Ins,OutS,Prop>::Cell::Cell(const Monitor<InS,OutS,Prop>::Cell& cell) {
+  Monitor<InS,OutS,Prop>::Cell::Cell(const Monitor<InS,OutS,Prop>::Cell& cell) {
     symb = cell.symb;
     prop = cell.prop;
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename Monitor<Ins,OutS,Prop>::Cell& Monitor<Ins,OutS,Prop>::Cell::operator=(const Monitor<InS,OutS,Prop>::Cell& cell) {
-    if (hardopt && (symb==cell.symb) && (prop==cell.prop) {
+  typename Monitor<InS,OutS,Prop>::Cell& Monitor<InS,OutS,Prop>::Cell::operator=(const Monitor<InS,OutS,Prop>::Cell& cell) {
+    if (hardopt && (symb==cell.symb) && (prop==cell.prop)) {
       // do nothing
     } else {
       symb = cell.symb;
@@ -175,19 +175,19 @@ namespace blessings {
 
   template <typename InS, typename OutS, typename Prop>
   Monitor<InS,OutS,Prop>::Iterator::Iterator(Monitor<InS,OutS,Prop>::Cell* Grid, int ptr, int bound) {
-    if ((pnt<0) || (pnt>bnd)) throw Monitor::Iterator::Error();
+    if ((pointer<0) || (pointer>stopPos)) throw Monitor::Iterator::Error();
     //Monitor::Iterator::Error("pointer out of range");
     grid = Grid;
     pointer = ptr;
     stopPos = bound;
   }
 
-  template <typename InS, typename OutS, typename Prop>
-  Monitor<InS,OutS,Prop>::Iterator(const Iterator& it) {
-    grid = it.grid;
-    pointer = it.pointer;
-    stopPos = it.stopPos;
-  }
+  //template <typename InS, typename OutS, typename Prop>
+  //Monitor<InS,OutS,Prop>::Iterator(const Monitor<InS,OutS,Prop>::Iterator& it) {
+    //grid = it.grid;
+    //pointer = it.pointer;
+    //stopPos = it.stopPos;
+  //}
 
   template <typename InS, typename OutS, typename Prop>
   typename Monitor<InS,OutS,Prop>::Iterator& Monitor<InS,OutS,Prop>::Iterator::operator=(const Iterator& it) {
@@ -195,9 +195,6 @@ namespace blessings {
     pointer = it.pointer;
     stopPos = it.stopPos;
   }
-
-  template <typename InS, typename OutS, typename Prop>
-  Monitor<InS,OutS,Prop>::~Iterator() {}
 
   template <typename InS, typename OutS, typename Prop>
   typename Monitor<InS,OutS,Prop>::Cell& Monitor<InS,OutS,Prop>::Iterator::operator*() {
@@ -243,7 +240,7 @@ namespace blessings {
   template <typename InS, typename OutS, typename Prop>
   typename Monitor<InS,OutS,Prop>::Iterator Monitor<InS,OutS,Prop>::Iterator::operator+(int k) {
     int newptr = pointer+k;
-    if ((newptr < 0) || (newptr > stopPos)) throw Monitor::Iterator::Error;
+    if ((newptr < 0) || (newptr > stopPos)) throw Monitor::Iterator::Error();
     Iterator it(grid, newptr, stopPos);
     return it;
   }
@@ -335,7 +332,7 @@ namespace blessings {
 
 
   template <typename InS, typename OutS, typename Prop>
-  void Monitor<InS,OutS,Prop>::tile(OutS s, Property p) {
+  void Monitor<InS,OutS,Prop>::tile(OutS s, Prop p) {
     Monitor::Cell c(s, p);
     Monitor::Iterator i = begin();
     while (!i.isEnd()) {
@@ -346,7 +343,7 @@ namespace blessings {
 
   template <typename InS, typename OutS, typename Prop>
   void Monitor<InS,OutS,Prop>::tile(OutS s) {
-    tile(s, Property::empty);
+    tile(s, Prop::empty);
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -414,7 +411,7 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void Monitor<InS,OutS,Prop>::printSymbol(OutS symb, Property prop) {
+  void Monitor<InS,OutS,Prop>::printSymbol(OutS symb, Prop prop) {
     termIO->print(symb, prop);
   }
 
@@ -464,7 +461,7 @@ namespace blessings {
   void Monitor<InS,OutS,Prop>::printPage() {
     Monitor::Iterator i = begin();
     while (!i.isEnd()) {
-      termIO->print((*i).symb, (*i).prop);
+      termIO->print((*i).symbol(), (*i).property());
       (*i).setStaged();
       i++;
       if (i.index()%res.width==0) termIO->newLine();
@@ -492,7 +489,7 @@ namespace blessings {
     while (!i.isEnd()) {
       if ((*i).isUnstaged()) {
         moveCursorTo(positionOf(i.index()));
-        termIO->print((*i).symb, (*i).prop);
+        termIO->print((*i).symbol(), (*i).property());
         (*i).setStaged();
       }
       i++;

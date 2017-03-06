@@ -24,10 +24,13 @@ namespace blessings {
     public:
       Cell() {}
       Cell(OutS s, Prop p) : symb(s), prop(p) {}
-      Cell(OutS s) : symb(s), prop(Property::empty) {}
+      Cell(OutS s) : symb(s), prop(Prop::empty) {}
       ~Cell() {}
       Cell(const Cell&);
       Cell& operator=(const Cell&);
+      
+      OutS symbol() {return symb;}
+      Prop property() {return prop;}
 
       static bool hardopt;
 
@@ -46,11 +49,11 @@ namespace blessings {
       bool comparable(const Iterator&);
 
     public:
-      Iterator() {};
+      Iterator() {}
       Iterator(Cell* Grid, int ptr, int bound);
-      Iterator(const Iterator&);
+      //Iterator(const Iterator&);
       Iterator& operator=(const Iterator&);
-      ~Iterator();
+      ~Iterator() {}
 
       Cell& operator*();
 
