@@ -31,6 +31,8 @@ namespace blessings {
 
       static bool hardopt;
 
+      bool isUnstaged();
+
       void setStaged();
       void setUnstaged();
     };

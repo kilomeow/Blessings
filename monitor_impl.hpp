@@ -1,7 +1,10 @@
+#pragma once
+
+#include <queue>
+
 #include "monitor.hpp"
 #include "additional_structs.hpp"
 #include "terminal_io.hpp"
-#include "property.hpp"
 
 namespace blessings {
   template <typename InS, typename OutS, typename Prop>
@@ -33,6 +36,7 @@ namespace blessings {
     termIO = monitor.termIO;
     maxSize = monitor.maxSize;
     res = monitor.res;
+    isDrawn = false;
     delete [] grid;
     grid = new Monitor<InS,OutS,Prop>::Cell [maxSize];
     for (int i=0;i<maxSize;i++)
@@ -47,7 +51,7 @@ namespace blessings {
 
   template <typename InS, typename OutS, typename Prop>
   void Monitor<InS,OutS,Prop>::disconnect() {
-    //termIO = nullptr;
+    termIO = nullptr;
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -144,7 +148,7 @@ namespace blessings {
 
   template <typename InS, typename OutS, typename Prop>
   typename Monitor<Ins,OutS,Prop>::Cell& Monitor<Ins,OutS,Prop>::Cell::operator=(const Monitor<InS,OutS,Prop>::Cell& cell) {
-    if (hardopt && (symb==cell.symb) && (prop->compare(cell.prop))) {
+    if (hardopt && (symb==cell.symb) && (prop==cell.prop) {
       // do nothing
     } else {
       symb = cell.symb;
@@ -152,6 +156,11 @@ namespace blessings {
       unstaged = true;
     }
     return (*this);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  bool Monitor<InS,OutS,Prop>::Cell::isUnstaged() {
+    return unstaged;
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -260,7 +269,7 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  bool Monitor<InS,OutS,Prop>::Iterator::isEnd() {
+  bool Monitor<InS,OutS,Prop>::Iterator::isBegin() {
     return (pointer==0);
   }
 
@@ -481,7 +490,7 @@ namespace blessings {
     checkResolution(drawMode);
     Monitor::Iterator i = begin();
     while (!i.isEnd()) {
-      if ((*i).unstaged) {
+      if ((*i).isUnstaged()) {
         moveCursorTo(positionOf(i.index()));
         termIO->print((*i).symb, (*i).prop);
         (*i).setStaged();
@@ -493,15 +502,5 @@ namespace blessings {
   template <typename InS, typename OutS, typename Prop>
   void Monitor<InS,OutS,Prop>::hardOptimization(bool p) {
     Monitor<InS,OutS,Prop>::Cell::hardopt = p;
-  }
-
-  template <typename InS, typename OutS, typename Prop>
-  int Monitor<InS,OutS,Prop>::boldSupported() {
-    return termIO->boldSupported();
-  }
-
-  template <typename InS, typename OutS, typename Prop>
-  int Monitor<InS,OutS,Prop>::italicsSupported() {
-    return termIO->italicsSupported();
   }
 }
