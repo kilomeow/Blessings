@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "test_string_utf8.hpp"
-#include "symbol/string_utf8.hpp"
+#include "string_utf8.hpp"
 
 using namespace std;
 
