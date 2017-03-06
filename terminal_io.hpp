@@ -2,13 +2,11 @@
 
 #include <queue>
 
-#include "symbol/symbol.hpp"
-#include "write_stream.hpp"
-#include "read_stream.hpp"
 #include "additional_structs.hpp"
 
 namespace blessings {
-  template <class InS, class OutS>
+  template <typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
   class TerminalIO {
   protected:
     TerminalIO(const TerminalIO&);
@@ -22,7 +20,10 @@ namespace blessings {
     //IO
     virtual void print(OutS, const Property*)=0;
     virtual void print(OutS)=0;
+    virtual void print(const OutStr&)=0;
+
     virtual std::queue<InS> getSymbol(int n)=0;
+    virtual InStr getString(GridPos start);
     virtual void clearInputBuffer()=0;
 
     //Screen state
