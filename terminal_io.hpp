@@ -8,22 +8,17 @@ namespace blessings {
   template <typename InS, typename OutS, typename InStr, typename OutStr,
     typename Property>
   class TerminalIO {
-  protected:
-    TerminalIO(const TerminalIO&);
-    TerminalIO& operator=(const TerminalIO&);
   public:
-    TerminalIO() {};
-
     //Device info
     virtual MonitorResolution getResolution()=0;
 
     //IO
-    virtual void print(OutS, const Property*)=0;
+    virtual void print(OutS, const Property&)=0;
     virtual void print(OutS)=0;
     virtual void print(const OutStr&)=0;
 
     virtual std::queue<InS> getSymbol(int n)=0;
-    virtual InStr getString(GridPos start);
+    virtual InStr getString(GridPos start)=0;
     virtual void clearInputBuffer()=0;
 
     //Screen state

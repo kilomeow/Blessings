@@ -1,34 +1,29 @@
 #pragma once
 
 #include <cstdio>
+#include <string>
 
-#include "../symbol/symbol_utf8.hpp"
-#include "../write_stream.hpp"
 #include "write_stream_linux.hpp"
 #include "../error.hpp"
 
 namespace blessings {
-  template <>
-  class WriteStreamLinux<SymbolUTF8> :
-    public WriteStream<SymbolUTF8> {
-
+  class WriteStreamLinux {
     FILE* file;
+    
+    WriteStreamLinux(const WriteStreamLinux&);
+    WriteStreamLinux& operator=(const WriteStreamLinux&);
   public:
-    class Error;
-    class WriteError;
+    class Error : public BlessingsError {};
+    class WriteError : public Error {};
 
-    WriteStreamLinux(FILE* f=stdout);
-
-    void write(SymbolUTF8);
+    WriteStreamLinux(FILE* f=stdout) noexcept;
+    
+    template <class Symbol>
+    void write(const Symbol&);
     void write(char);
     void write(const char*);
-    void write(std::string);
+    void write(const std::string&);
 
     void flush();
   };
-
-
-  class WriteStreamLinux<SymbolUTF8>::Error : BlessingsError {};
-  class WriteStreamLinux<SymbolUTF8>::WriteError :\
-    public WriteStreamLinux<SymbolUTF8>::Error {};
 }

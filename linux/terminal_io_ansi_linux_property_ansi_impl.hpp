@@ -4,22 +4,25 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 
-#include "../symbol/some_symbol_utf8_symbols.hpp"
-#include "../symbol/symbol.hpp"
+#include "ansi_symbol_table.hpp"
 #include "terminal_io_ansi_linux_property_ansi.hpp"
 #include "write_stream_linux.hpp"
 #include "../additional_structs.hpp"
 
 namespace blessings {
-  template<class InS, class OutS>
-  TerminalIOANSILinux<InS, OutS, PropertyANSI>::TerminalIOANSILinux() {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::
+  TerminalIOANSILinux() {
     inited=false;
     nonCanonicalMode=0;
     echoInhibited=0;
   }
 
-  template<class InS, class OutS>
-  TerminalIOANSILinux<InS, OutS, PropertyANSI>::~TerminalIOANSILinux() {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::
+  ~TerminalIOANSILinux() {
     if (inited) {
       setEchoInhibition();
       resetSGR();
@@ -28,8 +31,10 @@ namespace blessings {
     }
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::Init(std::string path) {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::
+  Init(std::string path) {
     if (inited) throw ReInitAttemptError();
 
     if (path=="") fd=open(ttyname(1), O_RDWR|O_APPEND);
@@ -44,7 +49,7 @@ namespace blessings {
     }
 
     try {
-      ws = new WriteStreamLinux<SymbolUTF8>(file);
+      ws = new WriteStreamLinux(file);
     }
     catch(...) {
       fclose(file);
@@ -62,10 +67,10 @@ namespace blessings {
     tcsetattr(fd,TCSANOW,&tempSettings); //Pray it works
 
     try {
-      ws->write(SymbolTable<OutS>::ESCSymbol);
-      ws->write(SymbolTable<OutS>::openBracket);
-      ws->write(SymbolTable<OutS>::zero);
-      ws->write(SymbolTable<OutS>::mSym);
+      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
+      ws->write(ANSISymbolTable<OutS>::openBracket);
+      ws->write(ANSISymbolTable<OutS>::zero);
+      ws->write(ANSISymbolTable<OutS>::mSym);
 
       ws->flush();
     }
@@ -80,103 +85,16 @@ namespace blessings {
     inited = true;
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::print(\
-    OutS sym, const Property* propRaw) {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::print(\
+    OutS sym, const Property& prop) {
     if (!inited) throw BadModeError();
 
-    if (propRaw==nullptr) throw ArgumentError();
-
-    const PropertyANSI* prop=static_cast<const PropertyANSI* >(propRaw);
-
     try {
-      if (prop->bold) {
-        ws->write(SymbolTable<OutS>::ESCSymbol);
-        ws->write(SymbolTable<OutS>::openBracket);
-        ws->write(SymbolTable<OutS>::one);
-        ws->write(SymbolTable<OutS>::mSym);
-      }
-
-      if (prop->italics) {
-        ws->write(SymbolTable<OutS>::ESCSymbol);
-        ws->write(SymbolTable<OutS>::openBracket);
-        ws->write(SymbolTable<OutS>::three);
-        ws->write(SymbolTable<OutS>::mSym);
-      }
-
-      if (prop->color.color!=ColorANSI::NONE) {
-        ws->write(SymbolTable<OutS>::ESCSymbol);
-        ws->write(SymbolTable<OutS>::openBracket);
-        ws->write(SymbolTable<OutS>::three);
-        switch(prop->color.color) {
-        case ColorANSI::BLACK:
-          ws->write(SymbolTable<OutS>::zero);
-          break;
-        case ColorANSI::RED:
-          ws->write(SymbolTable<OutS>::one);
-          break;
-        case ColorANSI::GREEN:
-          ws->write(SymbolTable<OutS>::two);
-          break;
-        case ColorANSI::YELLOW:
-          ws->write(SymbolTable<OutS>::three);
-          break;
-        case ColorANSI::BLUE:
-          ws->write(SymbolTable<OutS>::four);
-          break;
-        case ColorANSI::MAGENTA:
-          ws->write(SymbolTable<OutS>::five);
-          break;
-        case ColorANSI::CYAN:
-          ws->write(SymbolTable<OutS>::six);
-          break;
-        case ColorANSI::WHITE:
-          ws->write(SymbolTable<OutS>::seven);
-          break;
-        default:
-          throw ArgumentError();
-        }
-        ws->write(SymbolTable<OutS>::mSym);
-      }
-
-      if (prop->backgroundColor.color!=ColorANSI::NONE) {
-        ws->write(SymbolTable<OutS>::ESCSymbol);
-        ws->write(SymbolTable<OutS>::openBracket);
-        ws->write(SymbolTable<OutS>::four);
-        switch(prop->backgroundColor.color) {
-        case ColorANSI::BLACK:
-          ws->write(SymbolTable<OutS>::zero);
-          break;
-        case ColorANSI::RED:
-          ws->write(SymbolTable<OutS>::one);
-          break;
-        case ColorANSI::GREEN:
-          ws->write(SymbolTable<OutS>::two);
-          break;
-        case ColorANSI::YELLOW:
-          ws->write(SymbolTable<OutS>::three);
-          break;
-        case ColorANSI::BLUE:
-          ws->write(SymbolTable<OutS>::four);
-          break;
-        case ColorANSI::MAGENTA:
-          ws->write(SymbolTable<OutS>::five);
-          break;
-        case ColorANSI::CYAN:
-          ws->write(SymbolTable<OutS>::six);
-          break;
-        case ColorANSI::WHITE:
-          ws->write(SymbolTable<OutS>::seven);
-          break;
-        default:
-          throw ArgumentError();
-        }
-        ws->write(SymbolTable<OutS>::mSym);
-      }
+      setSGR(Property);
 
       ws->write(sym);
-
-      resetSGR();
 
       ws->flush();
     }
@@ -185,8 +103,9 @@ namespace blessings {
     }
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::print(OutS sym) {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::print(OutS sym) {
     if (!inited) throw BadModeError();
 
     try {
@@ -199,15 +118,16 @@ namespace blessings {
     }
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::clearScreen() {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::clearScreen() {
     if (!inited) throw BadModeError();
 
     try {
-      ws->write(SymbolTable<OutS>::ESCSymbol);
-      ws->write(SymbolTable<OutS>::openBracket);
-      ws->write(SymbolTable<OutS>::two);
-      ws->write(SymbolTable<OutS>::JSym);
+      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
+      ws->write(ANSISymbolTable<OutS>::openBracket);
+      ws->write(ANSISymbolTable<OutS>::two);
+      ws->write(ANSISymbolTable<OutS>::JSym);
 
       ws->flush();
     }
@@ -216,12 +136,13 @@ namespace blessings {
     }
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::newLine() {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::newLine() {
     if (!inited) throw BadModeError();
 
     try {
-      ws->write(SymbolTable<OutS>::newLineSymbol);
+      ws->write(ANSISymbolTable<OutS>::newLineSymbol);
 
       ws->flush();
     }
@@ -230,8 +151,9 @@ namespace blessings {
     }
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::moveCursor(int x, int y) {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::moveCursor(int x, int y) {
     if (!inited) throw BadModeError();
 
     try {
@@ -244,27 +166,27 @@ namespace blessings {
       std::string yAbsStr=std::to_string(yAbs);
 
       if (x!=0) {
-        ws->write(SymbolTable<OutS>::ESCSymbol);
-        ws->write(SymbolTable<OutS>::openBracket);
+        ws->write(ANSISymbolTable<OutS>::ESCSymbol);
+        ws->write(ANSISymbolTable<OutS>::openBracket);
 
         for(size_t i=0; i<xAbsStr.size(); ++i) {
           ws->write(xAbsStr[i]);
         }
 
-        if (x<0) ws->write(SymbolTable<OutS>::DSym);
-        else ws->write(SymbolTable<OutS>::CSym);
+        if (x<0) ws->write(ANSISymbolTable<OutS>::DSym);
+        else ws->write(ANSISymbolTable<OutS>::CSym);
       }
 
       if (y!=0) {
-        ws->write(SymbolTable<OutS>::ESCSymbol);
-        ws->write(SymbolTable<OutS>::openBracket);
+        ws->write(ANSISymbolTable<OutS>::ESCSymbol);
+        ws->write(ANSISymbolTable<OutS>::openBracket);
 
         for(size_t i=0; i<yAbsStr.size(); ++i) {
           ws->write(yAbsStr[i]);
         }
 
-        if (y>0) ws->write(SymbolTable<OutS>::ASym);
-        else ws->write(SymbolTable<OutS>::BSym);
+        if (y>0) ws->write(ANSISymbolTable<OutS>::ASym);
+        else ws->write(ANSISymbolTable<OutS>::BSym);
       }
 
       ws->flush();
@@ -274,8 +196,9 @@ namespace blessings {
     }
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::moveCursorTo(int x, int y) {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::moveCursorTo(int x, int y) {
     if (!inited) throw BadModeError();
 
     if (x<=0 || y<=0) throw ArgumentError();
@@ -284,20 +207,20 @@ namespace blessings {
       std::string xStr=std::to_string(x);
       std::string yStr=std::to_string(y);
 
-      ws->write(SymbolTable<OutS>::ESCSymbol);
-      ws->write(SymbolTable<OutS>::openBracket);
+      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
+      ws->write(ANSISymbolTable<OutS>::openBracket);
 
       for(size_t i=0; i<yStr.size(); ++i) {
         ws->write(yStr[i]);
       }
 
-      ws->write(SymbolTable<OutS>::semicolon);
+      ws->write(ANSISymbolTable<OutS>::semicolon);
 
       for(size_t i=0; i<xStr.size(); ++i) {
         ws->write(xStr[i]);
       }
 
-      ws->write(SymbolTable<OutS>::HSym);
+      ws->write(ANSISymbolTable<OutS>::HSym);
 
       ws->flush();
     }
@@ -306,15 +229,104 @@ namespace blessings {
     }
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::resetSGR() {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::setSGR(const Property& prop) {
+ 	  if (prop->bold) {
+        ws->write(ANSISymbolTable<OutS>::ESCSymbol);
+        ws->write(ANSISymbolTable<OutS>::openBracket);
+        ws->write(ANSISymbolTable<OutS>::one);
+        ws->write(ANSISymbolTable<OutS>::mSym);
+      }
+
+      if (prop->italics) {
+        ws->write(ANSISymbolTable<OutS>::ESCSymbol);
+        ws->write(ANSISymbolTable<OutS>::openBracket);
+        ws->write(ANSISymbolTable<OutS>::three);
+        ws->write(ANSISymbolTable<OutS>::mSym);
+      }
+
+      if (prop->color.color!=ColorANSI::NONE) {
+        ws->write(ANSISymbolTable<OutS>::ESCSymbol);
+        ws->write(ANSISymbolTable<OutS>::openBracket);
+        ws->write(ANSISymbolTable<OutS>::three);
+        switch(prop->color.color) {
+        case ColorANSI::BLACK:
+          ws->write(ANSISymbolTable<OutS>::zero);
+          break;
+        case ColorANSI::RED:
+          ws->write(ANSISymbolTable<OutS>::one);
+          break;
+        case ColorANSI::GREEN:
+          ws->write(ANSISymbolTable<OutS>::two);
+          break;
+        case ColorANSI::YELLOW:
+          ws->write(ANSISymbolTable<OutS>::three);
+          break;
+        case ColorANSI::BLUE:
+          ws->write(ANSISymbolTable<OutS>::four);
+          break;
+        case ColorANSI::MAGENTA:
+          ws->write(ANSISymbolTable<OutS>::five);
+          break;
+        case ColorANSI::CYAN:
+          ws->write(ANSISymbolTable<OutS>::six);
+          break;
+        case ColorANSI::WHITE:
+          ws->write(ANSISymbolTable<OutS>::seven);
+          break;
+        default:
+          throw ArgumentError();
+        }
+        ws->write(ANSISymbolTable<OutS>::mSym);
+      }
+
+      if (prop->backgroundColor.color!=ColorANSI::NONE) {
+        ws->write(ANSISymbolTable<OutS>::ESCSymbol);
+        ws->write(ANSISymbolTable<OutS>::openBracket);
+        ws->write(ANSISymbolTable<OutS>::four);
+        switch(prop->backgroundColor.color) {
+        case ColorANSI::BLACK:
+          ws->write(ANSISymbolTable<OutS>::zero);
+          break;
+        case ColorANSI::RED:
+          ws->write(ANSISymbolTable<OutS>::one);
+          break;
+        case ColorANSI::GREEN:
+          ws->write(ANSISymbolTable<OutS>::two);
+          break;
+        case ColorANSI::YELLOW:
+          ws->write(ANSISymbolTable<OutS>::three);
+          break;
+        case ColorANSI::BLUE:
+          ws->write(ANSISymbolTable<OutS>::four);
+          break;
+        case ColorANSI::MAGENTA:
+          ws->write(ANSISymbolTable<OutS>::five);
+          break;
+        case ColorANSI::CYAN:
+          ws->write(ANSISymbolTable<OutS>::six);
+          break;
+        case ColorANSI::WHITE:
+          ws->write(ANSISymbolTable<OutS>::seven);
+          break;
+        default:
+          throw ArgumentError();
+        }
+        ws->write(ANSISymbolTable<OutS>::mSym);
+      }
+  }
+
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::resetSGR() {
     if (!inited) throw BadModeError();
 
     try {
-      ws->write(SymbolTable<OutS>::ESCSymbol);
-      ws->write(SymbolTable<OutS>::openBracket);
-      ws->write(SymbolTable<OutS>::zero);
-      ws->write(SymbolTable<OutS>::mSym);
+      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
+      ws->write(ANSISymbolTable<OutS>::openBracket);
+      ws->write(ANSISymbolTable<OutS>::zero);
+      ws->write(ANSISymbolTable<OutS>::mSym);
 
       ws->flush();
     }
@@ -323,17 +335,18 @@ namespace blessings {
     }
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::hideCursor() {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::hideCursor() {
     if (!inited) throw BadModeError();
 
     try {
-      ws->write(SymbolTable<OutS>::ESCSymbol);
-      ws->write(SymbolTable<OutS>::openBracket);
-      ws->write(SymbolTable<OutS>::question);
-      ws->write(SymbolTable<OutS>::two);
-      ws->write(SymbolTable<OutS>::five);
-      ws->write(SymbolTable<OutS>::lSym);
+      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
+      ws->write(ANSISymbolTable<OutS>::openBracket);
+      ws->write(ANSISymbolTable<OutS>::question);
+      ws->write(ANSISymbolTable<OutS>::two);
+      ws->write(ANSISymbolTable<OutS>::five);
+      ws->write(ANSISymbolTable<OutS>::lSym);
 
       ws->flush();
     }
@@ -342,17 +355,18 @@ namespace blessings {
     }
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::showCursor() {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::showCursor() {
     if (!inited) throw BadModeError();
 
     try {
-      ws->write(SymbolTable<OutS>::ESCSymbol);
-      ws->write(SymbolTable<OutS>::openBracket);
-      ws->write(SymbolTable<OutS>::question);
-      ws->write(SymbolTable<OutS>::two);
-      ws->write(SymbolTable<OutS>::five);
-      ws->write(SymbolTable<OutS>::hSym);
+      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
+      ws->write(ANSISymbolTable<OutS>::openBracket);
+      ws->write(ANSISymbolTable<OutS>::question);
+      ws->write(ANSISymbolTable<OutS>::two);
+      ws->write(ANSISymbolTable<OutS>::five);
+      ws->write(ANSISymbolTable<OutS>::hSym);
 
       ws->flush();
     }
@@ -361,14 +375,15 @@ namespace blessings {
     }
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::saveCursorPos() {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::saveCursorPos() {
     if (!inited) throw BadModeError();
 
     try {
-      ws->write(SymbolTable<OutS>::ESCSymbol);
-      ws->write(SymbolTable<OutS>::openBracket);
-      ws->write(SymbolTable<OutS>::sSym);
+      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
+      ws->write(ANSISymbolTable<OutS>::openBracket);
+      ws->write(ANSISymbolTable<OutS>::sSym);
 
       ws->flush();
     }
@@ -377,14 +392,15 @@ namespace blessings {
     }
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::restoreCursorPos() {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::restoreCursorPos() {
     if (!inited) throw BadModeError();
 
     try {
-      ws->write(SymbolTable<OutS>::ESCSymbol);
-      ws->write(SymbolTable<OutS>::openBracket);
-      ws->write(SymbolTable<OutS>::uSym);
+      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
+      ws->write(ANSISymbolTable<OutS>::openBracket);
+      ws->write(ANSISymbolTable<OutS>::uSym);
 
       ws->flush();
     }
@@ -393,8 +409,9 @@ namespace blessings {
     }
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::setNonCanonicalMode() {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::setNonCanonicalMode() {
     if (!inited) throw BadModeError();
 
     if (nonCanonicalMode==1) return;
@@ -413,8 +430,9 @@ namespace blessings {
     nonCanonicalMode = 1;
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::setCanonicalMode() {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::setCanonicalMode() {
     if (!inited) throw BadModeError();
 
     if (nonCanonicalMode==-1) return;
@@ -431,8 +449,9 @@ namespace blessings {
     nonCanonicalMode = -1;
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::setEchoInhibition() {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::setEchoInhibition() {
     if (!inited) throw BadModeError();
 
     if (echoInhibited==1) return;
@@ -449,8 +468,9 @@ namespace blessings {
     echoInhibited = 1;
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::setEchoForward() {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::setEchoForward() {
     if (!inited) throw BadModeError();
 
     if (echoInhibited==-1) return;
@@ -467,8 +487,9 @@ namespace blessings {
     echoInhibited = -1;
   }
 
-  template<class InS, class OutS>
-  void TerminalIOANSILinux<InS, OutS, PropertyANSI>::resetDeviceMode() {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::resetDeviceMode() {
     if (!inited) throw BadModeError();
 
     tcsetattr(fd,TCSANOW,&storedSettings); //Pray it works
@@ -477,8 +498,9 @@ namespace blessings {
     echoInhibited = 0;
   }
 
-  template<class InS, class OutS>
-  MonitorResolution TerminalIOANSILinux<InS, OutS, PropertyANSI>::getResolution() {
+  template<typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  TerminalIOANSILinux<InS, OutS, InStr, OutStr, Property>::getResolution() {
     if (!inited) throw BadModeError();
 
     struct winsize ws;

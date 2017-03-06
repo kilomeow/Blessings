@@ -3,14 +3,13 @@
 #include <string>
 
 #include "write_stream_linux_symbol_utf8.hpp"
-#include "../symbol/some_symbol_utf8_symbols.hpp"
-#include "../error.hpp"
 
 namespace blessings {
-  WriteStreamLinux<SymbolUTF8>::WriteStreamLinux(FILE* f) :\
+  WriteStreamLinux::WriteStreamLinux(FILE* f) noexcept :\
     file(f) {};
-
-  void WriteStreamLinux<SymbolUTF8>::write(SymbolUTF8 sym) {
+  
+  template <class Symbol>
+  void WriteStreamLinux::write(const Symbol& sym) {
     try {
       sym.writeToFile(file);
     }
@@ -18,13 +17,14 @@ namespace blessings {
       throw WriteError();
     }
   }
-
-  void WriteStreamLinux<SymbolUTF8>::write(char c) {
+  
+  template 
+  void WriteStreamLinux::write(char c) {
     int temp=fputc(c, file);
     if (temp==EOF) throw WriteError();
   }
 
-  void WriteStreamLinux<SymbolUTF8>::write(const char* str) {
+  void WriteStreamLinux::write(const char* str) {
     size_t len=strlen(str);
     for (size_t i=0; i<len; ++i) {
       int temp=fputc(str[i], file);
@@ -32,14 +32,14 @@ namespace blessings {
     }
   }
 
-  void WriteStreamLinux<SymbolUTF8>::write(std::string str) {
+  void WriteStreamLinux::write(std::string str) {
     for (size_t i=0; i<str.size(); ++i) {
       int temp=fputc(str[i], file);
       if (temp==EOF) throw WriteError();
     }
   }
 
-  void WriteStreamLinux<SymbolUTF8>::flush() {
+  void WriteStreamLinux::flush() {
     int temp=fflush(file);
     if (temp==EOF) throw WriteError();
   }

@@ -7,39 +7,42 @@
 #include <cstdio>
 #include <queue>
 
-#include "../symbol/symbol.hpp"
-#include "../write_stream.hpp"
-#include "../read_stream.hpp"
 #include "../additional_structs.hpp"
 #include "../error.hpp"
 #include "terminal_io_ansi_linux.hpp"
 #include "../terminal_io.hpp"
 
 namespace blessings {
-  template <class InS, class OutS>
-  class TerminalIOANSILinux<InS, OutS, PropertyANSI> :
-    public TerminalIO<InS, OutS> {
+  template <typename InS, typename OutS, typename InStr, typename OutStr,
+    typename Property>
+  class TerminalIOANSILinux :
+    public TerminalIO<InS, OutS, InStr, OutStr, Property> {
 
     bool inited;
     int nonCanonicalMode;
     int echoInhibited;
 
-    WriteStream<OutS>* ws;
+    WriteStreamLinux* ws;
     //ReadStream<InS>* rs;
 
     termios storedSettings;
 
     int fd;
     FILE* file;
+
+    Property currentProperty;
+    
+    TerminalIO(const TerminalIO&);
+    TerminalIO& operator=(const TerminalIO&);
   public:
-    class Error;
-    class InitError;
-    class ReInitAttemptError;
-    class NotInitedError;
-    class ArgumentError;
-    class IOError;
-    class DeviceError;
-    class BadModeError;
+    class Error : public BlessingsError {};
+    class InitError : public Error {};
+    class ReInitAttemptError : public Error {};
+    class NotInitedError : public Error {};
+    class ArgumentError : public Error {};
+    class IOError : public Error {};
+    class DeviceError : public Error {};
+    class BadModeError : public Error {};
 
     TerminalIOANSILinux();
 
@@ -51,9 +54,12 @@ namespace blessings {
     MonitorResolution getResolution(); //TODO: rewrite!
 
     //IO
-    void print(OutS, const Property*);
+    void print(OutS, const Property&);
     void print(OutS);
+    void print(const OutStr&);
+    
     std::queue<InS> getSymbol(int n=1) {return std::queue<InS>();}; //TODO: rewrite!
+    InStr getString(GridPos start);
     void clearInputBuffer() {};
 
     //Screen state
@@ -70,6 +76,7 @@ namespace blessings {
     void saveCursorPos();
     void restoreCursorPos();
 
+    void setSGR(const Property&)
     void resetSGR();
 
     //Terminal info
@@ -91,31 +98,4 @@ namespace blessings {
 
     bool isInited() {return inited;};
   };
-
-
-  //Errors
-  template<class InS, class OutS>
-  class TerminalIOANSILinux<InS, OutS, PropertyANSI>::Error :\
-    public BlessingsError {};
-  template<class InS, class OutS>
-  class TerminalIOANSILinux<InS, OutS, PropertyANSI>::InitError :\
-    public TerminalIOANSILinux<InS, OutS, PropertyANSI>::Error {};
-  template<class InS, class OutS>
-  class TerminalIOANSILinux<InS, OutS, PropertyANSI>::NotInitedError :\
-    public TerminalIOANSILinux<InS, OutS, PropertyANSI>::Error {};
-  template<class InS, class OutS>
-  class TerminalIOANSILinux<InS, OutS, PropertyANSI>::ArgumentError :\
-    public TerminalIOANSILinux<InS, OutS, PropertyANSI>::Error {};
-  template<class InS, class OutS>
-  class TerminalIOANSILinux<InS, OutS, PropertyANSI>::IOError :\
-    public TerminalIOANSILinux<InS, OutS, PropertyANSI>::Error {};
-  template<class InS, class OutS>
-  class TerminalIOANSILinux<InS, OutS, PropertyANSI>::DeviceError :\
-    public TerminalIOANSILinux<InS, OutS, PropertyANSI>::Error {};
-  template<class InS, class OutS>
-  class TerminalIOANSILinux<InS, OutS, PropertyANSI>::BadModeError :\
-    public TerminalIOANSILinux<InS, OutS, PropertyANSI>::Error {};
-  template<class InS, class OutS>
-  class TerminalIOANSILinux<InS, OutS, PropertyANSI>::ReInitAttemptError :\
-    public TerminalIOANSILinux<InS, OutS, PropertyANSI>::InitError {};
 }
