@@ -8,9 +8,9 @@ namespace blessings {
   Monitor<InS,OutS>::Monitor(int MaxSize) {
     if (MaxSize <= 0) throw Error();   // ::Error("wrong MaxSize")
     maxSize = MaxSize;
-    grid = new MonitorCell<OutS> [maxSize];
+    grid = new Monitor<InS,OutS>::Cell<OutS> [maxSize];
     res.width=1; res.height=1;
-    Cell<OutS>::hardopt = false;
+    Monitor<InS,OutS>::Cell<OutS>::hardopt = false;
   }
 
   template <class InS, class OutS>
@@ -23,7 +23,7 @@ namespace blessings {
     termIO = monitor.termIO;
     maxSize = monitor.maxSize;
     res = monitor.res;
-    grid = new MonitorCell<OutS> [maxSize];
+    grid = new Monitor<InS,OutS>::Cell<OutS> [maxSize];
     for (int i=0;i<maxSize;i++)
       grid[i] = monitor.grid[i];
   }
@@ -34,7 +34,7 @@ namespace blessings {
     maxSize = monitor.maxSize;
     res = monitor.res;
     delete [] grid;
-    grid = new Cell<OutS> [maxSize];
+    grid = new Monitor<InS,OutS>::Cell<OutS> [maxSize];
     for (int i=0;i<maxSize;i++)
       grid[i] = monitor.grid[i];
     return (*this);
@@ -137,12 +137,12 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  Monitor<Ins, OutS>::Cell<OutS>::Cell(const Cell& cell) {
+  Monitor<Ins, OutS>::Cell<OutS>::Cell(const Monitor<InS,OutS>::Cell<OutS>& cell) {
     symb = cell.symb;
     prop = cell.prop;
   }
 
-  typename Monitor<Ins, OutS>::Cell<OutS>& Monitor<Ins, OutS>::Cell<OutS>::operator=(const Cell& cell) {
+  typename Monitor<Ins, OutS>::Cell<OutS>& Monitor<Ins, OutS>::Cell<OutS>::operator=(const Monitor<InS,OutS>::Cell<OutS>& cell) {
     if (hardopt && (symb==cell.symb) && (prop->compare(cell.prop))) {
       // do nothing
     } else {
@@ -162,7 +162,7 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  Monitor<InS,OutS>::Iterator::Iterator(MonitorCell<OutS>* Grid, int ptr, int bound) {
+  Monitor<InS,OutS>::Iterator::Iterator(Monitor<InS,OutS>::Cell<OutS>* Grid, int ptr, int bound) {
     if ((pnt<0) || (pnt>bnd)) throw Monitor::Iterator::Error();
     //Monitor::Iterator::Error("pointer out of range");
     grid = Grid;
@@ -323,7 +323,7 @@ namespace blessings {
 
   template <class InS, class OutS>
   void Monitor<InS,OutS>::tile(OutS s, const Property* p) {
-    MonitorCell<OutS> c(s, p);
+    Monitor<InsOutS>::Cell<OutS> c(s, p);
     Monitor::Iterator i = begin();
     while (!i.isEnd()) {
       (*i) = c;
@@ -483,7 +483,7 @@ namespace blessings {
 
   template <class InS, class OutS>
   void Monitor<InS,OutS>::hardOptimization(bool p) {
-    MonitorCell<OutS>::hardopt = false;
+    Monitor<InS,OutS>::Cell<OutS>::hardopt = p;
   }
 
   template <class InS, class OutS>
