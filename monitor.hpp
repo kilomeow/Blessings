@@ -4,97 +4,80 @@
 
 #include "additional_structs.hpp"
 #include "terminal_io.hpp"
-#include "symbol/symbol.hpp"
+#include "property.hpp"
 
 namespace blessings {
-  
-  template <class Symbol>
-  struct MonitorCell {
-    Symbol symb;
-    const Property* prop;
-    
-    static bool hardopt;
-    bool unstaged = false;
-
-    MonitorCell() {}
-    MonitorCell(Symbol s, const Property* p) : symb(s), prop(p) {}
-    
-    MonitorCell& operator=(const MonitorCell& cell) {
-      if (hardopt && (symb==cell.symb) && (prop->compare(cell.prop))) {
-        // do nothing
-      } else {
-        symb = cell.symb;
-        prop = cell.prop;
-        unstaged = true;
-      }
-      return (*this);
-    }
-    
-    void setStaged() {
-      unstaged = false;
-    }
-    void setUnstaged() {
-      unstaged = true;
-    }
-  };
-
-
   template <class InS, class OutS>    // <InputSymbol, OutputSymbol>
   class Monitor {
-  protected:
-    MonitorCell <OutS> * grid;
-    TerminalIO <InS, OutS> * termIO;
-
-    int maxSize;
-    MonitorResolution res;
-
   public:
     Monitor() {}
     Monitor(int MaxSize);
     ~Monitor();
-    
     Monitor(const Monitor&);
     Monitor& operator=(const Monitor&);
-    
-    void connect(TerminalIO <InS, OutS>*);
-    void disconnect();
-    
-    void startWork();
-    void endWork();
-    
-    GridPos positionOf(int) const;
-    int indexOf(GridPos) const;
-    int currentBound() const;
 
-    MonitorCell <OutS> & operator[] (int p);
-    MonitorCell <OutS> operator[] (int p) const;
-    MonitorCell <OutS> & operator()(int x, int y);
-    MonitorCell <OutS> operator()(int x, int y) const;
+    termplate <class Symbol>
+    class Cell {
+    protected:
+      Symbol symb;
+      Property prop;
+      bool unstaged = false;
 
-    MonitorCell <OutS> & at(int p);
-    MonitorCell <OutS> at (int p) const;
-    MonitorCell <OutS> & at(int x, int y);
-    MonitorCell <OutS> at (int x, int y) const;
+    public:
+      Cell() {}
+      Cell(Symbol s, const Property* p) : symb(s), prop(p) {}
+      ~Cell() {}
+      Cell(const Cell&);
+      Cell& operator=(const Cell&);
+
+      static bool hardopt;
+
+      void setStaged();
+      void setUnstaged();
+    };
 
     class Iterator {
     protected:
-      MonitorCell <OutS> * grid;
+      Monitor::Cell <OutS> * grid;
       int pointer;
       int stopPos;
 
     public:
       Iterator() {};
-      Iterator(MonitorCell<OutS>* grd, int pnt, int bnd);
-      MonitorCell<OutS>& operator*();
+      Iterator(Cell<OutS>* grd, int pnt, int bnd);
+      Cell<OutS>& operator*();
       Iterator& operator++();
       Iterator operator++(int);
 
       int index();
+      //bool isBegin();
       bool isEnd();
+
+      //void rewind();
 
       class Error {};
       class EndError : public Error {};
     };
+
+    void connect(TerminalIO <InS, OutS>*);
+    void disconnect();
+
+    void startWork();
+    void endWork();
+
+    GridPos positionOf(int) const;
+    int indexOf(GridPos) const;
+    int currentBound() const;
+
+    Cell <OutS> & operator[] (int p);
+    Cell <OutS> operator[] (int p) const;
+    Cell <OutS> & operator()(int x, int y);
+    Cell <OutS> operator()(int x, int y) const;
+
+    Cell <OutS> & at(int p);
+    Cell <OutS> at (int p) const;
+    Cell <OutS> & at(int x, int y);
+    Cell <OutS> at (int x, int y) const;
 
     Iterator begin();
     Iterator end();
@@ -131,7 +114,7 @@ namespace blessings {
     void draw(resChange drawMode=alarm);
     void lazyDraw(resChange drawMode=alarm);
     void hardOptimization(bool);
-    
+
     int boldSupported();    // Must be rewritten
     int italicsSupported();
 
@@ -142,9 +125,18 @@ namespace blessings {
     class ResolutionDisparity : public DrawError {};
     class TerminalModeError : public DrawError {};
 
+  protected:
+    Cell <OutS> * grid;
+    TerminalIO <InS, OutS> * termIO;
+
+    int maxSize;
+    MonitorResolution res;
+
+    bool isDrawn=false;
+
   private:
     void checkMode();
     void checkResolution(resChange);
   };
-  
+
 }

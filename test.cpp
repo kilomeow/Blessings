@@ -3,8 +3,8 @@
 #include <chrono>
 #include <thread>
 
-#include "symbol/symbol_utf8.hpp"
-#include "symbol/symbol.hpp"
+#include "symbol_utf8/symbol_utf8.hpp"
+#include "property.hpp"
 #include "linux/terminal_io_ansi_linux.hpp"
 #include "monitor.hpp"
 #include "additional_structs.hpp"
@@ -16,7 +16,7 @@ typedef SymbolUTF8 S;
 typedef PropertyANSI P;
 typedef TerminalIOANSILinux<S, S, P> TL;
 typedef Monitor<S, S> M;
-typedef MonitorCell<S> Cell;
+typedef Monitor::Cell<S> Cell;
 
 int main() {
   TL term;
@@ -27,15 +27,15 @@ int main() {
 
   M monitor(1000);
   monitor.connect(&term);
-  
+
   monitor.setResolution(50, 10);
   monitor.startWork();
-  
+
   monitor.hardOptimization(true);
-  
+
   monitor.tile(S("."), &P::defaultProperty);
   monitor.draw(M::resChange::ignore);
-  
+
   for (int i=0; i<(500-116); i++) {
     monitor(i/8+1, i%8+1) = Cell(S('#'), &yell);
     monitor.lazyDraw(M::resChange::ignore);
@@ -43,7 +43,7 @@ int main() {
     // feel the difference
     this_thread::sleep_for(chrono::milliseconds(3));
   }
-  
+
   monitor.endWork();
 
   //FILE * in = fopen("logo.txt", "r");

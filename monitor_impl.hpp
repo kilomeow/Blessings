@@ -1,7 +1,7 @@
 #include "monitor.hpp"
 #include "additional_structs.hpp"
 #include "terminal_io.hpp"
-#include "symbol/symbol.hpp"
+#include "property.hpp"
 
 namespace blessings {
   template <class InS, class OutS>
@@ -10,9 +10,9 @@ namespace blessings {
     maxSize = MaxSize;
     grid = new MonitorCell<OutS> [maxSize];
     res.width=1; res.height=1;
-    MonitorCell<OutS>::hardopt = false;
+    Cell<OutS>::hardopt = false;
   }
-  
+
   template <class InS, class OutS>
   Monitor<InS,OutS>::~Monitor() {
     delete [] grid;
@@ -34,32 +34,31 @@ namespace blessings {
     maxSize = monitor.maxSize;
     res = monitor.res;
     delete [] grid;
-    grid = new MonitorCell<OutS> [maxSize];
+    grid = new Cell<OutS> [maxSize];
     for (int i=0;i<maxSize;i++)
       grid[i] = monitor.grid[i];
     return (*this);
   }
-  
+
   template <class InS, class OutS>
   void Monitor<InS,OutS>::connect(TerminalIO<InS,OutS>* Term) {
     termIO = Term;
   }
-  
+
   template <class InS, class OutS>
   void Monitor<InS,OutS>::disconnect() {
     //termIO = nullptr;
   }
-  
+
   template <class InS, class OutS>
   void Monitor<InS,OutS>::startWork() {
-    // termIO->resetDeviceMode();
     termIO->setNonCanonicalMode();
     termIO->setEchoInhibition();
     termIO->hideCursor();
     clearScreen();
     moveCursorTo(1, 1);
   }
-  
+
   template <class InS, class OutS>
   void Monitor<InS,OutS>::endWork() {
     termIO->setCanonicalMode();
@@ -88,21 +87,21 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  MonitorCell<OutS>& Monitor<InS,OutS>::operator[] (int p) {
+  typename Monitor<InS,OutS>::Cell<OutS>& Monitor<InS,OutS>::operator[] (int p) {
     if ((p<0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
 
   template <class InS, class OutS>
-  MonitorCell<OutS> Monitor<InS,OutS>::operator[] (int p) const {
+  typename Monitor<InS,OutS>::Cell<OutS> Monitor<InS,OutS>::operator[] (int p) const {
     if ((p<0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
 
   template <class InS, class OutS>
-  MonitorCell<OutS>& Monitor<InS,OutS>::operator() (int x, int y) {
+  typename Monitor<InS,OutS>::Cell<OutS>& Monitor<InS,OutS>::operator() (int x, int y) {
     int p = x+y*res.width;
     if ((p<0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
@@ -110,7 +109,7 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  MonitorCell<OutS> Monitor<InS,OutS>::operator() (int x, int y) const {
+  typename Monitor<InS,OutS>::Cell<OutS> Monitor<InS,OutS>::operator() (int x, int y) const {
     int p = x+y*res.width;
     if ((p<0) || (p>=currentBound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
@@ -118,23 +117,48 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  MonitorCell<OutS>& Monitor<InS,OutS>::at (int p) {
+  typename Monitor<InS,OutS>::Cell<OutS>& Monitor<InS,OutS>::at (int p) {
     return (*this)[p];
   }
 
   template <class InS, class OutS>
-  MonitorCell<OutS> Monitor<InS,OutS>::at (int p) const {
+  typename Monitor<InS,OutS>::Cell<OutS> Monitor<InS,OutS>::at (int p) const {
     return (*this)[p];
   }
 
   template <class InS, class OutS>
-  MonitorCell<OutS>& Monitor<InS,OutS>::at (int x, int y) {
+  typename Monitor<InS,OutS>::Cell<OutS>& Monitor<InS,OutS>::at (int x, int y) {
     return (*this)(x, y);
   }
 
   template <class InS, class OutS>
-  MonitorCell<OutS> Monitor<InS,OutS>::at (int x, int y) const {
+  typename Monitor<InS,OutS>::Cell<OutS> Monitor<InS,OutS>::at (int x, int y) const {
     return (*this)(x, y);
+  }
+
+  template <class InS, class OutS>
+  Monitor<Ins, OutS>::Cell<OutS>::Cell(const Cell& cell) {
+    symb = cell.symb;
+    prop = cell.prop;
+  }
+
+  typename Monitor<Ins, OutS>::Cell<OutS>& Monitor<Ins, OutS>::Cell<OutS>::operator=(const Cell& cell) {
+    if (hardopt && (symb==cell.symb) && (prop->compare(cell.prop))) {
+      // do nothing
+    } else {
+      symb = cell.symb;
+      prop = cell.prop;
+      unstaged = true;
+    }
+    return (*this);
+  }
+
+  void Monitor<InS,OutS>::Cell<OutS>::setStaged() {
+    unstaged = false;
+  }
+
+  void Monitor<InS,OutS>::Cell<OutS>::setUnstaged() {
+    unstaged = true;
   }
 
   template <class InS, class OutS>
@@ -147,7 +171,7 @@ namespace blessings {
   }
 
   template <class InS, class OutS>
-  MonitorCell<OutS>& Monitor<InS,OutS>::Iterator::operator*() {
+  typename Monitor<InS,OutS>::Cell<OutS>& Monitor<InS,OutS>::Iterator::operator*() {
     if (pointer==stopPos) throw Monitor::Iterator::EndError();
     //Monitor::Iterator::EndError("pointer is at end");
     return grid[pointer];
@@ -218,6 +242,7 @@ namespace blessings {
     if ((mr.width<=0) || (mr.height<=0)) throw Error(); // "wrong resolution"
     if (mr.width*mr.height>maxSize) throw Error(); // "resolution out of range"
     res = mr;
+    isDrawn = false;
   }
 
   template <class InS, class OutS>
@@ -330,10 +355,15 @@ namespace blessings {
     checkResolution(drawMode);
     moveCursorTo(1, 1);
     printPage();
+    isDrawn = true;
   }
 
   template <class InS, class OutS>
   void Monitor<InS,OutS>::lazyDraw(Monitor::resChange drawMode) {
+    if (!isDrawn) {
+      draw();
+      return;
+    }
     checkMode();
     checkResolution(drawMode);
     Monitor::Iterator i = begin();
@@ -346,7 +376,7 @@ namespace blessings {
       i++;
     }
   }
-  
+
   template <class InS, class OutS>
   void Monitor<InS,OutS>::hardOptimization(bool p) {
     MonitorCell<OutS>::hardopt = false;
