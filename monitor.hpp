@@ -6,7 +6,7 @@
 #include "terminal_io.hpp"
 
 namespace blessings {
-  template <class InS, class OutS, class Prop>
+  template <typename InS, typename OutS, typename Prop>
   class Monitor {
   public:
     Monitor() {}
@@ -15,21 +15,19 @@ namespace blessings {
     Monitor(const Monitor&);
     Monitor& operator=(const Monitor&);
 
-    template <class Symbol, class Property>
     class Cell {
-    protected:
-      Symbol symb;
-      Property prop;
+    private:
+      OutS symb;
+      Prop prop;
       bool unstaged = false;
 
     public:
       Cell() {}
-      Cell(Symbol s, Property p) : symb(s), prop(p) {}
-      Cell(Symbol s) : symb(s), prop(Property::defaultProperty) {}
+      Cell(OutS s, Prop p) : symb(s), prop(p) {}
+      Cell(OutS s) : symb(s), prop(Property::empty) {}
       ~Cell() {}
       Cell(const Cell&);
       Cell& operator=(const Cell&);
-      Cell& operator=(Symbol s);
 
       static bool hardopt;
 
@@ -38,19 +36,21 @@ namespace blessings {
     };
 
     class Iterator {
-    protected:
-      Monitor::Cell<OutS, Prop>* grid;
+    private:
+      Monitor::Cell* grid;
       int pointer;
       int stopPos;
 
+      bool comparable(const Iterator&);
+
     public:
       Iterator() {};
-      Iterator(Cell<OutS, Prop>* Grid, int ptr, int bound);
+      Iterator(Cell* Grid, int ptr, int bound);
       Iterator(const Iterator&);
       Iterator& operator=(const Iterator&);
       ~Iterator();
 
-      Cell<OutS, Prop>& operator*();
+      Cell& operator*();
 
       Iterator& operator++();
       Iterator operator++(int);
@@ -77,12 +77,9 @@ namespace blessings {
 
       class Error {};
       class EndError : public Error {};
-
-    private:
-      bool comparable(const Iterator&);
     };
 
-    void connect(TerminalIO<InS, OutS, std::queue<InS>, std::queue<OutS>, Prop>*);
+    void connect(TerminalIO<InS, OutS, Prop>*);
     void disconnect();
 
     void startWork();
@@ -92,15 +89,15 @@ namespace blessings {
     int indexOf(GridPos) const;
     int currentBound() const;
 
-    Cell<OutS, Prop> & operator[] (int p);
-    Cell<OutS, Prop> operator[] (int p) const;
-    Cell<OutS, Prop> & operator()(int x, int y);
-    Cell<OutS, Prop> operator()(int x, int y) const;
+    Cell & operator[] (int p);
+    Cell operator[] (int p) const;
+    Cell & operator()(int x, int y);
+    Cell operator()(int x, int y) const;
 
-    Cell<OutS, Prop> & at(int p);
-    Cell<OutS, Prop> at (int p) const;
-    Cell<OutS, Prop> & at(int x, int y);
-    Cell<OutS, Prop> at (int x, int y) const;
+    Cell & at(int p);
+    Cell at (int p) const;
+    Cell & at(int x, int y);
+    Cell at (int x, int y) const;
 
     Iterator begin();
     Iterator end();
@@ -138,27 +135,21 @@ namespace blessings {
     void draw(resChange drawMode=alarm);
     void lazyDraw(resChange drawMode=alarm);
     void hardOptimization(bool);
-    
-    // PropertyType getPropertyType();
-
-    int boldSupported();    // Must be rewritten
-    int italicsSupported();
 
     class Error {};
     class DrawError : public Error {};
     class ResolutionDisparity : public DrawError {};
     class TerminalModeError : public DrawError {};
 
-  protected:
-    Cell<OutS, Prop>* grid;
-    TerminalIO<InS, OutS, std::queue<InS>, std::queue<OutS>, Prop>* termIO;
-    
+  private:
+    Cell* grid;
+    TerminalIO<InS, OutS, Prop>* termIO;
+
     int maxSize;
     MonitorResolution res;
 
     bool isDrawn=false;
 
-  private:
     void checkMode();
     void checkResolution(resChange);
   };
