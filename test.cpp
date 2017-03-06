@@ -6,7 +6,7 @@
 
 #include "symbol_utf8/symbol_utf8.hpp"
 #include "property.hpp"
-#include "linux/terminal_io_ansi_linux.hpp"
+#include "linux/ANSI/terminal_io_ansi_linux.hpp"
 #include "monitor.hpp"
 #include "additional_structs.hpp"
 
@@ -95,5 +95,5 @@ int main() {
   //fclose(in);
 
   return 0;
-  
+
 }

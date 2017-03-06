@@ -234,7 +234,7 @@ namespace blessings {
     return getSymbol(str, str+strlen(str));
   }
 
-  std::pair<SymbolUTF8, const char*> SymbolUTF8::getSymbol(const char* str,\
+  SymbolUTF8 SymbolUTF8::getSymbol(const char* str,\
   size_t n) {
     if(n==0) throw InitError();
     else if(str==nullptr) throw InitError();
@@ -247,7 +247,7 @@ namespace blessings {
 
     if(n<static_cast<size_t>(size)) throw InitError();
 
-    return std::pair<SymbolUTF8, const char*>(SymbolUTF8(str, size), str+size);
+    return SymbolUTF8(str, size);
   }
 
   std::istream& operator>>(std::istream& stream, SymbolUTF8& sym) {
@@ -324,7 +324,7 @@ namespace blessings {
     return ret;
   }
 
-  void SymbolUTF8::writeToFile(FILE* file) {
+  void SymbolUTF8::writeToFile(FILE* file) const {
     for (int8_t i=0; i<size_; ++i) {
       int temp=fputc(static_cast<int>(arr_[i]), file);
       if (temp==EOF) throw SymbolUTF8::IOError();
@@ -356,16 +356,17 @@ namespace blessings {
     return ret;
   }
 
-  SymbolUTF8::operator char32_t() {
+  SymbolUTF8::operator char32_t() const {
     Converter conv;
     conv.ch=0;
 
-    char* ch=arr_;
-    while (size_) {
+    const char* ch=arr_;
+    uint8_t size=size_;
+    while (size) {
       conv.ch<<=8;
       conv.arr_[0]=*ch;
 
-      --size_;
+      --size;
       ++ch;
     }
 

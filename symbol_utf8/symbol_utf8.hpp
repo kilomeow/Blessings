@@ -47,7 +47,7 @@ namespace blessings {
 
     uint32_t unicode() const;
 
-    operator char32_t();
+    operator char32_t() const;
 
     friend bool operator==(const SymbolUTF8&, const SymbolUTF8&);
     friend bool operator!=(const SymbolUTF8&, const SymbolUTF8&);
@@ -56,11 +56,10 @@ namespace blessings {
     friend std::istream& operator>>(std::istream&, SymbolUTF8&);
 
     static SymbolUTF8 readFromFile(FILE*);
-    void writeToFile(FILE*);
+    void writeToFile(FILE*) const;
 
     static std::pair<SymbolUTF8, const char*> getSymbol(const char* str);
-    static std::pair<SymbolUTF8, const char*> getSymbol(const char* str,\
-    size_t n);
+    SymbolUTF8 getSymbol(const char* str, size_t n);
     template <typename CharIteratorT>
     static std::pair<SymbolUTF8, CharIteratorT> getSymbol(CharIteratorT begin,
     CharIteratorT end);
