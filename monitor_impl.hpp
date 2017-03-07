@@ -365,17 +365,17 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  MonitorResolution Monitor<InS,OutS,Prop>::getCurrentResolution() {
+  Resolution Monitor<InS,OutS,Prop>::getCurrentResolution() {
     return res;
   }
 
   template <typename InS, typename OutS, typename Prop>
-  MonitorResolution Monitor<InS,OutS,Prop>::getTerminalResolution() {
+  Resolution Monitor<InS,OutS,Prop>::getTerminalResolution() {
     return termIO->getResolution();
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void Monitor<InS,OutS,Prop>::setResolution(MonitorResolution mr) {
+  void Monitor<InS,OutS,Prop>::setResolution(Resolution mr) {
     if ((mr.width<=0) || (mr.height<=0)) throw Error(); // "wrong resolution"
     if (mr.width*mr.height>maxSize) throw Error(); // "resolution out of range"
     res = mr;
@@ -385,7 +385,7 @@ namespace blessings {
 
   template <typename InS, typename OutS, typename Prop>
   void Monitor<InS,OutS,Prop>::setResolution(int w, int h) {
-    MonitorResolution mr(w, h);
+    Resolution mr(w, h);
     setResolution(mr);
   }
 

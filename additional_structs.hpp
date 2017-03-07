@@ -6,7 +6,7 @@ namespace blessings {
     int width;
     int height;
 
-    MonitorResolution(int w=0, int h=0) : width(w), height(h) {}
+    Resolution(int w=0, int h=0) : width(w), height(h) {}
   };
 
   struct GridPos {
@@ -16,27 +16,27 @@ namespace blessings {
     GridPos(int X=0, int Y=0) : x(X), y(Y) {};
   };
 
-  inline bool operator==(const MonitorResolution& a, const MonitorResolution& b) {
+  inline bool operator==(const Resolution& a, const Resolution& b) {
     return a.width==b.width && a.height==b.height;
   }
 
-  inline bool operator!=(const MonitorResolution& a, const MonitorResolution& b) {
+  inline bool operator!=(const Resolution& a, const Resolution& b) {
     return a.width!=b.width || a.height!=b.height;
   }
 
-  inline bool operator<(const MonitorResolution& a, const MonitorResolution& b) {
+  inline bool operator<(const Resolution& a, const Resolution& b) {
     return a.width<b.width && a.height<b.height;
   }
 
-  inline bool operator<=(const MonitorResolution& a, const MonitorResolution& b) {
+  inline bool operator<=(const Resolution& a, const Resolution& b) {
     return a.width<=b.width && a.height<=b.height;
   }
 
-  inline bool operator>(const MonitorResolution& a, const MonitorResolution& b) {
+  inline bool operator>(const Resolution& a, const Resolution& b) {
     return a.width>b.width && a.height>b.height;
   }
 
-  inline bool operator>=(const MonitorResolution& a, const MonitorResolution& b) {
+  inline bool operator>=(const Resolution& a, const Resolution& b) {
     return a.width>=b.width && a.height>=b.height;
   }
 

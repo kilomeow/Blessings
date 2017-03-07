@@ -118,9 +118,9 @@ namespace blessings {
     //void tileRectangle(OutS, Prop, int x1, int y1, int x2, int y2);
     //void tileRectangle(OutS, int x1, int y1, int x2, int y2);
 
-    MonitorResolution getCurrentResolution();
-    MonitorResolution getTerminalResolution();
-    void setResolution(MonitorResolution);
+    Resolution getCurrentResolution();
+    Resolution getTerminalResolution();
+    void setResolution(Resolution);
     void setResolution(int w, int h);
     void updateResolution();
 
@@ -163,7 +163,7 @@ namespace blessings {
     TerminalIO<InS, OutS, Prop>* termIO;
 
     int maxSize;
-    MonitorResolution res;
+    Resolution res;
 
     bool isDrawn=false;
     bool cursorVisible=false;
