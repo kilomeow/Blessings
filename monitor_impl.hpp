@@ -107,14 +107,14 @@ namespace blessings {
   typename Monitor<InS,OutS,Prop>::Cell& Monitor<InS,OutS,Prop>::operator() (int x, int y) {
     if ((x<0) || (x>res.width) || (y<0) || (y>res.height)) throw Error();
     //Monitor::Error("(x,y) out of range");
-    return grid[p];
+    return grid[x+y*res.width];
   }
 
   template <typename InS, typename OutS, typename Prop>
   typename Monitor<InS,OutS,Prop>::Cell Monitor<InS,OutS,Prop>::operator() (int x, int y) const {
     if ((x<0) || (x>res.width) || (y<0) || (y>res.height)) throw Error();
     //Monitor::Error("(x,y) out of range");
-    return grid[p];
+    return grid[x+y*res.width];
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -211,6 +211,7 @@ namespace blessings {
     grid = it.grid;
     pointer = it.pointer;
     stopPos = it.stopPos;
+    return (*this);
   }
 
   template <typename InS, typename OutS, typename Prop>
