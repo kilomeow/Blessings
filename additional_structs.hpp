@@ -1,7 +1,7 @@
 #pragma once
 
 namespace blessings {
-  class MonitorResolution {
+  class Resolution {
   public:
     int width;
     int height;

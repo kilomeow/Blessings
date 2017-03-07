@@ -401,13 +401,13 @@ namespace blessings {
   }
 
   template<typename InS, typename OutS, typename Property>
-  MonitorResolution TerminalIOANSILinux<InS, OutS, Property>::getResolution() {
+  Resolution TerminalIOANSILinux<InS, OutS, Property>::getResolution() {
     if (!inited) throw BadMode();
 
     winsize ws;
     int temp=ioctl(fd, TIOCGWINSZ, &ws);
     if (temp==-1) throw DeviceError();
 
-    return MonitorResolution(ws.ws_col, ws.ws_row);
+    return Resolution(ws.ws_col, ws.ws_row);
   }
 }

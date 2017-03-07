@@ -48,7 +48,7 @@ namespace blessings {
     void disconnect();
 
     //Device info
-    MonitorResolution getResolution();
+    Resolution getResolution();
 
     //IO
     void print(OutS, const Property&);

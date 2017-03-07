@@ -9,7 +9,7 @@ namespace blessings {
   class TerminalIO {
   public:
     //Device info
-    virtual MonitorResolution getResolution()=0;
+    virtual Resolution getResolution()=0;
 
     //IO
     virtual void print(OutS, const Property&)=0;
