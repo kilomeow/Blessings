@@ -38,6 +38,8 @@ namespace blessings {
   setSGR(const PropertyANSI& prop) {
     if (prop!=currentProperty) {
       try {
+        resetSGR();
+
         if (prop.bold) {
           ws->write(ANSISymbolTable<SymbolUTF8>::ESCSymbol);
           ws->write(ANSISymbolTable<SymbolUTF8>::openBracket);
@@ -125,6 +127,8 @@ namespace blessings {
       catch(...) {
         throw IOError();
       }
+
+      currentProperty=prop;
     }
   }
 

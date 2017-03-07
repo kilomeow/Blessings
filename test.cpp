@@ -19,7 +19,7 @@ typedef PropertyANSI P;
 typedef TerminalIOANSILinux<S, S, P> TL;
 typedef Monitor<S, S, P> M;
 
-int main() {
+void test_dest00() {
   TL term;
 
   P yell(ColorANSI(3));
@@ -45,7 +45,9 @@ int main() {
   }
 
   monitor.endWork();
+}
 
+void test_dest01() {
   //FILE * in = fopen("logo.txt", "r");
   //int s;
   //char c;
@@ -93,7 +95,31 @@ int main() {
   //}
 
   //fclose(in);
+}
+
+int main() {
+  TL term;
+
+  P yell(ColorANSI(3));
+
+  term.init();
+
+  M monitor(1000);
+  monitor.connect(&term);
+
+  monitor.setResolution(50, 10);
+  monitor.startWork();
+
+  monitor.hardOptimization(true);
+
+  monitor.tile(S("."));
+  monitor(0,0)=SymbolUTF8("a");
+  monitor(0,1)=M::Cell(SymbolUTF8("a"), PropertyANSI::highlight);
+  monitor(0,2)=SymbolUTF8("a");
+  
+  monitor.draw(M::resChange::ignore);
+
+  monitor.endWork();
 
   return 0;
-
 }

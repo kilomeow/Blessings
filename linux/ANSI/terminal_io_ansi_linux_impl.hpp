@@ -111,6 +111,8 @@ namespace blessings {
     if (!inited) throw BadMode();
 
     try {
+      setSGR(Property::empty);
+
       ws->write(sym);
 
       ws->flush();
