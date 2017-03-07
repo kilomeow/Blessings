@@ -37,6 +37,7 @@ namespace blessings {
     bool bold;
 
     static const PropertyANSI empty;
+    static const PropertyANSI highlight;
 
     PropertyANSI(ColorANSI clr=ColorANSI::NONE, \
       ColorANSI bgclr=ColorANSI::NONE, bool itl=false, bool bld=false) :

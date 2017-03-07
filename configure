@@ -74,7 +74,7 @@ def walk(dir):
 
             print("Working with "+path[len(currPath)+1:])
 
-            os.system("g++ --std=c++11 -MM -MF "+tempFile+" -MT build/"+path[len(currPath)+1:-3]+"o "+path)
+            os.system("g++ --std=c++14 -MM -MF "+tempFile+" -MT build/"+path[len(currPath)+1:-3]+"o "+path)
 
             f=open(tempFile, "r")
             lines=f.readlines();
@@ -113,9 +113,9 @@ for triple in structure:
     thirdStr=""
 
     if not gcc:
-        thirdStr="\tclang --std=c++11 -fpic -c -o "+triple[1]+compilerKeysStr+includeDirsStr+" "+triple[0]+"\n"
+        thirdStr="\tclang --std=c++14 -fpic -c -o "+triple[1]+compilerKeysStr+includeDirsStr+" "+triple[0]+"\n"
     else:
-        thirdStr="\tg++ --std=c++11 -fpic -c -o "+triple[1]+compilerKeysStr+includeDirsStr+" "+triple[0]+"\n"
+        thirdStr="\tg++ --std=c++14 -fpic -c -o "+triple[1]+compilerKeysStr+includeDirsStr+" "+triple[0]+"\n"
 
     makefile.append(secondStr)
     makefile.append(thirdStr)
@@ -151,9 +151,9 @@ for triple in structure:
 firstStr=firstStr+"\n"
 
 if not gcc:
-    secondStr="\tclang --std=c++11 -shared -o "+outputSharedLibName+compilerKeysStr+" $^\n"
+    secondStr="\tclang --std=c++14 -shared -o "+outputSharedLibName+compilerKeysStr+" $^\n"
 else:
-    secondStr="\tg++ --std=c++11 -shared -o "+outputSharedLibName+compilerKeysStr+" $^\n"
+    secondStr="\tg++ --std=c++14 -shared -o "+outputSharedLibName+compilerKeysStr+" $^\n"
 
 makefile.append(firstStr)
 makefile.append(secondStr)
@@ -167,9 +167,9 @@ firstStr=firstStr+"\n"
 
 secondStr=""
 if not gcc:
-    secondStr="\tclang --std=c++11 -o work"+compilerKeysStr+libsStr+libDirsStr+" $^\n"
+    secondStr="\tclang --std=c++14 -o work"+compilerKeysStr+libsStr+libDirsStr+" $^\n"
 else:
-    secondStr="\tg++ --std=c++11  -o work"+compilerKeysStr+libsStr+libDirsStr+" $^\n"
+    secondStr="\tg++ --std=c++14  -o work"+compilerKeysStr+libsStr+libDirsStr+" $^\n"
 
 makefile=makefile+[firstStr]+[secondStr]
 
