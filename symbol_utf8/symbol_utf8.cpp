@@ -10,6 +10,8 @@
 using namespace std;
 
 namespace blessings {
+  const SymbolUTF8 SymbolUTF8::space({static_cast<char>(0x20)});
+
   SymbolUTF8::SymbolUTF8(char c) noexcept {
     if (c&0b10000000) {
       arr_[0]=0b11000000|(c>>6);
@@ -402,6 +404,8 @@ namespace blessings {
       conv.ui<<=6;
       conv.arr_[0]|=arr_[3]&0b00111111;
       return conv.ui;
+    default:
+      throw InternalError();
     }
   }
 }

@@ -47,4 +47,8 @@ namespace blessings {
   inline bool operator!=(const GridPos& a, const GridPos& b) {
     return a.x!=b.x || a.y!=b.y;
   }
+
+  inline GridPos operator+(const GridPos& a, const GridPos& b) {
+    return GridPos(a.x+b.x, a.y+b.y);
+  }
 }
