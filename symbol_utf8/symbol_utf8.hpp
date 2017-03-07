@@ -1,5 +1,10 @@
 #pragma once
 
+/* Test for a little-endian machine */
+#if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
+#error "Machines with non-little endian orders for SymbolUTF8 is not supported"
+#endif
+
 #include <string>
 #include <iostream>
 #include <cstdio>
@@ -14,10 +19,11 @@ namespace blessings {
 
     operator uint32_t() const;
   public:
-    class Error;
-    class IOError;
-    class InitError;
-    class AccessError;
+    class Error : public BlessingsError {};
+    class IOError : public Error {};
+    class InitError : public Error {};
+    class AccessError : public Error {};
+    class InternalError : public Error {};
 
     union Converter {
       char arr_[4];
@@ -63,6 +69,8 @@ namespace blessings {
     template <typename CharIteratorT>
     static std::pair<SymbolUTF8, CharIteratorT> getSymbol(CharIteratorT begin,
     CharIteratorT end);
+
+    static const SymbolUTF8 space;
   };
 
   bool operator==(const SymbolUTF8&, const SymbolUTF8&);
@@ -70,10 +78,4 @@ namespace blessings {
 
   std::ostream& operator<<(std::ostream& stream, const SymbolUTF8& sym);
   std::istream& operator>>(std::istream& stream, SymbolUTF8& sym);
-
-  //Errors
-  class SymbolUTF8::Error : public BlessingsError {};
-  class SymbolUTF8::IOError : public SymbolUTF8::Error {};
-  class SymbolUTF8::InitError : public SymbolUTF8::Error {};
-  class SymbolUTF8::AccessError : public SymbolUTF8::Error {};
 }
