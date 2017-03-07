@@ -54,7 +54,7 @@ namespace blessings {
     void print(OutS, const Property&);
     void print(OutS);
 
-    std::queue<InS> getSymbol(int n=1) {return std::queue<InS>();}; //TODO: rewrite!
+    std::queue<InS> getSymbol(int n=1); //TODO: rewrite!
     void clearInputBuffer() {};
 
     //Screen state

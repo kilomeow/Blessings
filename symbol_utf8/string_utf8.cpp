@@ -139,7 +139,7 @@ namespace blessings {
       data=it->data();
       size=it->size();
 
-      for(int i=0; i<size; ++i) ret[currPos+i]=data[i];
+      for(size_t i=0; i<size; ++i) ret[currPos+i]=data[i];
       currPos+=size;
     }
 
@@ -166,8 +166,6 @@ namespace blessings {
 
   StringUTF8::StringUTF8(const string& str) :
   basic_string<SymbolUTF8, SymbolUTF8Traits>() {
-    size_t size=str.size();
-
     auto it=str.begin();
     while (it!=str.end()) {
       pair<SymbolUTF8, decltype(it)> temp;
