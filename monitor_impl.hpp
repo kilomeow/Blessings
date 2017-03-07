@@ -58,18 +58,17 @@ namespace blessings {
   void Monitor<InS,OutS,Prop>::startWork() {
     termIO->setNonCanonicalMode();
     termIO->setEchoInhibition();
-    termIO->hideCursor();
     clearScreen();
-    moveCursorTo(1, 1);
+    resetCursor();
   }
 
   template <typename InS, typename OutS, typename Prop>
   void Monitor<InS,OutS,Prop>::endWork() {
     termIO->setCanonicalMode();
     termIO->setEchoForward();
-    termIO->showCursor();
     clearScreen();
-    moveCursorTo(1, 1);
+    resetCursor();
+    showCursor();
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -106,18 +105,26 @@ namespace blessings {
 
   template <typename InS, typename OutS, typename Prop>
   typename Monitor<InS,OutS,Prop>::Cell& Monitor<InS,OutS,Prop>::operator() (int x, int y) {
-    int p = x+y*res.width;
-    if ((p<0) || (p>=currentBound())) throw Monitor::Error();
-    //Monitor::Error("p out of range");
+    if ((x<0) || (x>res.width) || (y<0) || (y>res.height)) throw Error();
+    //Monitor::Error("(x,y) out of range");
     return grid[p];
   }
 
   template <typename InS, typename OutS, typename Prop>
   typename Monitor<InS,OutS,Prop>::Cell Monitor<InS,OutS,Prop>::operator() (int x, int y) const {
-    int p = x+y*res.width;
-    if ((p<0) || (p>=currentBound())) throw Monitor::Error();
-    //Monitor::Error("p out of range");
+    if ((x<0) || (x>res.width) || (y<0) || (y>res.height)) throw Error();
+    //Monitor::Error("(x,y) out of range");
     return grid[p];
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  typename Monitor<InS,OutS,Prop>::Cell& Monitor<InS,OutS,Prop>::operator() (GridPos p) {
+    return this->at(p.x, p.y);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  typename Monitor<InS,OutS,Prop>::Cell Monitor<InS,OutS,Prop>::operator() (GridPos p) const {
+    return this->at(p.x, p.y);
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -138,6 +145,16 @@ namespace blessings {
   template <typename InS, typename OutS, typename Prop>
   typename Monitor<InS,OutS,Prop>::Cell Monitor<InS,OutS,Prop>::at (int x, int y) const {
     return (*this)(x, y);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  typename Monitor<InS,OutS,Prop>::Cell& Monitor<InS,OutS,Prop>::at (GridPos p) {
+    return this->at(p.x, p.y);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  typename Monitor<InS,OutS,Prop>::Cell Monitor<InS,OutS,Prop>::at (GridPos p) const {
+    return this->at(p.x, p.y);
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -361,6 +378,7 @@ namespace blessings {
     if ((mr.width<=0) || (mr.height<=0)) throw Error(); // "wrong resolution"
     if (mr.width*mr.height>maxSize) throw Error(); // "resolution out of range"
     res = mr;
+    resetCursor();
     isDrawn = false;
   }
 
@@ -372,37 +390,58 @@ namespace blessings {
 
   template <typename InS, typename OutS, typename Prop>
   void Monitor<InS,OutS,Prop>::moveCursor(int x, int y) {
+    // field check?
     termIO->moveCursor(x, y);
   }
 
   template <typename InS, typename OutS, typename Prop>
   void Monitor<InS,OutS,Prop>::moveCursorTo(int x, int y) {
-    termIO->moveCursorTo(x, y);
+    if ((x<0) || (x>res.width) || (y<0) || (y>res.height)) throw Error();
+    termIO->moveCursorTo(x+1, y+1);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  void Monitor<InS,OutS,Prop>::moveCursorTo(int p) {
+    moveCursorTo(positionOf(p));
   }
 
   template <typename InS, typename OutS, typename Prop>
   void Monitor<InS,OutS,Prop>::moveCursorTo(GridPos pos) {
-    termIO->moveCursorTo(pos.x+1, pos.y+1);
+    moveCursorTo(pos.x, pos.y);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  void Monitor<InS,OutS,Prop>::resetCursor() {
+    hideCursor();
+    moveCursorTo(0, 0);
   }
 
   template <typename InS, typename OutS, typename Prop>
   void Monitor<InS,OutS,Prop>::hideCursor() {
     termIO->hideCursor();
+    cursorVisible = false;
   }
 
   template <typename InS, typename OutS, typename Prop>
   void Monitor<InS,OutS,Prop>::showCursor() {
     termIO->showCursor();
+    cursorVisible = true;
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void Monitor<InS,OutS,Prop>::saveCursorPos() {
+  void Monitor<InS,OutS,Prop>::saveCursor() {
     termIO->saveCursorPos();
+    cursorVisibleSlot = cursorVisible;
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void Monitor<InS,OutS,Prop>::restoreCursorPos() {
+  void Monitor<InS,OutS,Prop>::restoreCursor() {
     termIO->restoreCursorPos();
+    if (cursorVisibleSlot) {
+      showCursor();
+    } else {
+      hideCursor();
+    }
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -472,9 +511,14 @@ namespace blessings {
   void Monitor<InS,OutS,Prop>::draw(Monitor::resChange drawMode) {
     checkMode();
     checkResolution(drawMode);
-    moveCursorTo(1, 1);
+
+    saveCursor();
+    resetCursor();
+
     printPage();
     isDrawn = true;
+
+    restoreCursor();
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -483,17 +527,24 @@ namespace blessings {
       draw();
       return;
     }
+
     checkMode();
     checkResolution(drawMode);
+
+    saveCursor();
+    resetCursor();
+
     Monitor::Iterator i = begin();
     while (!i.isEnd()) {
       if ((*i).isUnstaged()) {
-        moveCursorTo(positionOf(i.index()));
+        moveCursorTo(i.index());
         termIO->print((*i).symbol(), (*i).property());
         (*i).setStaged();
       }
       i++;
     }
+
+    restoreCursor();
   }
 
   template <typename InS, typename OutS, typename Prop>

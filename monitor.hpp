@@ -28,7 +28,7 @@ namespace blessings {
       ~Cell() {}
       Cell(const Cell&);
       Cell& operator=(const Cell&);
-      
+
       OutS symbol() {return symb;}
       Prop property() {return prop;}
 
@@ -98,11 +98,15 @@ namespace blessings {
     Cell operator[] (int p) const;
     Cell & operator()(int x, int y);
     Cell operator()(int x, int y) const;
+    Cell & operator()(GridPos);
+    Cell operator()(GridPos) const;
 
     Cell & at(int p);
     Cell at (int p) const;
     Cell & at(int x, int y);
     Cell at (int x, int y) const;
+    Cell & at(GridPos);
+    Cell at(GridPos) const;
 
     Iterator begin();
     Iterator end();
@@ -117,13 +121,14 @@ namespace blessings {
     void updateResolution();
 
     void moveCursor(int x, int y);
+    //void moveCursor(int p);
     void moveCursorTo(int x, int y);
+    void moveCursorTo(int p);
     void moveCursorTo(GridPos);
 
+    void resetCursor();
     void hideCursor();
     void showCursor();
-    void saveCursorPos();
-    void restoreCursorPos();
 
     std::queue<InS> getSymbol(int n=1);
     void printSymbol(OutS, Prop);
@@ -154,6 +159,11 @@ namespace blessings {
     MonitorResolution res;
 
     bool isDrawn=false;
+    bool cursorVisible=false;
+    bool cursorVisibleSlot;
+
+    void saveCursor();
+    void restoreCursor();
 
     void checkMode();
     void checkResolution(resChange);
