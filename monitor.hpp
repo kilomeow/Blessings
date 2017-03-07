@@ -113,6 +113,10 @@ namespace blessings {
 
     void tile(OutS, Prop);
     void tile(OutS);
+    //void tileRectangle(OutS, Prop, GridPos p1, GridPos p2);
+    //void tileRectangle(OutS, GridPos p1, GridPos p2);
+    //void tileRectangle(OutS, Prop, int x1, int y1, int x2, int y2);
+    //void tileRectangle(OutS, int x1, int y1, int x2, int y2);
 
     MonitorResolution getCurrentResolution();
     MonitorResolution getTerminalResolution();
@@ -129,6 +133,9 @@ namespace blessings {
     void resetCursor();
     void hideCursor();
     void showCursor();
+    bool isCursorVisible();
+
+    void clearInputBuffer();
 
     std::queue<InS> getSymbol(int n=1);
     void printSymbol(OutS, Prop);
@@ -167,6 +174,9 @@ namespace blessings {
 
     void checkMode();
     void checkResolution(resChange);
+    //void checkPos(GridPos);
+    //void checkPos(int x, int y);
+    //void checkPos(int p);
   };
 
 }

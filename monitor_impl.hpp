@@ -430,6 +430,16 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
+  bool Monitor<InS,OutS,Prop>::isCursorVisible() {
+    return cursorVisible;
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  void Monitor<InS,OutS,Prop>::clearInputBuffer() {
+    termIO->clearInputBuffer();
+  }
+
+  template <typename InS, typename OutS, typename Prop>
   void Monitor<InS,OutS,Prop>::saveCursor() {
     termIO->saveCursorPos();
     cursorVisibleSlot = cursorVisible;
