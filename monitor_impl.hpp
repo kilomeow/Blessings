@@ -192,7 +192,7 @@ namespace blessings {
 
   template <typename InS, typename OutS, typename Prop>
   Monitor<InS,OutS,Prop>::Iterator::Iterator(Monitor<InS,OutS,Prop>::Cell* Grid, int ptr, int bound) {
-    if ((ptr<0) || (ptr>stopPos)) throw Monitor::Iterator::Error();
+    if ((ptr<0) || (ptr>bound)) throw Monitor::Iterator::Error();
     //Monitor::Iterator::Error("pointer out of range");
     grid = Grid;
     pointer = ptr;
