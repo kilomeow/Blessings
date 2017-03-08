@@ -174,9 +174,9 @@ firstStr=firstStr+"\n"
 
 secondStr=""
 if not gcc:
-    secondStr="\tclang --std=c++14 -o work"+compilerKeysStr+libsStr+libDirsStr+" $^\n"
+    secondStr="\tclang --std=c++14 -o work"+compilerKeysStr+libDirsStr+" $^"+libsStr+"\n"
 else:
-    secondStr="\tg++ --std=c++14  -o work"+compilerKeysStr+libsStr+libDirsStr+" $^\n"
+    secondStr="\tg++ --std=c++14  -o work"+compilerKeysStr+libDirsStr+" $^"+libsStr+"\n"
 
 makefile=makefile+[firstStr]+[secondStr]
 
