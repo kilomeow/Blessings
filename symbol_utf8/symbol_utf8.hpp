@@ -76,6 +76,11 @@ namespace blessings {
   bool operator==(const SymbolUTF8&, const SymbolUTF8&);
   bool operator!=(const SymbolUTF8&, const SymbolUTF8&);
 
+  bool operator<=(const SymbolUTF8&, const SymbolUTF8&);
+  bool operator<(const SymbolUTF8&, const SymbolUTF8&);
+  bool operator>=(const SymbolUTF8&, const SymbolUTF8&);
+  bool operator>(const SymbolUTF8&, const SymbolUTF8&);
+
   std::ostream& operator<<(std::ostream& stream, const SymbolUTF8& sym);
   std::istream& operator>>(std::istream& stream, SymbolUTF8& sym);
 }

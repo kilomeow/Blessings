@@ -180,4 +180,22 @@ namespace blessings {
       it=temp.second;
     }
   }
+
+  StringUTF8& StringUTF8::operator=(const StringUTF8& other) {
+    if (this==&other) return *this;
+
+    basic_string<SymbolUTF8, SymbolUTF8Traits>& str=*this;
+    str=other;
+
+    return *this;
+  };
+
+  StringUTF8& StringUTF8::operator=(StringUTF8&& other) {
+    if (this==&other) return *this;
+
+    basic_string<SymbolUTF8, SymbolUTF8Traits>& str=*this;
+    str=other;
+
+    return *this;
+  };
 }

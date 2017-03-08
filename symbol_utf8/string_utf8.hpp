@@ -83,6 +83,10 @@ namespace blessings {
     std::basic_string<SymbolUTF8, SymbolUTF8Traits>(init, alloc) {};
 
 
+    StringUTF8& operator=(const StringUTF8&); //TODO(KernelOps) complete according to stl
+    StringUTF8& operator=(StringUTF8&&);
+
+
     StringUTF8(const char*);
     StringUTF8(const std::string&);
 

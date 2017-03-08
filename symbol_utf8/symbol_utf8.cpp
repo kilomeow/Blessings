@@ -408,4 +408,20 @@ namespace blessings {
       throw InternalError();
     }
   }
+
+  bool operator<=(const SymbolUTF8& a, const SymbolUTF8& b) {
+    return a.unicode()<=b.unicode();
+  }
+
+  bool operator<(const SymbolUTF8& a, const SymbolUTF8& b) {
+    return a.unicode()<b.unicode();
+  }
+
+  bool operator>=(const SymbolUTF8& a, const SymbolUTF8& b) {
+    return a.unicode()>=b.unicode();
+  }
+
+  bool operator>(const SymbolUTF8& a, const SymbolUTF8& b) {
+    return a.unicode()>b.unicode();
+  }
 }
