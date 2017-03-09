@@ -92,7 +92,7 @@ namespace blessings {
 
     GridPos positionOf(int) const;
     int indexOf(GridPos) const;
-    int currentBound() const;
+    int bound() const;
 
     Cell & operator[] (int p);
     Cell operator[] (int p) const;
@@ -113,12 +113,18 @@ namespace blessings {
 
     void tile(OutS, Prop);
     void tile(OutS);
-    //void tileRectangle(OutS, Prop, GridPos p1, GridPos p2);
-    //void tileRectangle(OutS, GridPos p1, GridPos p2);
-    //void tileRectangle(OutS, Prop, int x1, int y1, int x2, int y2);
-    //void tileRectangle(OutS, int x1, int y1, int x2, int y2);
+    void tile();
+    void tile(OutS, Prop, int x1, int y1, int x2, int y2);
+    void tile(OutS, int x1, int y1, int x2, int y2);
+    void tile(int x1, int y1, int x2, int y2);
+    void tile(OutS, Prop, GridPos p1, GridPos p2);
+    void tile(OutS, GridPos p1, GridPos p2);
+    void tile(GridPos p1, GridPos p2);
+    void tile(OutS, Prop, GridPos p1, Resolution r);
+    void tile(OutS, GridPos p1, Resolution r);
+    void tile(GridPos p1, Resolution r);
 
-    Resolution getCurrentResolution();
+    Resolution getResolution();
     Resolution getTerminalResolution();
     void setResolution(Resolution);
     void setResolution(int w, int h);
@@ -141,6 +147,10 @@ namespace blessings {
     void printSymbol(OutS, Prop);
     void printSymbol(OutS);
 
+    void hardOptimization(bool);
+    //void lazyDraw(bool);
+    //void lazyTile(bool);
+
     enum resChange {
       alarm,
       ignore,
@@ -150,8 +160,7 @@ namespace blessings {
     void clearScreen();
     void printPage();
     void draw(resChange drawMode=alarm);
-    void lazyDraw(resChange drawMode=alarm);
-    void hardOptimization(bool);
+    void lazyDraw(resChange drawMode=alarm); //will be removed
 
     class Error {};
     class DrawError : public Error {};
@@ -169,6 +178,9 @@ namespace blessings {
     bool cursorVisible=false;
     bool cursorVisibleSlot;
 
+    //bool lazydraw=false;
+    //bool lazytile=false;
+
     void saveCursor();
     void restoreCursor();
 
@@ -177,6 +189,8 @@ namespace blessings {
     //void checkPos(GridPos);
     //void checkPos(int x, int y);
     //void checkPos(int p);
+
+    //void overPrint();
   };
 
 }

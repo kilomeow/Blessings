@@ -85,20 +85,20 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  int Monitor<InS,OutS,Prop>::currentBound() const {
+  int Monitor<InS,OutS,Prop>::bound() const {
     return res.width*res.height;
   }
 
   template <typename InS, typename OutS, typename Prop>
   typename Monitor<InS,OutS,Prop>::Cell& Monitor<InS,OutS,Prop>::operator[] (int p) {
-    if ((p<0) || (p>=currentBound())) throw Monitor::Error();
+    if ((p<0) || (p>=bound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
 
   template <typename InS, typename OutS, typename Prop>
   typename Monitor<InS,OutS,Prop>::Cell Monitor<InS,OutS,Prop>::operator[] (int p) const {
-    if ((p<0) || (p>=currentBound())) throw Monitor::Error();
+    if ((p<0) || (p>=bound())) throw Monitor::Error();
     //Monitor::Error("p out of range");
     return grid[p];
   }
@@ -338,13 +338,13 @@ namespace blessings {
 
   template <typename InS, typename OutS, typename Prop>
   typename Monitor<InS,OutS,Prop>::Iterator Monitor<InS,OutS,Prop>::begin() {
-    Monitor::Iterator i(grid, 0, currentBound());
+    Monitor::Iterator i(grid, 0, bound());
     return i;
   }
 
   template <typename InS, typename OutS, typename Prop>
   typename Monitor<InS,OutS,Prop>::Iterator Monitor<InS,OutS,Prop>::end() {
-    Monitor::Iterator i(grid, currentBound(), currentBound());
+    Monitor::Iterator i(grid, bound(), bound());
     return i;
   }
 
@@ -365,7 +365,69 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  Resolution Monitor<InS,OutS,Prop>::getCurrentResolution() {
+  void Monitor<InS,OutS,Prop>::tile() {
+    tile(OutS::space, Prop::empty);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  void Monitor<InS,OutS,Prop>::tile(OutS s, Prop p, int x1, int y1, int x2, int y2) {
+    int l = std::min(x1, x2); //left
+    int r = std::max(x1, x2); //right
+    int u = std::min(y1, y2); //up
+    int d = std::max(y1, y2); //down
+
+    if ((l<0) || (r>=res.width) || (u<0) || (d>=res.height))
+      throw Monitor::ResolutionDisparity();
+
+    Monitor::Cell c(s, p);
+
+    for (int j=l;j<=r;j++)
+    for (int i=u;i<=d;i++)
+      this->at(j, i) = c;
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  void Monitor<InS,OutS,Prop>::tile(OutS s, int x1, int y1, int x2, int y2) {
+    tile(s, Prop::empty, x1, y1, x2, y2);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  void Monitor<InS,OutS,Prop>::tile(int x1, int y1, int x2, int y2) {
+    tile(OutS::space, Prop::empty, x1, y1, x2, y2);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  void Monitor<InS,OutS,Prop>::tile(OutS s, Prop p, GridPos p1, GridPos p2) {
+    tile(s, p, p1.x, p1.y, p2.x, p2.y);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  void Monitor<InS,OutS,Prop>::tile(OutS s, GridPos p1, GridPos p2) {
+    tile(s, Prop::empty, p1.x, p1.y, p2.x, p2.y);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  void Monitor<InS,OutS,Prop>::tile(GridPos p1, GridPos p2) {
+    tile(OutS::space, Prop::empty, p1.x, p1.y, p2.x, p2.y);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  void Monitor<InS,OutS,Prop>::tile(OutS s, Prop p, GridPos p1, Resolution r) {
+    tile(s, p, p1.x, p1.y, p1.x+r.width, p1.y+r.height);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  void Monitor<InS,OutS,Prop>::tile(OutS s, GridPos p1, Resolution r) {
+    tile(s, Prop::empty, p1.x, p1.y, p1.x+r.width, p1.y+r.height);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  void Monitor<InS,OutS,Prop>::tile(GridPos p1, Resolution r) {
+    tile(OutS::space, Prop::empty, p1.x, p1.y, p1.x+r.width, p1.y+r.height);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  Resolution Monitor<InS,OutS,Prop>::getResolution() {
     return res;
   }
 
