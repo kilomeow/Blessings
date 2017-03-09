@@ -85,6 +85,25 @@ void test_dest01(M monitor) {
   fclose(in);
 }
 
+void test_dest02(M monitor) {
+	monitor.updateResolution();
+	
+	monitor.tile();
+	
+	for (int i=0;i<20;i++) {
+		int x1 = rand()%monitor.getResolution().width;
+		int x2 = rand()%monitor.getResolution().width;
+		int y1 = rand()%monitor.getResolution().height;
+		int y2 = rand()%monitor.getResolution().height;
+		
+		P col(ColorANSI(i%6+1));
+		
+		monitor.tile(S("@"), col, x1, y1, x2, y2);
+		monitor.lazyDraw();
+		this_thread::sleep_for(chrono::milliseconds(300));
+	}
+}
+
 void test_melon00(M monitor) {
   monitor.setResolution(50, 10);
 
@@ -103,7 +122,7 @@ void test_melon00(M monitor) {
 
 int main() {
 	TL term;
-	M monitor(5000);
+	M monitor(50000);
 	
 	term.init();
 	monitor.connect(&term);
