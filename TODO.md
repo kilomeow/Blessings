@@ -3,8 +3,12 @@
 - [x] Add rectangle tiling
 - [ ] Make Monitor more protected (empty constructor)
 - [ ] Add lazy tiling
+- [ ] Monitor::Iterator operator->* overloading
 - [ ] Add lazy interface
 - [ ] Add writing-line mode
+
+### TerminalIO
+- [ ] terminfo
 
 ### Widgets
 - [ ] Write core
@@ -22,3 +26,8 @@
 
 ### WriteStream
 - [ ] Write Windows implementation
+
+### Other
+- [ ] Documentation (!)
+- [ ] Readme
+- [ ] Python bindings

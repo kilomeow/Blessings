@@ -22,9 +22,10 @@ namespace blessings {
       bool unstaged = false;
 
     public:
-      Cell() {}
-      Cell(OutS s, Prop p) : symb(s), prop(p) {}
+      Cell() : symb(OutS::space), prop(Prop::empty) {}
       Cell(OutS s) : symb(s), prop(Prop::empty) {}
+      Cell(Prop p) : symb(OutS::space), prop(p) {}
+      Cell(OutS s, Prop p) : symb(s), prop(p) {}
       ~Cell() {}
       Cell(const Cell&);
       Cell& operator=(const Cell&);

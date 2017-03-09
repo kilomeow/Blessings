@@ -1,6 +1,7 @@
 #pragma once
 
 #include <queue>
+#include <algorithm>
 
 #include "monitor.hpp"
 #include "additional_structs.hpp"
