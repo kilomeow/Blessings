@@ -19,20 +19,10 @@ typedef PropertyANSI P;
 typedef TerminalIOANSILinux<S, S, P> TL;
 typedef Monitor<S, S, P> M;
 
-void test_dest00() {
-  TL term;
-
+void test_dest00(M monitor) {
   P yell(ColorANSI(3));
 
-  term.init();
-
-  M monitor(1000);
-  monitor.connect(&term);
-
   monitor.setResolution(50, 10);
-  monitor.startWork();
-
-  monitor.hardOptimization(true);
 
   monitor.tile(S("."));
   monitor.draw(M::resChange::ignore);
@@ -40,75 +30,63 @@ void test_dest00() {
   for (int i=0; i<(500-116); i++) {
     monitor(i/8+1, i%8+1) = M::Cell(S('#'), yell);
     monitor.lazyDraw(M::resChange::ignore);
-    // monitor.draw(M::resChange::ignore);
+    //monitor.draw(M::resChange::ignore);
     this_thread::sleep_for(chrono::milliseconds(3));
   }
-
-  monitor.endWork();
 }
 
-void test_dest01() {
-  //FILE * in = fopen("logo.txt", "r");
-  //int s;
-  //char c;
-  //bool ex=false;
+void test_dest01(M monitor) {
+	monitor.setResolution(50, 10);
+	
+  FILE * in = fopen("logo.txt", "r");
+  int s;
+  char c;
+  bool ex=false;
+  
+  monitor.hardOptimization(true);
 
-  //const P p(ColorANSI(3));
+  monitor.tile(S(" "));
+  monitor.draw(M::resChange::ignore);
 
-  //monitor.tile(S("."), &p);
-  //monitor.draw(M::resChange::ignore);
+  for (int t=0;t<300;t++) {
+    rewind(in);
+    s = 0;
 
-  //for (int t=0;t<300;t++) {
-    //rewind(in);
-    //s = 0;
+    while (s<500) {
+      for (int k=0;k<=t;k++) fscanf(in, "%c", &c);
 
-    //while (s<500) {
-      //for (int k=0;k<=t;k++) fscanf(in, "%c", &c);
+      for (int k=0;k<50;k++) {
+        if (c==*"\n") ex = true;
+        if (ex) break;
 
-      //for (int k=0;k<50;k++) {
-        //if (c==*"\n") ex = true;
-        //if (ex) break;
+        if (c!=*".") {
+          P randcolor(ColorANSI(rand()%6+1));
+          monitor[s] = M::Cell(S(c), randcolor);
+        } else {
+          const P p();
+          monitor[s] = M::Cell(S(" "));
+        }
 
-        ////if (c!=*".") {
-        ////  const P p(ColorANSI(rand()%6+1));
-        ////  monitor[s] = Cell(S(c), &p);
-        ////} else {
-        ////  const P p();
-        ////  monitor[s] = Cell(S(c), &p);
-        ////}
+        fscanf(in, "%c", &c);
+        s++;
+      }
 
-        //monitor[s] = Cell(S(c), &p);
+      if (ex) break;
 
-        //fscanf(in, "%c", &c);
-        //s++;
-      //}
+      while (c !=*"\n") fscanf(in, "%c", &c);
+    }
 
-      //if (ex) break;
+    if (ex) break;
 
-      //while (c !=*"\n") fscanf(in, "%c", &c);
-    //}
+    monitor.lazyDraw(M::resChange::ignore);
+    this_thread::sleep_for(chrono::milliseconds(50));
+  }
 
-    //if (ex) break;
-
-    //monitor.lazyDraw(M::resChange::ignore);
-    //this_thread::sleep_for(chrono::milliseconds(50));
-  //}
-
-  //fclose(in);
+  fclose(in);
 }
 
-int main() {
-  TL term;
-
-  P yell(ColorANSI(3));
-
-  term.init();
-
-  M monitor(1000);
-  monitor.connect(&term);
-
+void test_melon00(M monitor) {
   monitor.setResolution(50, 10);
-  monitor.startWork();
 
   monitor.hardOptimization(true);
 
@@ -118,8 +96,23 @@ int main() {
   monitor(0,2)=SymbolUTF8("a");
   
   monitor.draw(M::resChange::ignore);
+  
+  this_thread::sleep_for(chrono::milliseconds(1000));
+}
 
-  monitor.endWork();
+
+int main() {
+	TL term;
+	M monitor(5000);
+	
+	term.init();
+	monitor.connect(&term);
+	
+	monitor.startWork();
+	
+	test_dest01(monitor);
+	
+	monitor.endWork();
 
   return 0;
 }
