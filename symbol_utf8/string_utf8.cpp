@@ -63,7 +63,13 @@ namespace blessings {
   }
 
   std::ostream& operator<<(std::ostream& stream, const StringUTF8& str) {
-    for (auto it=str.begin(); it!=str.end(); ++it) stream << (*it);
+    try {
+      for (auto it=str.begin(); it!=str.end(); ++it) stream << (*it);
+    }
+    catch (...) {
+      throw StringUTF8::OutputError();
+    }
+
     return stream;
   }
 
@@ -73,25 +79,33 @@ namespace blessings {
 
     locale loc("");
 
-    while (stream) {
-      stream >> sym;
-      if (!isspace(static_cast<char32_t>(sym), loc)) {
-        for (int i=sym.size()-1; i>=0; --i) {
-          stream.putback(sym(i));
+    try {
+      while (stream) {
+        stream >> sym;
+        if (!isspace(static_cast<char32_t>(sym), loc)) {
+          for (int i=sym.size()-1; i>=0; --i) {
+            stream.putback(sym(i));
+          }
+          break;
         }
-        break;
+      }
+
+      while (stream) {
+        stream >> sym;
+        if (!isspace(static_cast<char32_t>(sym), loc)) {
+          for (int i=sym.size()-1; i>=0; --i) {
+            stream.putback(sym(i));
+          }
+          break;
+        }
+        str.push_back(sym);
       }
     }
-
-    while (stream) {
-      stream >> sym;
-      if (!isspace(static_cast<char32_t>(sym), loc)) {
-        for (int i=sym.size()-1; i>=0; --i) {
-          stream.putback(sym(i));
-        }
-        break;
-      }
-      str.push_back(sym);
+    catch (std::ios_base::failure&) {
+      throw StringUTF8::InputError();
+    }
+    catch (SymbolUTF8::IOError&) {
+      throw StringUTF8::InputError();
     }
 
     return stream;
@@ -101,12 +115,20 @@ namespace blessings {
     StringUTF8 ret;
 
     const char* p=str;
-    while (p!=str+n) {
-      auto temp=SymbolUTF8::getSymbol(p, str+n);
+    while (p<str+n) {
+      decltype(SymbolUTF8::getSymbol(p, str+n)) temp;
+      try {
+        temp=SymbolUTF8::getSymbol(p, str+n);
+      }
+      catch (SymbolUTF8::InitError&) {
+        throw StringUTF8::InitError();
+      }
 
       ret.push_back(temp.first);
       p=temp.second;
     }
+
+    if(p>str+n) throw StringUTF8::InitError();
 
     return ret;
   }

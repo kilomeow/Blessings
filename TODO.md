@@ -9,8 +9,10 @@
 - [ ] Add writing-line mode
 
 ### TerminalIO
-- [ ] Write terminfo
+- [ ] Rewrite linux terminal using terminfo
 - [ ] Input interface
+- [ ] Write windows/mac implementation
+- [ ] Write error ierarchy for abstract class
 
 ### Widgets
 - [ ] Write core
@@ -21,16 +23,13 @@
 - [ ] Add text fields
 - [ ] Add shortcuts
 
-### ReadStream
-- [ ] Write abstract interface
-- [ ] Write Linux implementation
-- [ ] Write Windows implementation
-
-### WriteStream
-- [ ] Write Windows implementation
-
 ### Other
 - [ ] Documentation (!)
 - [ ] Readme
 - [ ] Unit testing
 - [ ] Python bindings
+- [ ] Errors structure
+
+### SttringUTF8
+- [ ] Complete StringUTF8 operator= to stl
+- [ ] Add exception-safe constructors

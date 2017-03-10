@@ -56,10 +56,10 @@ void test_dest01(M monitor) {
       for (int k=0;k<=t;k++) fscanf(in, "%c", &c);
 
       for (int k=0;k<50;k++) {
-        if (c==*"\n") ex = true;
+        if (c=='\n') ex = true;
         if (ex) break;
 
-        if (c!=*".") {
+        if (c!='.') {
           P randcolor(ColorANSI(rand()%6+1));
           monitor[s] = M::Cell(S(c), randcolor);
         } else {

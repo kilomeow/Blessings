@@ -223,7 +223,7 @@ namespace blessings {
         stream << sym.arr_[i];
       }
       catch (...) {
-        throw SymbolUTF8::IOError();
+        throw SymbolUTF8::WriteError();
       }
     }
 
@@ -258,31 +258,35 @@ namespace blessings {
       stream.get(ret.arr_[0]);
     }
     catch (...) {
-      throw SymbolUTF8::IOError();
+      throw SymbolUTF8::ReadError();
     }
+
+    if(stream.eof()) throw SymbolUTF8::EndOfFile();
 
     if (!(ret.arr_[0]&0b10000000)) ret.size_=1;
     else if (!((ret.arr_[0]&0b11100000)^0b11000000)) ret.size_=2;
     else if (!((ret.arr_[0]&0b11110000)^0b11100000)) ret.size_=3;
     else if (!((ret.arr_[0]&0b11111000)^0b11110000)) ret.size_=4;
-    else throw SymbolUTF8::IOError();
+    else throw SymbolUTF8::StreamInitError();
 
     for (int8_t i=1; i<ret.size_; ++i) {
       try {
         stream.get(ret.arr_[i]);
       }
       catch (...) {
-        throw SymbolUTF8::IOError();
+        throw SymbolUTF8::ReadError();
       }
+
+      if(stream.eof()) throw SymbolUTF8::EndOfFile();
     }
 
     switch(ret.size_) {
     case 4:
-      if (((ret.arr_[3]&0b11000000)^0b10000000)) throw SymbolUTF8::IOError();
+      if (((ret.arr_[3]&0b11000000)^0b10000000)) throw SymbolUTF8::StreamInitError();
     case 3:
-      if (((ret.arr_[2]&0b11000000)^0b10000000)) throw SymbolUTF8::IOError();
+      if (((ret.arr_[2]&0b11000000)^0b10000000)) throw SymbolUTF8::StreamInitError();
     case 2:
-      if (((ret.arr_[1]&0b11000000)^0b10000000)) throw SymbolUTF8::IOError();
+      if (((ret.arr_[1]&0b11000000)^0b10000000)) throw SymbolUTF8::StreamInitError();
     }
 
     sym=ret;
@@ -329,13 +333,16 @@ namespace blessings {
   void SymbolUTF8::writeToFile(FILE* file) const {
     for (int8_t i=0; i<size_; ++i) {
       int temp=fputc(static_cast<int>(arr_[i]), file);
-      if (temp==EOF) throw SymbolUTF8::IOError();
+      if (temp==EOF) throw SymbolUTF8::WriteError();
     }
   }
 
   SymbolUTF8 SymbolUTF8::readFromFile(FILE* file) {
     int temp=getc(file);
-    if (temp==EOF) throw SymbolUTF8::IOError();
+    if (temp==EOF) {
+      if(feof(file)) throw SymbolUTF8::EndOfFile();
+      else throw SymbolUTF8::ReadError();
+    }
 
     SymbolUTF8 ret;
     ret.arr_[0]=static_cast<char>(temp);
@@ -344,15 +351,18 @@ namespace blessings {
     else if (!((ret.arr_[0]&0b11100000)^0b11000000)) ret.size_=2;
     else if (!((ret.arr_[0]&0b11110000)^0b11100000)) ret.size_=3;
     else if (!((ret.arr_[0]&0b11111000)^0b11110000)) ret.size_=4;
-    else throw SymbolUTF8::IOError();
+    else throw SymbolUTF8::StreamInitError();
 
     for (int8_t i=1; i<ret.size_; ++i) {
       temp=getc(file);
-      if (temp==EOF) throw SymbolUTF8::IOError();
+      if (temp==EOF) {
+        if(feof(file)) throw SymbolUTF8::EndOfFile();
+        else throw SymbolUTF8::ReadError();
+      }
 
       ret.arr_[i]=static_cast<char>(temp);
 
-      if ((ret.arr_[i]&0b11000000)^0b10000000) throw SymbolUTF8::IOError();
+      if ((ret.arr_[i]&0b11000000)^0b10000000) throw SymbolUTF8::StreamInitError();
     }
 
     return ret;

@@ -1,7 +1,6 @@
 #include <string>
 
 #include "symbol_utf8.hpp"
-#include "../error.hpp"
 
 namespace blessings {
   struct SymbolUTF8Traits {
@@ -40,7 +39,12 @@ namespace blessings {
 
   class StringUTF8 : public std::basic_string<SymbolUTF8, SymbolUTF8Traits> {
   public:
-    class NonUTF8StringGiven : public BlessingsError {};
+    class Error {};
+    class NonUTF8StringGiven : public Error {};
+    class IOError : public Error {};
+    class InputError : public IOError {};
+    class OutputError : public IOError {};
+    class InitError : public Error {};
 
     explicit StringUTF8(const allocator_type& alloc=allocator_type()) :
     std::basic_string<SymbolUTF8, SymbolUTF8Traits>(alloc) {};
@@ -83,7 +87,7 @@ namespace blessings {
     std::basic_string<SymbolUTF8, SymbolUTF8Traits>(init, alloc) {};
 
 
-    StringUTF8& operator=(const StringUTF8&); //TODO(KernelOps) complete according to stl
+    StringUTF8& operator=(const StringUTF8&);
     StringUTF8& operator=(StringUTF8&&);
 
 

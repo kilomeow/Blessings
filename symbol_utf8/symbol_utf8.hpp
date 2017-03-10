@@ -1,6 +1,6 @@
 #pragma once
 
-/* Test for a little-endian machine */
+// Test for a little-endian machine
 #if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
 #error "Machines with non-little endian orders for SymbolUTF8 is not supported"
 #endif
@@ -10,8 +10,6 @@
 #include <cstdio>
 #include <utility>
 
-#include "../error.hpp"
-
 namespace blessings {
   class SymbolUTF8 { //Only for little-endian systems!
     char arr_[4]; //char in c++ is always 1 byte
@@ -19,8 +17,12 @@ namespace blessings {
 
     operator uint32_t() const;
   public:
-    class Error : public BlessingsError {};
+    class Error {};
     class IOError : public Error {};
+    class ReadError : public IOError {};
+    class WriteError : public IOError {};
+    class StreamInitError {};
+    class EndOfFile : public IOError {};
     class InitError : public Error {};
     class AccessError : public Error {};
     class InternalError : public Error {};
