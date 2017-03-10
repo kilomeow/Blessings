@@ -90,10 +90,10 @@ void test_dest02(M monitor) {
 	monitor.tile();
 
 	for (int i=0;i<20;i++) {
-		int x1 = rand()%monitor.getResolution().width;
-		int x2 = rand()%monitor.getResolution().width;
-		int y1 = rand()%monitor.getResolution().height;
-		int y2 = rand()%monitor.getResolution().height;
+		int x1 = rand()%monitor.resolution().width;
+		int x2 = rand()%monitor.resolution().width;
+		int y1 = rand()%monitor.resolution().height;
+		int y2 = rand()%monitor.resolution().height;
 
 		P col(ColorANSI(i%6+1));
 

@@ -52,11 +52,12 @@ namespace blessings {
     public:
       Iterator() {}
       Iterator(Cell* Grid, int ptr, int bound);
-      //Iterator(const Iterator&);
+      Iterator(const Iterator&);
       Iterator& operator=(const Iterator&);
       ~Iterator() {}
 
       Cell& operator*();
+      Cell* operator->();
 
       Iterator& operator++();
       Iterator operator++(int);
@@ -125,14 +126,14 @@ namespace blessings {
     void tile(OutS, GridPos p1, Resolution r);
     void tile(GridPos p1, Resolution r);
 
-    Resolution getResolution();
-    Resolution getTerminalResolution();
+    Resolution resolution();
+    Resolution terminalResolution();
     void setResolution(Resolution);
     void setResolution(int w, int h);
     void updateResolution();
 
     void moveCursor(int x, int y);
-    //void moveCursor(int p);
+    void moveCursor(int p);
     void moveCursorTo(int x, int y);
     void moveCursorTo(int p);
     void moveCursorTo(GridPos);
@@ -140,11 +141,13 @@ namespace blessings {
     void resetCursor();
     void hideCursor();
     void showCursor();
+
+    GridPos cursorPosition();
     bool isCursorVisible();
 
     void clearInputBuffer();
-
     std::queue<InS> getSymbol(int n=1);
+
     void printSymbol(OutS, Prop);
     void printSymbol(OutS);
 
@@ -174,6 +177,10 @@ namespace blessings {
 
     int maxSize;
     Resolution res;
+
+    //bool isEmpty = false;
+
+    GridPos cursorPos;
 
     bool isDrawn=false;
     bool cursorVisible=false;

@@ -200,12 +200,12 @@ namespace blessings {
     stopPos = bound;
   }
 
-  //template <typename InS, typename OutS, typename Prop>
-  //Monitor<InS,OutS,Prop>::Iterator(const Monitor<InS,OutS,Prop>::Iterator& it) {
-    //grid = it.grid;
-    //pointer = it.pointer;
-    //stopPos = it.stopPos;
-  //}
+  template <typename InS, typename OutS, typename Prop>
+  Monitor<InS,OutS,Prop>::Iterator::Iterator(const Iterator& it) {
+    grid = it.grid;
+    pointer = it.pointer;
+    stopPos = it.stopPos;
+  }
 
   template <typename InS, typename OutS, typename Prop>
   typename Monitor<InS,OutS,Prop>::Iterator& Monitor<InS,OutS,Prop>::Iterator::operator=(const Iterator& it) {
@@ -220,6 +220,13 @@ namespace blessings {
     if (pointer==stopPos) throw Monitor::Iterator::EndError();
     //Monitor::Iterator::EndError("pointer is at end");
     return grid[pointer];
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  typename Monitor<InS,OutS,Prop>::Cell* Monitor<InS,OutS,Prop>::Iterator::operator->() {
+    if (pointer==stopPos) throw Monitor::Iterator::EndError();
+    //Monitor::Iterator::EndError("pointer is at end");
+    return &grid[pointer];
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -428,12 +435,12 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  Resolution Monitor<InS,OutS,Prop>::getResolution() {
+  Resolution Monitor<InS,OutS,Prop>::resolution() {
     return res;
   }
 
   template <typename InS, typename OutS, typename Prop>
-  Resolution Monitor<InS,OutS,Prop>::getTerminalResolution() {
+  Resolution Monitor<InS,OutS,Prop>::terminalResolution() {
     return termIO->getResolution();
   }
 
@@ -454,14 +461,19 @@ namespace blessings {
 
   template <typename InS, typename OutS, typename Prop>
   void Monitor<InS,OutS,Prop>::moveCursor(int x, int y) {
-    // field check?
-    termIO->moveCursor(x, y);
+    moveCursorTo(cursorPos.x + x, cursorPos.y + y);
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  void Monitor<InS,OutS,Prop>::moveCursor(int p) {
+    moveCursorTo(indexOf(cursorPos)+p);
   }
 
   template <typename InS, typename OutS, typename Prop>
   void Monitor<InS,OutS,Prop>::moveCursorTo(int x, int y) {
     if ((x<0) || (x>res.width) || (y<0) || (y>res.height)) throw Error();
     termIO->moveCursorTo(x+1, y+1);
+    GridPos cursorPos(x, y);
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -490,6 +502,11 @@ namespace blessings {
   void Monitor<InS,OutS,Prop>::showCursor() {
     termIO->showCursor();
     cursorVisible = true;
+  }
+
+  template <typename InS, typename OutS, typename Prop>
+  GridPos Monitor<InS,OutS,Prop>::cursorPosition() {
+    return cursorPos;
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -535,21 +552,21 @@ namespace blessings {
 
   template <typename InS, typename OutS, typename Prop>
   void Monitor<InS,OutS,Prop>::updateResolution() {
-    setResolution(getTerminalResolution());
+    setResolution(terminalResolution());
   }
 
   template <typename InS, typename OutS, typename Prop>
   void Monitor<InS,OutS,Prop>::checkResolution(resChange drawMode) {
     switch (drawMode) {
     case alarm: {
-      if ((getTerminalResolution().width != res.width) ||
-          (getTerminalResolution().height != res.height))
+      if ((terminalResolution().width != res.width) ||
+          (terminalResolution().height != res.height))
         throw ResolutionDisparity();
         break;
       }
     case ignoreExtension: {
-      if ((getTerminalResolution().width < res.width) ||
-          (getTerminalResolution().height < res.height))
+      if ((terminalResolution().width < res.width) ||
+          (terminalResolution().height < res.height))
         throw ResolutionDisparity();
         break;
     }
@@ -574,8 +591,8 @@ namespace blessings {
   void Monitor<InS,OutS,Prop>::printPage() {
     Monitor::Iterator i = begin();
     while (!i.isEnd()) {
-      termIO->print((*i).symbol(), (*i).property());
-      (*i).setStaged();
+      termIO->print(i->symbol(), i->property());
+      i->setStaged();
       i++;
       if (i.index()%res.width==0) termIO->newLine();
     }
@@ -610,10 +627,10 @@ namespace blessings {
 
     Monitor::Iterator i = begin();
     while (!i.isEnd()) {
-      if ((*i).isUnstaged()) {
+      if (i->isUnstaged()) {
         moveCursorTo(i.index());
-        termIO->print((*i).symbol(), (*i).property());
-        (*i).setStaged();
+        termIO->print(i->symbol(), i->property());
+        i->setStaged();
       }
       i++;
     }
