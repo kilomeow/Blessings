@@ -69,14 +69,14 @@ namespace blessings {
     StringUTF8(const StringUTF8& other) :
     std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other) {};
 
-    StringUTF8(const StringUTF8& other, const allocator_type& alloc) :
-    std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other, alloc) {};
+    //StringUTF8(const StringUTF8& other, const allocator_type& alloc) :
+    //std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other, alloc) {};
 
     StringUTF8(StringUTF8&& other) :
     std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other) {};
 
-    StringUTF8(StringUTF8&& other, const allocator_type& alloc) :
-    std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other, alloc) {};
+    //StringUTF8(StringUTF8&& other, const allocator_type& alloc) :
+    //std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other, alloc) {};
 
     StringUTF8(std::initializer_list<SymbolUTF8> init,
     const allocator_type& alloc = allocator_type()) :

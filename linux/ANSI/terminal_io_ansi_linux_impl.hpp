@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <sys/select.h>
 
 #include "terminal_io_ansi_linux.hpp"
 #include "ansi_symbol_table.hpp"
@@ -409,5 +410,84 @@ namespace blessings {
     if (temp==-1) throw DeviceError();
 
     return Resolution(ws.ws_col, ws.ws_row);
+  }
+
+  template<typename InS, typename OutS, typename Property>
+  void TerminalIOANSILinux<InS, OutS, Property>::clearInputBuffer() {
+    if (!inited) throw BadMode();
+
+    fseek(file, 0, SEEK_END);
+  }
+
+  template<typename InS, typename OutS, typename Property>
+  InS TerminalIOANSILinux<InS, OutS, Property>::getSymbol() {
+    if (!inited) throw BadMode();
+
+    try
+    {
+      if (checkInput()) {
+        return InS::readFromFile(file);
+      } else {
+        throw NoSymbolYet();
+      }
+    }
+    catch(EndOfFile &)
+    {
+      throw InputEnd();
+    }
+    catch(InSIOError &)
+    {
+      throw SymbolCorruption();
+    }
+    catch(StreamInitError &)
+    {
+      throw WrongEncoding();
+    }
+  }
+
+  template<typename InS, typename OutS, typename Property>
+  std::queue<InS> TerminalIOANSILinux<InS, OutS, Property>::getSymbol(int n) {
+    if (!inited) throw BadMode();
+
+    std::queue<InS> new_q;
+
+    try
+    {
+      for (int i = 0; i < n; i++) {
+        if (checkInput()) {
+          new_q.push(InS::readFromFile(file));
+        } else {
+          break;
+        }
+      }
+    }
+    catch(EndOfFile &)
+    {
+      throw InputEnd(new_q);
+    }
+    catch(StreamInitError &)
+    {
+      throw WrongEncoding(new_q);
+    }
+
+    return new_q;
+  }
+
+
+  template<typename InS, typename OutS, typename Property>
+  bool TerminalIOANSILinux<InS, OutS, Property>::checkInput() {
+    if (!inited) throw BadMode();
+
+    static timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+
+    static fd_set readfds;
+    FD_ZERO(&readfds);
+    FD_SET(fd, &readfds);
+
+    if (select(1, &readfds, NULL, NULL, &tv)) return true;
+
+    return false;
   }
 }
