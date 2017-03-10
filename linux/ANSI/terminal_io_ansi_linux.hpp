@@ -38,7 +38,27 @@ namespace blessings {
     class IOError : public Error {};
     class DeviceError : public Error {};
     class BadMode : public Error {};
-    class ArgumentError : public Error {};
+    class ArgumentError : public Error {};  //List of errors below needs fixin'
+    class SymbolCorruption : public Error {}; //Hui znaet, nado li ot nego nasledovat' EOFError
+    class InputEnd : public Error
+    {
+    public:
+      std::queue<InS> what_left;
+      InputEnd() {};
+      InputEnd(const std::queue<InS> & init_queue) {
+        what_left = init_queue;
+      };
+    };  //Syntax Sugar: it's EOF actually
+    class WrongEncoding : public Error
+    {
+    public:
+      std::queue<InS> what_left;
+      WrongEncoding() {};
+      WrongEncoding(const std::queue<InS> & init_queue) {
+        what_left = init_queue;
+      }
+    }; //Is this one being thrown only when encoding is wrong?
+    class NoSymbolYet : public Error {};  //When getSymbol fails to find anything
 
     TerminalIOANSILinux();
 
@@ -54,8 +74,10 @@ namespace blessings {
     void print(OutS, const Property&);
     void print(OutS);
 
-    std::queue<InS> getSymbol(int n=1); //TODO: rewrite!
-    void clearInputBuffer() {};
+    InS getSymbol();
+    std::queue<InS> getSymbol(int n);
+    void clearInputBuffer();
+    bool checkInput();
 
     //Screen state
     void clearScreen();
