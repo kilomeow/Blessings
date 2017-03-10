@@ -431,15 +431,15 @@ namespace blessings {
         throw NoSymbolYet();
       }
     }
-    catch(EndOfFile &)
+    catch(typename InS::EndOfFile &)
     {
       throw InputEnd();
     }
-    catch(InSIOError &)
+    catch(typename InS::IOError &)
     {
       throw SymbolCorruption();
     }
-    catch(StreamInitError &)
+    catch(typename InS::StreamInitError &)
     {
       throw WrongEncoding();
     }
@@ -461,11 +461,11 @@ namespace blessings {
         }
       }
     }
-    catch(EndOfFile &)
+    catch(typename InS::EndOfFile &)
     {
       throw InputEnd(new_q);
     }
-    catch(StreamInitError &)
+    catch(typename InS::StreamInitError &)
     {
       throw WrongEncoding(new_q);
     }
