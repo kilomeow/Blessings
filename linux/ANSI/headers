@@ -1,0 +1,7 @@
+{
+    "blessings" : [
+        "ansi_symbol_table.hpp",
+        "terminal_io_ansi_linux.hpp",
+        "terminal_io_ansi_linux_impl.hpp"
+    ]
+}

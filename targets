@@ -1,0 +1,15 @@
+{
+    "blessings_static" : {
+        "target_type" : "lib_static",
+        "sources_dict" : "blessings",
+        "headers_dict" : "blessings",
+        "include_dirs" : [],
+        "in_all_target" : False,
+        "output_name" : "blessings",
+        "compiler_flags" : {
+            "gcc" : "-O3",
+            "clang" : "-O3",
+            "mingw" : "-O3"
+        }
+    }
+}

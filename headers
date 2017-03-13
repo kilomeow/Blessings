@@ -1,0 +1,10 @@
+{
+    "blessings" : [
+        "additional_structs.hpp",
+        "error.hpp",
+        "monitor.hpp",
+        "monitor_impl.hpp",
+        "property.hpp",
+        "terminal_io.hpp"        
+    ]
+}

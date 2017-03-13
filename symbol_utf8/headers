@@ -1,0 +1,7 @@
+{
+    "blessings_utf8" : [
+        "string_utf8.hpp",
+        "symbol_utf8.hpp",
+        "symbol_utf8_impl.hpp"
+    ]
+}
