@@ -1,0 +1,29 @@
+#!/usr/bin/python3
+
+import sys
+import os
+
+def main():
+    args=sys.argv[1:];
+
+    target_file="targets"
+    compiler_type="clang"
+    compiler_executable="clang"
+    prefix="\\$(HOME)/.prefix"
+
+    i=0
+    while i<len(args):
+        if args[i]=="--help":
+            print("No help provided now. Sorry.")
+        elif args[i]=="--gcc":
+            compiler_type="gcc"
+            compiler_executable="gcc"
+
+        i+=1
+
+    os.system("./configurator.py --compiler_type "+compiler_type+\
+        " --compiler_executable "+compiler_executable+" --prefix \""+prefix+"\" "+
+        target_file)
+
+if __name__=="__main__":
+    main()

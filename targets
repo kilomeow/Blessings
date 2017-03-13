@@ -1,15 +1,168 @@
 {
     "blessings_static" : {
-        "target_type" : "lib_static",
+        "target_type" : "static_lib",
         "sources_dict" : "blessings",
         "headers_dict" : "blessings",
         "include_dirs" : [],
-        "in_all_target" : False,
+        "preprocessor_directives" : [],
+        "in_all_target" : True,
         "output_name" : "blessings",
         "compiler_flags" : {
-            "gcc" : "-O3",
-            "clang" : "-O3",
-            "mingw" : "-O3"
+            "gcc" : "-O3 -std=c++14",
+            "clang" : "-O3 -std=c++14",
+            "mingw" : "-O3 -std=c++14",
+            "gcc-like" : "-O3 -std=c++14"
         }
+    },
+    "blessings_shared" : {
+        "target_type" : "shared_lib",
+        "sources_dict" : "blessings",
+        "headers_dict" : "blessings",
+        "include_dirs" : [],
+        "preprocessor_directives" : [],
+        "in_all_target" : True,
+        "output_name" : "blessings",
+        "compiler_flags" : {
+            "gcc" : "-O3 -std=c++14",
+            "clang" : "-O3 -std=c++14",
+            "mingw" : "-O3 -std=c++14",
+            "gcc-like" : "-O3 -std=c++14"
+        }
+    },
+    "blessings_static_test" : {
+        "target_type" : "static_lib",
+        "sources_dict" : "blessings",
+        "headers_dict" : "blessings",
+        "include_dirs" : [],
+        "preprocessor_directives" : [],
+        "in_all_target" : False,
+        "output_name" : "blessings_test",
+        "compiler_flags" : {
+            "gcc" : "-Wall -Wextra -std=c++14",
+            "clang" : "-Wall -Wextra -std=c++14",
+            "mingw" : "-Wall -Wextra -std=c++14",
+            "gcc-like" : "-Wall -Wextra -std=c++14"
+        }
+    },
+    "blessings_shared_test" : {
+        "target_type" : "shared_lib",
+        "sources_dict" : "blessings",
+        "headers_dict" : "blessings",
+        "include_dirs" : [],
+        "preprocessor_directives" : [],
+        "in_all_target" : False,
+        "output_name" : "blessings_test",
+        "compiler_flags" : {
+            "gcc" : "-Wall -Wextra -std=c++14",
+            "clang" : "-Wall -Wextra -std=c++14",
+            "mingw" : "-Wall -Wextra -std=c++14",
+            "gcc-like" : "-Wall -Wextra -std=c++14"
+        }
+    },
+    "blessings_utf8_static" : {
+        "target_type" : "static_lib",
+        "sources_dict" : "blessings_utf8",
+        "headers_dict" : "blessings_utf8",
+        "include_dirs" : [],
+        "preprocessor_directives" : [],
+        "in_all_target" : True,
+        "output_name" : "blessings_utf8",
+        "compiler_flags" : {
+            "gcc" : "-O3 -std=c++14",
+            "clang" : "-O3 -std=c++14",
+            "mingw" : "-O3 -std=c++14",
+            "gcc-like" : "-O3 -std=c++14"
+        }
+    },
+    "blessings_utf8_shared" : {
+        "target_type" : "shared_lib",
+        "sources_dict" : "blessings_utf8",
+        "headers_dict" : "blessings_utf8",
+        "include_dirs" : [],
+        "preprocessor_directives" : [],
+        "in_all_target" : True,
+        "output_name" : "blessings_utf8",
+        "compiler_flags" : {
+            "gcc" : "-O3 -std=c++14",
+            "clang" : "-O3 -std=c++14",
+            "mingw" : "-O3 -std=c++14",
+            "gcc-like" : "-O3 -std=c++14"
+        }
+    },
+    "blessings_utf8_static_test" : {
+        "target_type" : "static_lib",
+        "sources_dict" : "blessings_utf8",
+        "headers_dict" : "blessings_utf8",
+        "include_dirs" : [],
+        "preprocessor_directives" : [],
+        "in_all_target" : False,
+        "output_name" : "blessings_utf8_test",
+        "compiler_flags" : {
+            "gcc" : "-Wall -Wextra -std=c++14",
+            "clang" : "-Wall -Wextra -std=c++14",
+            "mingw" : "-Wall -Wextra -std=c++14",
+            "gcc-like" : "-Wall -Wextra -std=c++14"
+        }
+    },
+    "blessings_utf8_shared_test" : {
+        "target_type" : "shared_lib",
+        "sources_dict" : "blessings_utf8",
+        "headers_dict" : "blessings_utf8",
+        "include_dirs" : [],
+        "preprocessor_directives" : [],
+        "in_all_target" : False,
+        "output_name" : "blessings_utf8_test",
+        "compiler_flags" : {
+            "gcc" : "-Wall -Wextra -std=c++14",
+            "clang" : "-Wall -Wextra -std=c++14",
+            "mingw" : "-Wall -Wextra -std=c++14",
+            "gcc-like" : "-Wall -Wextra -std=c++14"
+        }
+    },
+    "test" : {
+        "target_type" : "executable",
+        "sources_dict" : "test",
+        "headers_dict" : None,
+        "include_dirs" : [],
+        "lib_dirs" : [],
+        "preprocessor_directives" : [],
+        "link_with" : ["stdc++"],
+        "link_with_target" : ["blessings_static_test", "blessings_utf8_static_test"],
+        "in_all_target" : False,
+        "output_name" : "work",
+        "compiler_flags" : {
+            "gcc" : "-Wall -Wextra -std=c++14",
+            "clang" : "-Wall -Wextra -std=c++14",
+            "mingw" : "-Wall -Wextra -std=c++14",
+            "gcc-like" : "-Wall -Wextra -std=c++14"
+        }
+    },
+    "install" : {
+        "target_type" : "install",
+        "in_all_target" : False, #Is in all target?
+        "targets_to_install" : [
+            "blessings_static",
+            "blessings_shared",
+            "blessings_utf8_static",
+            "blessings_utf8_shared"
+        ],
+        "static_libs_path" : "usr/lib",
+        "shared_libs_path" : "usr/lib",
+        "executable_path" : "usr/bin",
+        "includes_path" : "usr/include/blessings"
+    },
+    "uninstall" : {
+        "target_type" : "uninstall",
+        "in_all_target" : False, #Is in all target?
+        "targets_to_uninstall" : [
+            "blessings_static",
+            "blessings_shared",
+            "blessings_utf8_static",
+            "blessings_utf8_shared"
+        ],
+        "static_libs_path" : "usr/lib",
+        "shared_libs_path" : "usr/lib",
+        "executable_path" : "usr/bin",
+        "headers_pathes" : ["usr/include/blessings"]
     }
 }
