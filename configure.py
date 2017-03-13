@@ -72,10 +72,10 @@ def add_dicts(dict1, dict2, f):
 def files_intersected(f1, f2):
     print(f1, f2)
 
-    print("Filenames intersected")
+    print("Filenames intersected while adding dictionaries")
     exit(1)
 
-def walk(dir, sources_dir):
+def walk(dir, sources_dir): #walk and scan sources/headers files 
     sources={}
     headers={}
 
@@ -128,72 +128,131 @@ def walk(dir, sources_dir):
 
     return {"sources" : sources, "headers" : headers}
 
-def main_linux(targets, files_given, compiler_type, compiler_executable):
+def linux_compile_objects(target_name, target, files_given, compiler_type,\
+    compiler_executable, add_flags=""):
+        
+    temp_file="temp.1224asda"
+
+    makefile=[]
+    
+    for source in files_given["sources"][target["sources_dict"]]:
+        print("Processing source file "+source)
+        
+        source_target_name="build/"+target_name+"/"+source[:-4]+".o"
+
+        os.system("gcc -MM -MF "+temp_file+" -MT "+\
+            source_target_name+" "+source)
+
+        f=open(temp_file)
+        lines=f.readlines()
+        f.close()
+
+        for line in lines:
+            makefile.append(line[:-1])
+
+        compiler_flags=""
+        if compiler_type in target["compiler_flags"].keys():
+            compiler_flags=target["compiler_flags"][compiler_type]
+
+        if compiler_type in files_given["sources"]\
+            [target["sources_dict"]][source].keys():
+            compiler_flags=compiler_flags+" "+files_given["sources"]\
+                [targets["sources_dict"]][source][compiler_type]
+        
+        compiler_flags=compiler_flags+add_flags
+
+        if compiler_flags!="":
+            compiler_flags=" "+compiler_flags
+
+        include_dirs_str=""
+        for include_dir in target["include_dirs"]:
+            include_dirs_str=include_dirs_str+" -I"+include_dir
+
+        line="\t"+compiler_executable+compiler_flags+include_dirs_str+" "+source+\
+            " -o "+source_target_name
+
+        makefile.append(line)
+        
+    return makefile
+
+def linux_static_lib(target_name, target, files_given, compiler_type, compiler_executable):
     temp_file="temp.1224asda"
 
     makefile=[]
 
+    first_str=target_name+":"
+
+    for source in files_given["sources"][target["sources_dict"]]:
+        first_str=first_str+" \\\n build/"+target_name+"/"+source[:-4]+".o"
+
+    second_str="\tar rsc lib"+target["output_name"]+".a ^$"
+
+    makefile.append(first_str)
+    makefile.append(second_str)
+
+    makefile=makefile+linux_compile_objects(target_name,\
+        target, files_given, compiler_type, compiler_executable)
+    
+    print()
+    
+    return makefile
+
+
+def linux_dynamic_lib(target_name, target, files_given, compiler_type, compiler_executable):
+    temp_file="temp.1224asda"
+
+    makefile=[]
+
+    first_str=target_name+":"
+
+    for source in files_given["sources"][target["sources_dict"]]:
+        first_str=first_str+" \\\n build/"+target_name+"/"+source[:-4]+".o"
+    
+    compiler_flags=""
+    if compiler_type in target["compiler_flags"].keys():
+        compiler_flags=" "+target["compiler_flags"][compiler_type]
+        
+    second_str="\t"+compiler_executable+compiler_flags+\
+        " -shared -o "+target["output_name"]+".so ^$"
+
+    makefile.append(first_str)
+    makefile.append(second_str)
+
+    makefile=makefile+linux_compile_objects(target_name,\
+        target, files_given, compiler_type, compiler_executable, "-fpic")
+    
+    print()
+    
+    return makefile
+
+def main_linux(targets, files_given, compiler_type, compiler_executable):
+    makefile=[]
+    
+    if compiler_type=="":
+        compiler_type="gcc"
+        compiler_executable="gcc"
+
     for target in targets.keys():
-        if targets[target]["target_type"]=="lib_static":
-            if compiler_type=="":
-                compiler_type="gcc"
-                compiler_executable="gcc"
-
-            if not compiler_type in targets[target]["compiler_flags"].keys():
-                print("Warning: no compiler_flags specified for compiler type ", compiler_type,\
-                    " in target ", target, ", but this compiler choosen")
-
-
-            first_str=target+":"
-
-            for source in files_given["sources"][targets[target]["sources_dict"]]:
-                first_str=first_str+" \\\n build/"+target+"/"+source[:-4]+".o"
-
-            second_str="\tar rsc lib"+targets[target]["output_name"]+".a ^$"
-
-            makefile.append(first_str)
-            makefile.append(second_str)
-
-            for source in files_given["sources"][targets[target]["sources_dict"]]:
-                source_target_name="build/"+target+"/"+source[:-4]+".o"
-
-                os.system("gcc -MM -MF "+temp_file+" -MT "+\
-                    source_target_name+" "+source)
-
-                f=open(temp_file)
-                lines=f.readlines()
-                f.close()
-
-                for line in lines:
-                    makefile.append(line[:-1])
-
-                compiler_flags=""
-                if compiler_type in targets[target]["compiler_flags"].keys():
-                    compiler_flags=targets[target]["compiler_flags"][compiler_type]
-
-                if compiler_type in files_given["sources"]\
-                    [targets[target]["sources_dict"]][source].keys():
-                    compiler_flags=compiler_flags+" "+files_given["sources"]\
-                        [targets[target]["sources_dict"]][source][compiler_type]
-
-                if compiler_flags!="":
-                    compiler_flags=" "+compiler_flags
-
-                include_dirs_str=""
-                for include_dir in targets[target]["include_dirs"]:
-                    include_dirs_str=include_dirs_str+" -I"+include_dir
-
-                line="\t"+compiler_executable+compiler_flags+include_dirs_str+" "+source+\
-                    " -o "+source_target_name
-
-                makefile.append(line)
-
-
+        print("Processings target ", target, "\n")
+        
+        if not compiler_type in targets[target]["compiler_flags"].keys():
+            print("Warning: no compiler_flags specified for compiler type ", compiler_type,\
+                " in target ", target_name, ", but this compiler choosen")
+        
+        if targets[target]["target_type"]=="static_lib":
+            makefile=makefile+linux_static_lib(target, targets[target],\
+                files_given, compiler_type, compiler_executable)
+        elif targets[target]["target_type"]=="shared_lib":
+            makefile=makefile+linux_dynamic_lib(target, targets[target],\
+                files_given, compiler_type, compiler_executable)
+                
     for line in makefile:
         print(line)
-
-
-
+            
+    
+    
+ 
+        
 def main():
     args=scan_args()
 
