@@ -7,7 +7,6 @@
 
 #include "terminal_io_ansi_linux.hpp"
 #include "ansi_symbol_table.hpp"
-#include "../write_stream_linux.hpp"
 #include "../../additional_structs.hpp"
 
 namespace blessings {
@@ -40,14 +39,6 @@ namespace blessings {
       throw InitError();
     }
 
-    try {
-      ws = new WriteStreamLinux(file);
-    }
-    catch(...) {
-      fclose(file);
-      throw InitError();
-    }
-
     int temp=tcgetattr(fd,&storedSettings);
     if (temp!=0) {
       fclose(file);
@@ -59,12 +50,15 @@ namespace blessings {
     tcsetattr(fd,TCSANOW,&tempSettings); //Pray it works
 
     try {
-      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
-      ws->write(ANSISymbolTable<OutS>::openBracket);
-      ws->write(ANSISymbolTable<OutS>::zero);
-      ws->write(ANSISymbolTable<OutS>::mSym);
+      ANSISymbolTable<OutS>::ESCSymbol.writeToFile(file);
+      ANSISymbolTable<OutS>::openBracket.writeToFile(file);
+      ANSISymbolTable<OutS>::zero.writeToFile(file);
+      ANSISymbolTable<OutS>::mSym.writeToFile(file);
 
-      ws->flush();
+      int resCode=fflush(file);
+      if (resCode==EOF) {
+        throw IOError();
+      }
     }
     catch(...) {
       tcsetattr(fd,TCSANOW,&storedSettings);
@@ -98,9 +92,12 @@ namespace blessings {
     try {
       setSGR(prop);
 
-      ws->write(sym);
+      sym.writeToFile(file);
 
-      ws->flush();
+      int resCode=fflush(file);
+      if (resCode==EOF) {
+        throw IOError();
+      }
     }
     catch (...) {
       throw IOError();
@@ -114,9 +111,12 @@ namespace blessings {
     try {
       setSGR(Property::empty);
 
-      ws->write(sym);
+      sym.writeToFile(file);
 
-      ws->flush();
+      int resCode=fflush(file);
+      if (resCode==EOF) {
+        throw IOError();
+      }
     }
     catch (...) {
       throw IOError();
@@ -128,12 +128,15 @@ namespace blessings {
     if (!inited) throw BadMode();
 
     try {
-      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
-      ws->write(ANSISymbolTable<OutS>::openBracket);
-      ws->write(ANSISymbolTable<OutS>::two);
-      ws->write(ANSISymbolTable<OutS>::JSym);
+      ANSISymbolTable<OutS>::ESCSymbol.writeToFile(file);
+      ANSISymbolTable<OutS>::openBracket.writeToFile(file);
+      ANSISymbolTable<OutS>::two.writeToFile(file);
+      ANSISymbolTable<OutS>::JSym.writeToFile(file);
 
-      ws->flush();
+      int resCode=fflush(file);
+      if (resCode==EOF) {
+        throw IOError();
+      }
     }
     catch (...) {
       throw IOError();
@@ -145,9 +148,12 @@ namespace blessings {
     if (!inited) throw BadMode();
 
     try {
-      ws->write(ANSISymbolTable<OutS>::newLineSymbol);
+      ANSISymbolTable<OutS>::newLineSymbol.writeToFile(file);
 
-      ws->flush();
+      int resCode=fflush(file);
+      if (resCode==EOF) {
+        throw IOError();
+      }
     }
     catch (...) {
       throw IOError();
@@ -168,30 +174,39 @@ namespace blessings {
       std::string yAbsStr=std::to_string(yAbs);
 
       if (x!=0) {
-        ws->write(ANSISymbolTable<OutS>::ESCSymbol);
-        ws->write(ANSISymbolTable<OutS>::openBracket);
+        ANSISymbolTable<OutS>::ESCSymbol.writeToFile(file);
+        ANSISymbolTable<OutS>::openBracket.writeToFile(file);
 
         for(size_t i=0; i<xAbsStr.size(); ++i) {
-          ws->write(xAbsStr[i]);
+          int resCode=fputc(xAbsStr[i], file);
+          if (resCode==EOF) {
+            throw IOError();
+          }
         }
 
-        if (x<0) ws->write(ANSISymbolTable<OutS>::DSym);
-        else ws->write(ANSISymbolTable<OutS>::CSym);
+        if (x<0) ANSISymbolTable<OutS>::DSym.writeToFile(file);
+        else ANSISymbolTable<OutS>::CSym.writeToFile(file);
       }
 
       if (y!=0) {
-        ws->write(ANSISymbolTable<OutS>::ESCSymbol);
-        ws->write(ANSISymbolTable<OutS>::openBracket);
+        ANSISymbolTable<OutS>::ESCSymbol.writeToFile(file);
+        ANSISymbolTable<OutS>::openBracket.writeToFile(file);
 
         for(size_t i=0; i<yAbsStr.size(); ++i) {
-          ws->write(yAbsStr[i]);
+          int resCode=fputc(yAbsStr[i], file);
+          if (resCode==EOF) {
+            throw IOError();
+          }
         }
 
-        if (y>0) ws->write(ANSISymbolTable<OutS>::ASym);
-        else ws->write(ANSISymbolTable<OutS>::BSym);
+        if (y>0) ANSISymbolTable<OutS>::ASym.writeToFile(file);
+        else ANSISymbolTable<OutS>::BSym.writeToFile(file);
       }
 
-      ws->flush();
+      int resCode=fflush(file);
+      if (resCode==EOF) {
+        throw IOError();
+      }
     }
     catch (...) {
       throw IOError();
@@ -208,22 +223,31 @@ namespace blessings {
       std::string xStr=std::to_string(x);
       std::string yStr=std::to_string(y);
 
-      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
-      ws->write(ANSISymbolTable<OutS>::openBracket);
+      ANSISymbolTable<OutS>::ESCSymbol.writeToFile(file);
+      ANSISymbolTable<OutS>::openBracket.writeToFile(file);
 
       for(size_t i=0; i<yStr.size(); ++i) {
-        ws->write(yStr[i]);
+        int resCode=fputc(yStr[i], file);
+        if (resCode==EOF) {
+          throw IOError();
+        }
       }
 
-      ws->write(ANSISymbolTable<OutS>::semicolon);
+      ANSISymbolTable<OutS>::semicolon.writeToFile(file);
 
       for(size_t i=0; i<xStr.size(); ++i) {
-        ws->write(xStr[i]);
+        int resCode=fputc(xStr[i], file);
+        if (resCode==EOF) {
+          throw IOError();
+        }
       }
 
-      ws->write(ANSISymbolTable<OutS>::HSym);
+      ANSISymbolTable<OutS>::HSym.writeToFile(file);
 
-      ws->flush();
+      int resCode=fflush(file);
+      if (resCode==EOF) {
+        throw IOError();
+      }
     }
     catch (...) {
       throw IOError();
@@ -235,12 +259,15 @@ namespace blessings {
     if (!inited) throw BadMode();
 
     try {
-      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
-      ws->write(ANSISymbolTable<OutS>::openBracket);
-      ws->write(ANSISymbolTable<OutS>::zero);
-      ws->write(ANSISymbolTable<OutS>::mSym);
+      ANSISymbolTable<OutS>::ESCSymbol.writeToFile(file);
+      ANSISymbolTable<OutS>::openBracket.writeToFile(file);
+      ANSISymbolTable<OutS>::zero.writeToFile(file);
+      ANSISymbolTable<OutS>::mSym.writeToFile(file);
 
-      ws->flush();
+      int resCode=fflush(file);
+      if (resCode==EOF) {
+        throw IOError();
+      }
     }
     catch (...) {
       throw IOError();
@@ -252,14 +279,17 @@ namespace blessings {
     if (!inited) throw BadMode();
 
     try {
-      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
-      ws->write(ANSISymbolTable<OutS>::openBracket);
-      ws->write(ANSISymbolTable<OutS>::question);
-      ws->write(ANSISymbolTable<OutS>::two);
-      ws->write(ANSISymbolTable<OutS>::five);
-      ws->write(ANSISymbolTable<OutS>::lSym);
+      ANSISymbolTable<OutS>::ESCSymbol.writeToFile(file);
+      ANSISymbolTable<OutS>::openBracket.writeToFile(file);
+      ANSISymbolTable<OutS>::question.writeToFile(file);
+      ANSISymbolTable<OutS>::two.writeToFile(file);
+      ANSISymbolTable<OutS>::five.writeToFile(file);
+      ANSISymbolTable<OutS>::lSym.writeToFile(file);
 
-      ws->flush();
+      int resCode=fflush(file);
+      if (resCode==EOF) {
+        throw IOError();
+      }
     }
     catch (...) {
       throw IOError();
@@ -271,14 +301,17 @@ namespace blessings {
     if (!inited) throw BadMode();
 
     try {
-      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
-      ws->write(ANSISymbolTable<OutS>::openBracket);
-      ws->write(ANSISymbolTable<OutS>::question);
-      ws->write(ANSISymbolTable<OutS>::two);
-      ws->write(ANSISymbolTable<OutS>::five);
-      ws->write(ANSISymbolTable<OutS>::hSym);
+      ANSISymbolTable<OutS>::ESCSymbol.writeToFile(file);
+      ANSISymbolTable<OutS>::openBracket.writeToFile(file);
+      ANSISymbolTable<OutS>::question.writeToFile(file);
+      ANSISymbolTable<OutS>::two.writeToFile(file);
+      ANSISymbolTable<OutS>::five.writeToFile(file);
+      ANSISymbolTable<OutS>::hSym.writeToFile(file);
 
-      ws->flush();
+      int resCode=fflush(file);
+      if (resCode==EOF) {
+        throw IOError();
+      }
     }
     catch (...) {
       throw IOError();
@@ -290,11 +323,14 @@ namespace blessings {
     if (!inited) throw BadMode();
 
     try {
-      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
-      ws->write(ANSISymbolTable<OutS>::openBracket);
-      ws->write(ANSISymbolTable<OutS>::sSym);
+      ANSISymbolTable<OutS>::ESCSymbol.writeToFile(file);
+      ANSISymbolTable<OutS>::openBracket.writeToFile(file);
+      ANSISymbolTable<OutS>::sSym.writeToFile(file);
 
-      ws->flush();
+      int resCode=fflush(file);
+      if (resCode==EOF) {
+        throw IOError();
+      }
     }
     catch (...) {
       throw IOError();
@@ -306,11 +342,14 @@ namespace blessings {
     if (!inited) throw BadMode();
 
     try {
-      ws->write(ANSISymbolTable<OutS>::ESCSymbol);
-      ws->write(ANSISymbolTable<OutS>::openBracket);
-      ws->write(ANSISymbolTable<OutS>::uSym);
+      ANSISymbolTable<OutS>::ESCSymbol.writeToFile(file);
+      ANSISymbolTable<OutS>::openBracket.writeToFile(file);
+      ANSISymbolTable<OutS>::uSym.writeToFile(file);
 
-      ws->flush();
+      int resCode=fflush(file);
+      if (resCode==EOF) {
+        throw IOError();
+      }
     }
     catch (...) {
       throw IOError();

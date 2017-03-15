@@ -10,7 +10,6 @@
 #include "../../additional_structs.hpp"
 #include "../../error.hpp"
 #include "../../terminal_io.hpp"
-#include "../write_stream_linux.hpp"
 
 namespace blessings {
   template <typename InS, typename OutS, typename Property>
@@ -18,9 +17,6 @@ namespace blessings {
     bool inited;
     int nonCanonicalMode;
     int echoInhibited;
-
-    WriteStreamLinux* ws;
-    //ReadStream<InS>* rs;
 
     termios storedSettings;
 

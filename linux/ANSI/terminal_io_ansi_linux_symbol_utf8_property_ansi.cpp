@@ -13,87 +13,92 @@ namespace blessings {
         resetSGR();
 
         if (prop.bold) {
-          ws->write(ANSISymbolTable<SymbolUTF8>::ESCSymbol);
-          ws->write(ANSISymbolTable<SymbolUTF8>::openBracket);
-          ws->write(ANSISymbolTable<SymbolUTF8>::one);
-          ws->write(ANSISymbolTable<SymbolUTF8>::mSym);
+          ANSISymbolTable<SymbolUTF8>::ESCSymbol.writeToFile(file);
+          ANSISymbolTable<SymbolUTF8>::openBracket.writeToFile(file);
+          ANSISymbolTable<SymbolUTF8>::one.writeToFile(file);
+          ANSISymbolTable<SymbolUTF8>::mSym.writeToFile(file);
         }
 
         if (prop.italics) {
-          ws->write(ANSISymbolTable<SymbolUTF8>::ESCSymbol);
-          ws->write(ANSISymbolTable<SymbolUTF8>::openBracket);
-          ws->write(ANSISymbolTable<SymbolUTF8>::three);
-          ws->write(ANSISymbolTable<SymbolUTF8>::mSym);
+          ANSISymbolTable<SymbolUTF8>::ESCSymbol.writeToFile(file);
+          ANSISymbolTable<SymbolUTF8>::openBracket.writeToFile(file);
+          ANSISymbolTable<SymbolUTF8>::three.writeToFile(file);
+          ANSISymbolTable<SymbolUTF8>::mSym.writeToFile(file);
         }
 
         if (prop.color!=ColorANSI::NONE) {
-          ws->write(ANSISymbolTable<SymbolUTF8>::ESCSymbol);
-          ws->write(ANSISymbolTable<SymbolUTF8>::openBracket);
-          ws->write(ANSISymbolTable<SymbolUTF8>::three);
+          ANSISymbolTable<SymbolUTF8>::ESCSymbol.writeToFile(file);
+          ANSISymbolTable<SymbolUTF8>::openBracket.writeToFile(file);
+          ANSISymbolTable<SymbolUTF8>::three.writeToFile(file);
           switch(prop.color.color) {
           case ColorANSI::BLACK:
-            ws->write(ANSISymbolTable<SymbolUTF8>::zero);
+            ANSISymbolTable<SymbolUTF8>::zero.writeToFile(file);
             break;
           case ColorANSI::RED:
-            ws->write(ANSISymbolTable<SymbolUTF8>::one);
+            ANSISymbolTable<SymbolUTF8>::one.writeToFile(file);
             break;
           case ColorANSI::GREEN:
-            ws->write(ANSISymbolTable<SymbolUTF8>::two);
+            ANSISymbolTable<SymbolUTF8>::two.writeToFile(file);
             break;
           case ColorANSI::YELLOW:
-            ws->write(ANSISymbolTable<SymbolUTF8>::three);
+            ANSISymbolTable<SymbolUTF8>::three.writeToFile(file);
             break;
           case ColorANSI::BLUE:
-            ws->write(ANSISymbolTable<SymbolUTF8>::four);
+            ANSISymbolTable<SymbolUTF8>::four.writeToFile(file);
             break;
           case ColorANSI::MAGENTA:
-            ws->write(ANSISymbolTable<SymbolUTF8>::five);
+            ANSISymbolTable<SymbolUTF8>::five.writeToFile(file);
             break;
           case ColorANSI::CYAN:
-            ws->write(ANSISymbolTable<SymbolUTF8>::six);
+            ANSISymbolTable<SymbolUTF8>::six.writeToFile(file);
             break;
           case ColorANSI::WHITE:
-            ws->write(ANSISymbolTable<SymbolUTF8>::seven);
+            ANSISymbolTable<SymbolUTF8>::seven.writeToFile(file);
             break;
           default:
             throw ArgumentError();
           }
-          ws->write(ANSISymbolTable<SymbolUTF8>::mSym);
+          ANSISymbolTable<SymbolUTF8>::mSym.writeToFile(file);
         }
 
         if (prop.backgroundColor.color!=ColorANSI::NONE) {
-          ws->write(ANSISymbolTable<SymbolUTF8>::ESCSymbol);
-          ws->write(ANSISymbolTable<SymbolUTF8>::openBracket);
-          ws->write(ANSISymbolTable<SymbolUTF8>::four);
+          ANSISymbolTable<SymbolUTF8>::ESCSymbol.writeToFile(file);
+          ANSISymbolTable<SymbolUTF8>::openBracket.writeToFile(file);
+          ANSISymbolTable<SymbolUTF8>::four.writeToFile(file);
           switch(prop.backgroundColor.color) {
           case ColorANSI::BLACK:
-            ws->write(ANSISymbolTable<SymbolUTF8>::zero);
+            ANSISymbolTable<SymbolUTF8>::zero.writeToFile(file);
             break;
           case ColorANSI::RED:
-            ws->write(ANSISymbolTable<SymbolUTF8>::one);
+            ANSISymbolTable<SymbolUTF8>::one.writeToFile(file);
             break;
           case ColorANSI::GREEN:
-            ws->write(ANSISymbolTable<SymbolUTF8>::two);
+            ANSISymbolTable<SymbolUTF8>::two.writeToFile(file);
             break;
           case ColorANSI::YELLOW:
-            ws->write(ANSISymbolTable<SymbolUTF8>::three);
+            ANSISymbolTable<SymbolUTF8>::three.writeToFile(file);
             break;
           case ColorANSI::BLUE:
-            ws->write(ANSISymbolTable<SymbolUTF8>::four);
+            ANSISymbolTable<SymbolUTF8>::four.writeToFile(file);
             break;
           case ColorANSI::MAGENTA:
-            ws->write(ANSISymbolTable<SymbolUTF8>::five);
+            ANSISymbolTable<SymbolUTF8>::five.writeToFile(file);
             break;
           case ColorANSI::CYAN:
-            ws->write(ANSISymbolTable<SymbolUTF8>::six);
+            ANSISymbolTable<SymbolUTF8>::six.writeToFile(file);
             break;
           case ColorANSI::WHITE:
-            ws->write(ANSISymbolTable<SymbolUTF8>::seven);
+            ANSISymbolTable<SymbolUTF8>::seven.writeToFile(file);
             break;
           default:
             throw ArgumentError();
           }
-          ws->write(ANSISymbolTable<SymbolUTF8>::mSym);
+          ANSISymbolTable<SymbolUTF8>::mSym.writeToFile(file);
+        }
+
+        int resCode=fflush(file);
+        if (resCode==EOF) {
+          throw IOError();
         }
       }
       catch(...) {

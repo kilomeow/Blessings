@@ -1,6 +1,0 @@
-{
-    "blessings" : [
-        "write_stream_linux.hpp",
-        "write_stream_linux_impl.hpp"
-    ]
-}
