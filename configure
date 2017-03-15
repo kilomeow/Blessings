@@ -7,19 +7,37 @@ def main():
     args=sys.argv[1:];
 
     target_file="targets"
-    compiler_type="clang"
-    compiler_executable="clang"
+    compiler_type="gcc"
+    compiler_executable="gcc"
     prefix="\\$(HOME)/.prefix"
 
     i=0
     while i<len(args):
         if args[i]=="--help":
-            print("No help provided now. Sorry.")
-        elif args[i]=="--gcc":
-            compiler_type="gcc"
-            compiler_executable="gcc"
+            print("Simple configure script (NO autotools syntax provided)")
+            print("No cross-compile tools provided now")
+            print("Usage:")
+            print("")
+            print("--help - print this help")
+            print("--prefix <dest> - set up installation prefix")
+            print("CC variable - set non-default (default is gcc) compiler")
+            exit(0)
+        if args[i]=="--prefix":
+            prefix=args[i+1]
+            i+=2
+            continue
+        if len(args[i])>=3:
+            if args[i][:3]=="CC=":
+                print("Warning: you spicified CC= option. Thinking, it is gcc-like compiler")
+                compiler_type="gcc-like"
+                compiler_executable=args[i][3:]
+                i+=1
+                continue
 
-        i+=1
+    if "CC" in os.environ.keys():
+        print("Warning: you specified CC variable. Thinking, it is gcc-like compiler")
+        compiler_type="gcc-like"
+        compiler_executable=os.environ["CC"]
 
     os.system("./configurator.py --compiler_type "+compiler_type+\
         " --compiler_executable "+compiler_executable+" --prefix \""+prefix+"\" "+

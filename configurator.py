@@ -137,9 +137,7 @@ def walk(dir, sources_dir): #walk and scan sources/headers files
     return {"sources" : sources, "headers" : headers}
 
 def linux_compile_objects(target_name, target, files_given, compiler_type,\
-    compiler_executable, add_flags=""):
-
-    temp_file="temp.1224asda"
+    compiler_executable, temp_file, add_flags=""):
 
     makefile=[]
 
@@ -187,11 +185,11 @@ def linux_compile_objects(target_name, target, files_given, compiler_type,\
 
         makefile.append(line)
 
-    os.system("rm -f "+temp_file)
-
     return makefile
 
-def linux_static_lib(target_name, target, files_given, compiler_type, compiler_executable):
+def linux_static_lib(target_name, target, files_given, compiler_type, compiler_executable,\
+    temp_file):
+
     if not compiler_type in target["compiler_flags"].keys():
         print("Warning: no compiler_flags specified for compiler type ", compiler_type,\
             " in target ", target_name, ", but this compiler choosen")
@@ -209,15 +207,17 @@ def linux_static_lib(target_name, target, files_given, compiler_type, compiler_e
     makefile.append(second_str)
 
     makefile=makefile+linux_compile_objects(target_name,\
-        target, files_given, compiler_type, compiler_executable)
+        target, files_given, compiler_type, compiler_executable, temp_file)
 
     return makefile
 
 
-def linux_shared_lib(target_name, target, files_given, compiler_type, compiler_executable):
+def linux_shared_lib(target_name, target, files_given, compiler_type, compiler_executable,\
+    temp_file):
+
     if not compiler_type in target["compiler_flags"].keys():
-        print("Warning: no compiler_flags specified for compiler type ", compiler_type,\
-            " in target ", target_name, ", but this compiler choosen")
+        print("Warning: no compiler_flags specified for compiler type", compiler_type,\
+            "in target", target_name, ", but this compiler choosen")
 
     makefile=["", "#Target "+target_name]
 
@@ -237,11 +237,13 @@ def linux_shared_lib(target_name, target, files_given, compiler_type, compiler_e
     makefile.append(second_str)
 
     makefile=makefile+linux_compile_objects(target_name,\
-        target, files_given, compiler_type, compiler_executable, "-fpic")
+        target, files_given, compiler_type, compiler_executable, temp_file, "-fpic")
 
     return makefile
 
-def linux_executable(target_name, targets, files_given, compiler_type, compiler_executable):
+def linux_executable(target_name, targets, files_given, compiler_type, compiler_executable,\
+    temp_file):
+
     target=targets[target_name]
 
     if not compiler_type in target["compiler_flags"].keys():
@@ -261,7 +263,13 @@ def linux_executable(target_name, targets, files_given, compiler_type, compiler_
 
     link_targets_str=""
     for needed_target in target["link_with_target"]:
-        link_targets_str=link_targets_str+" -l"+targets[needed_target]["output_name"]
+        if targets[needed_target]["target_type"]=="static_lib":
+            link_targets_str=link_targets_str+" -l:lib"+targets[needed_target]["output_name"]+".a"
+        elif targets[needed_target]["target_type"]=="shared_lib":
+            link_targets_str=link_targets_str+" -l:lib"+targets[needed_target]["output_name"]+".so"
+        else:
+            print("Error: couldn't link", target_name, "with", needed_target)
+            exit(1)
 
     compiler_flags_str=""
     if compiler_type in target["compiler_flags"].keys():
@@ -293,7 +301,7 @@ def linux_executable(target_name, targets, files_given, compiler_type, compiler_
     makefile.append(second_str)
 
     makefile=makefile+linux_compile_objects(target_name,\
-        target, files_given, compiler_type, compiler_executable)
+        target, files_given, compiler_type, compiler_executable, temp_file)
 
     return makefile
 
@@ -393,14 +401,16 @@ def linux_uninstall(target_name, targets, files_given, prefix):
 def main_linux(targets, files_given, compiler_type, compiler_executable, prefix):
     makefile=[]
 
+    temp_file="temp.1224asda"
+
     if compiler_type=="":
         print("Warning: no compiler_type specified. Default choice is gcc with\
-            \"gcc\" executable")
+\"gcc\" executable")
         compiler_type="gcc"
         compiler_executable="gcc"
     elif compiler_type!="" and compiler_executable=="":
         print("Warning: compiler_type specified without compiler_executable. \
-            Default choise is name compiler_type")
+Default choise is name compiler_type")
         compiler_executable=compiler_type
     elif compiler_type=="" and compiler_executable!="":
         print("Error: compiler_type not specified, but compiler_executable given")
@@ -408,26 +418,25 @@ def main_linux(targets, files_given, compiler_type, compiler_executable, prefix)
 
     if not compiler_type in ["gcc", "clang", "mingw", "gcc-like"]:
         print("Warning: compiler_type was not recognized. Thinking, it has \
-            gcc-like syntax")
+gcc-like syntax")
 
     if prefix=="":
         print("Warning: using default prefix \"/\"")
         prefix="/"
 
-    print()
-
     for target in targets.keys():
-        print("Processings target", target)
+        print()
+        print("Processing target", target)
 
         if targets[target]["target_type"]=="static_lib":
             makefile=makefile+linux_static_lib(target, targets[target],\
-                files_given, compiler_type, compiler_executable)
+                files_given, compiler_type, compiler_executable, temp_file)
         elif targets[target]["target_type"]=="shared_lib":
             makefile=makefile+linux_shared_lib(target, targets[target],\
-                files_given, compiler_type, compiler_executable)
+                files_given, compiler_type, compiler_executable, temp_file)
         elif targets[target]["target_type"]=="executable":
             makefile=makefile+linux_executable(target, targets,\
-                files_given, compiler_type, compiler_executable)
+                files_given, compiler_type, compiler_executable, temp_file)
         elif targets[target]["target_type"]=="install":
             makefile=makefile+linux_install(target, targets,\
                 files_given, prefix)
@@ -457,17 +466,25 @@ def main_linux(targets, files_given, compiler_type, compiler_executable, prefix)
 
     makefile=makefile_prefix+makefile
 
+    os.system("rm -f "+temp_file)
+
     return makefile
 
 def main():
     print("Configure started")
 
     args=scan_args()
+    print()
+    print("Input data")
+    print("Compiler type:", args["compiler_type"])
+    print("Compiler_executable:", args["compiler_executable"])
+    print("Prefix:", args["prefix"])
 
     f=open(args["target_file"])
     targets=ast.literal_eval("".join(f.readlines()))
     f.close()
 
+    print()
     print("Walking through subdirs...")
     curr_path=os.getcwd()
     files_given=walk(curr_path, curr_path)
@@ -476,11 +493,14 @@ def main():
     makefile=[]
 
     if platform.system()=="Linux":
+        print()
         print("Detected linux")
         makefile=main_linux(targets, files_given, args["compiler_type"],\
             args["compiler_executable"], args["prefix"])
     else:
+        print()
         print("Sorry, your operating system is unsupported now")
+        print("Recognized as:", platform.system())
         exit(1)
 
     f=open("Makefile", "w")
