@@ -1,8 +1,7 @@
 {
     "blessings" : {
-        "monitor_symbol_utf8_property_ansi.cpp" : {},
         "property.cpp" : {},
-        "monitor_symbol_utf8_property_ansi.cpp" : {}
+        "monitor.cpp" : {}
     },
     "test" : {
         "test.cpp" : {}

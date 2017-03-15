@@ -8,7 +8,6 @@
 #include "property.hpp"
 #include "linux/ANSI/terminal_io_ansi_linux.hpp"
 #include "monitor.hpp"
-#include "monitor_impl.hpp"
 #include "additional_structs.hpp"
 
 using namespace std;
@@ -17,7 +16,7 @@ using namespace blessings;
 typedef SymbolUTF8 S;
 typedef PropertyANSI P;
 typedef TerminalIOANSILinux<S, S, P> TL;
-typedef Monitor<S, S, P> M;
+typedef Monitor M;
 
 void test_dest00(M monitor) {
   P yell(ColorANSI(3));

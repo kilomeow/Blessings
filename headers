@@ -2,8 +2,9 @@
     "blessings" : [
         "additional_structs.hpp",
         "error.hpp",
+        "monitor_template.hpp",
+        "monitor_template_impl.hpp",
         "monitor.hpp",
-        "monitor_impl.hpp",
         "property.hpp",
         "terminal_io.hpp"        
     ]
