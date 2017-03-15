@@ -5,6 +5,8 @@
 #error "Machines with non-little endian orders for SymbolUTF8 is not supported"
 #endif
 
+#include "../error.hpp"
+
 #include <string>
 #include <iostream>
 #include <cstdio>
@@ -17,15 +19,14 @@ namespace blessings {
 
     operator uint32_t() const;
   public:
-    class Error {};
+    class Error : public SymbolError {};
     class IOError : public Error {};
     class ReadError : public IOError {};
     class WriteError : public IOError {};
-    class StreamInitError {};
+    class BadEncodingStreamGiven : public Error {};
     class EndOfFile : public IOError {};
     class InitError : public Error {};
     class AccessError : public Error {};
-    class InternalError : public Error {};
 
     union Converter {
       char arr_[4];

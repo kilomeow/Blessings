@@ -439,7 +439,7 @@ namespace blessings {
     {
       throw SymbolCorruption();
     }
-    catch(typename InS::StreamInitError &)
+    catch(typename InS::BadEncodingStreamGiven &)
     {
       throw WrongEncoding();
     }
@@ -465,7 +465,7 @@ namespace blessings {
     {
       throw InputEnd(new_q);
     }
-    catch(typename InS::StreamInitError &)
+    catch(typename InS::BadEncodingStreamGiven &)
     {
       throw WrongEncoding(new_q);
     }

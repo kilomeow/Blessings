@@ -220,4 +220,22 @@ namespace blessings {
 
     return *this;
   };
+
+  StringUTF8& StringUTF8::operator=(const SymbolUTF8* other) {
+    *this=StringUTF8(other);
+
+    return *this;
+  };
+
+  StringUTF8& StringUTF8::operator=(SymbolUTF8 sym) {
+    *this=StringUTF8(1, sym);
+
+    return *this;
+  }
+
+  StringUTF8& StringUTF8::operator=(std::initializer_list<SymbolUTF8> initList) {
+    *this=StringUTF8(initList);
+
+    return *this;
+  }
 }

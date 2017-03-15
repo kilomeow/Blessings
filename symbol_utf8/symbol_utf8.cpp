@@ -267,7 +267,7 @@ namespace blessings {
     else if (!((ret.arr_[0]&0b11100000)^0b11000000)) ret.size_=2;
     else if (!((ret.arr_[0]&0b11110000)^0b11100000)) ret.size_=3;
     else if (!((ret.arr_[0]&0b11111000)^0b11110000)) ret.size_=4;
-    else throw SymbolUTF8::StreamInitError();
+    else throw SymbolUTF8::BadEncodingStreamGiven();
 
     for (int8_t i=1; i<ret.size_; ++i) {
       try {
@@ -282,11 +282,11 @@ namespace blessings {
 
     switch(ret.size_) {
     case 4:
-      if (((ret.arr_[3]&0b11000000)^0b10000000)) throw SymbolUTF8::StreamInitError();
+      if (((ret.arr_[3]&0b11000000)^0b10000000)) throw SymbolUTF8::BadEncodingStreamGiven();
     case 3:
-      if (((ret.arr_[2]&0b11000000)^0b10000000)) throw SymbolUTF8::StreamInitError();
+      if (((ret.arr_[2]&0b11000000)^0b10000000)) throw SymbolUTF8::BadEncodingStreamGiven();
     case 2:
-      if (((ret.arr_[1]&0b11000000)^0b10000000)) throw SymbolUTF8::StreamInitError();
+      if (((ret.arr_[1]&0b11000000)^0b10000000)) throw SymbolUTF8::BadEncodingStreamGiven();
     }
 
     sym=ret;
@@ -351,7 +351,7 @@ namespace blessings {
     else if (!((ret.arr_[0]&0b11100000)^0b11000000)) ret.size_=2;
     else if (!((ret.arr_[0]&0b11110000)^0b11100000)) ret.size_=3;
     else if (!((ret.arr_[0]&0b11111000)^0b11110000)) ret.size_=4;
-    else throw SymbolUTF8::StreamInitError();
+    else throw SymbolUTF8::BadEncodingStreamGiven();
 
     for (int8_t i=1; i<ret.size_; ++i) {
       temp=getc(file);
@@ -362,7 +362,7 @@ namespace blessings {
 
       ret.arr_[i]=static_cast<char>(temp);
 
-      if ((ret.arr_[i]&0b11000000)^0b10000000) throw SymbolUTF8::StreamInitError();
+      if ((ret.arr_[i]&0b11000000)^0b10000000) throw SymbolUTF8::BadEncodingStreamGiven();
     }
 
     return ret;
@@ -414,8 +414,6 @@ namespace blessings {
       conv.ui<<=6;
       conv.arr_[0]|=arr_[3]&0b00111111;
       return conv.ui;
-    default:
-      throw InternalError();
     }
   }
 

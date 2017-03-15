@@ -1,6 +1,7 @@
 #include <string>
 
 #include "symbol_utf8.hpp"
+#include "../error.hpp"
 
 namespace blessings {
   struct SymbolUTF8Traits {
@@ -73,14 +74,14 @@ namespace blessings {
     StringUTF8(const StringUTF8& other) :
     std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other) {};
 
-    //StringUTF8(const StringUTF8& other, const allocator_type& alloc) :
-    //std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other, alloc) {};
+    StringUTF8(const StringUTF8& other, const allocator_type& alloc) :
+    std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other, alloc) {};
 
     StringUTF8(StringUTF8&& other) :
     std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other) {};
 
-    //StringUTF8(StringUTF8&& other, const allocator_type& alloc) :
-    //std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other, alloc) {};
+    StringUTF8(StringUTF8&& other, const allocator_type& alloc) :
+    std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other, alloc) {};
 
     StringUTF8(std::initializer_list<SymbolUTF8> init,
     const allocator_type& alloc = allocator_type()) :
@@ -89,6 +90,9 @@ namespace blessings {
 
     StringUTF8& operator=(const StringUTF8&);
     StringUTF8& operator=(StringUTF8&&);
+    StringUTF8& operator=(const SymbolUTF8*);
+    StringUTF8& operator=(SymbolUTF8);
+    StringUTF8& operator=(std::initializer_list<SymbolUTF8>);
 
 
     StringUTF8(const char*);
