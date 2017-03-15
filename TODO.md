@@ -7,6 +7,7 @@
 - [ ] Input interface
 - [ ] Add lazy interface
 - [ ] Add writing-line mode
+- [ ] Make hardopt depended on instance of Monitor
 
 ### TerminalIO
 - [ ] Rewrite linux terminal using terminfo
