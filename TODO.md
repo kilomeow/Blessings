@@ -10,10 +10,11 @@
 - [ ] Make hardopt depended on instance of Monitor
 
 ### TerminalIO
-- [ ] Rewrite linux terminal using terminfo
-- [ ] Input interface
+- [-] Rewrite linux terminal using terminfo
+- [x] Input interface
 - [ ] Write windows/mac implementation
-- [ ] Write error ierarchy for abstract class
+- [x] Write error ierarchy for abstract class
+- [ ] Code review
 
 ### Widgets
 - [ ] Write core
@@ -30,7 +31,11 @@
 - [ ] Unit testing
 - [ ] Python bindings
 - [ ] Errors structure
+- [ ] Change include ierarchy (every include should be full-path from root)
 
-### SttringUTF8
-- [ ] Complete StringUTF8 operator= to stl
+### StringUTF8
+- [x] Complete StringUTF8 operator= to stl
 - [ ] Add exception-safe constructors
+
+### UTF8
+- [ ] Code review
