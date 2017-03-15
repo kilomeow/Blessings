@@ -36,24 +36,8 @@ namespace blessings {
     class BadMode : public Error {};
     class ArgumentError : public Error {};  //List of errors below needs fixin'
     class SymbolCorruption : public Error {}; //Hui znaet, nado li ot nego nasledovat' EOFError
-    class InputEnd : public Error
-    {
-    public:
-      std::queue<InS> what_left;
-      InputEnd() {};
-      InputEnd(const std::queue<InS> & init_queue) {
-        what_left = init_queue;
-      };
-    };  //Syntax Sugar: it's EOF actually
-    class WrongEncoding : public Error
-    {
-    public:
-      std::queue<InS> what_left;
-      WrongEncoding() {};
-      WrongEncoding(const std::queue<InS> & init_queue) {
-        what_left = init_queue;
-      }
-    }; //Is this one being thrown only when encoding is wrong?
+    class InputEnd; //Syntax Sugar: it's EOF actually
+    class WrongEncoding; //Is this one being thrown only when encoding is wrong?
     class NoSymbolYet : public Error {};  //When getSymbol fails to find anything
 
     TerminalIOANSILinux();
@@ -104,5 +88,23 @@ namespace blessings {
     int isEchoInhibited() {return echoInhibited;};
 
     bool isInited() {return inited;};
+  };
+
+  template <typename InS, typename OutS, typename Property>
+  class TerminalIOANSILinux<InS, OutS, Property>::InputEnd : public Error {
+  public:
+    std::queue<InS> whatLeft;
+
+    InputEnd() {};
+    InputEnd(const std::queue<InS>& initQueue) : whatLeft(initQueue) {};
+  };
+
+  template <typename InS, typename OutS, typename Property>
+  class TerminalIOANSILinux<InS, OutS, Property>::WrongEncoding : public Error {
+  public:
+    std::queue<InS> whatLeft;
+
+    WrongEncoding() {};
+    WrongEncoding(const std::queue<InS>& initQueue) : whatLeft(initQueue) {}
   };
 }

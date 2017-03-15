@@ -1,4 +1,7 @@
+#include <iostream>
+
 #include <cstdio>
+
 #include <termios.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -462,24 +465,21 @@ namespace blessings {
   InS TerminalIOANSILinux<InS, OutS, Property>::getSymbol() {
     if (!inited) throw BadMode();
 
-    try
-    {
+    try {
       if (checkInput()) {
         return InS::readFromFile(file);
-      } else {
+      }
+      else {
         throw NoSymbolYet();
       }
     }
-    catch(typename InS::EndOfFile &)
-    {
+    catch(typename InS::EndOfFile &) {
       throw InputEnd();
     }
-    catch(typename InS::IOError &)
-    {
+    catch(typename InS::IOError &) {
       throw SymbolCorruption();
     }
-    catch(typename InS::BadEncodingStreamGiven &)
-    {
+    catch(typename InS::BadEncodingStreamGiven &) {
       throw WrongEncoding();
     }
   }
@@ -488,28 +488,26 @@ namespace blessings {
   std::queue<InS> TerminalIOANSILinux<InS, OutS, Property>::getSymbol(int n) {
     if (!inited) throw BadMode();
 
-    std::queue<InS> new_q;
+    std::queue<InS> newQueue;
 
-    try
-    {
-      for (int i = 0; i < n; i++) {
+    try {
+      for (int i=0; i<n; ++i) {
         if (checkInput()) {
-          new_q.push(InS::readFromFile(file));
-        } else {
+          newQueue.push(InS::readFromFile(file));
+        }
+        else {
           break;
         }
       }
     }
-    catch(typename InS::EndOfFile &)
-    {
-      throw InputEnd(new_q);
+    catch(typename InS::EndOfFile&) {
+      throw InputEnd(newQueue);
     }
-    catch(typename InS::BadEncodingStreamGiven &)
-    {
-      throw WrongEncoding(new_q);
+    catch(typename InS::BadEncodingStreamGiven&) {
+      throw WrongEncoding(newQueue);
     }
 
-    return new_q;
+    return newQueue;
   }
 
 
@@ -525,7 +523,7 @@ namespace blessings {
     FD_ZERO(&readfds);
     FD_SET(fd, &readfds);
 
-    if (select(1, &readfds, NULL, NULL, &tv)) return true;
+    if (select(fd+1, &readfds, NULL, NULL, &tv)) return true;
 
     return false;
   }
