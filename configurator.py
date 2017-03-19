@@ -146,7 +146,7 @@ def linux_compile_objects(target_name, target, files_given, compiler_type,\
 
         source_target_name="build/"+target_name+"/"+source[:-4]+".o"
 
-        resCode=os.system("gcc -MM -MF "+temp_file+" -MT "+\
+        resCode=os.system("gcc -std=c++14 -MM -MF "+temp_file+" -MT "+\
             source_target_name+" "+source)
         if resCode!=0:
             print("Error: header scan finished unsuccesfull. Stopping configure")
