@@ -37,7 +37,7 @@ namespace blessings {
     termIO = monitor.termIO;
     maxSize = monitor.maxSize;
     res = monitor.res;
-    isDrawn = false;
+    isPrinted = false;
     delete [] grid;
     grid = new MonitorTemplate<InS,OutS,Prop>::Cell [maxSize];
     for (int i=0;i<maxSize;i++)
@@ -450,7 +450,7 @@ namespace blessings {
     if (mr.width*mr.height>maxSize) throw Error(); // "resolution out of range"
     res = mr;
     resetCursor();
-    isDrawn = false;
+    isPrinted = false;
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -556,23 +556,20 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void MonitorTemplate<InS,OutS,Prop>::checkResolution(resChange drawMode) {
-    switch (drawMode) {
-    case alarm: {
+  void MonitorTemplate<InS,OutS,Prop>::checkResolution() {
+    switch (resmode) {
+    case ResolutionChange::Alarm:
       if ((terminalResolution().width != res.width) ||
           (terminalResolution().height != res.height))
         throw ResolutionDisparity();
-        break;
-      }
-    case ignoreExtension: {
+      break;
+    case ResolutionChange::IgnoreExtension:
       if ((terminalResolution().width < res.width) ||
           (terminalResolution().height < res.height))
         throw ResolutionDisparity();
-        break;
-    }
-    case ignore: {
       break;
-    }
+    case ResolutionChange::Ignore:
+      break;
     }
   }
 
@@ -597,34 +594,20 @@ namespace blessings {
       if (i.index()%res.width==0) termIO->newLine();
     }
   }
-
+  
   template <typename InS, typename OutS, typename Prop>
-  void MonitorTemplate<InS,OutS,Prop>::draw(MonitorTemplate::resChange drawMode) {
-    checkMode();
-    checkResolution(drawMode);
-
-    saveCursor();
-    resetCursor();
-
-    printPage();
-    isDrawn = true;
-
-    restoreCursor();
+  void MonitorTemplate<InS,OutS,Prop>::overDraw() {
+    MonitorTemplate::Iterator i = begin();
+    while (!i.isEnd()) {
+      termIO->print(i->symbol(), i->property());
+      i->setStaged();
+      i++;
+      if (i.index()%res.width==0) moveCursorTo(i.index());
+    }
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void MonitorTemplate<InS,OutS,Prop>::lazyDraw(MonitorTemplate::resChange drawMode) {
-    if (!isDrawn) {
-      draw();
-      return;
-    }
-
-    checkMode();
-    checkResolution(drawMode);
-
-    saveCursor();
-    resetCursor();
-
+  void MonitorTemplate<InS,OutS,Prop>::lazyDraw() {
     MonitorTemplate::Iterator i = begin();
     while (!i.isEnd()) {
       if (i->isUnstaged()) {
@@ -634,12 +617,30 @@ namespace blessings {
       }
       i++;
     }
+  }
+  
+  template <typename InS, typename OutS, typename Prop>
+  void MonitorTemplate<InS,OutS,Prop>::draw() {
+    checkMode();
+    checkResolution();
+
+    saveCursor();
+    resetCursor();
+
+    if (!isPrinted) {
+      printPage();
+      isPrinted = true;
+    } else {
+      switch (drawmode) {
+      case DrawBehaviour::Primitive:
+        overDraw();
+        break;
+      case DrawBehaviour::Lazy:
+        lazyDraw();
+        break;
+      }
+    }
 
     restoreCursor();
-  }
-
-  template <typename InS, typename OutS, typename Prop>
-  void MonitorTemplate<InS,OutS,Prop>::hardOptimization(bool p) {
-    MonitorTemplate<InS,OutS,Prop>::Cell::hardopt = p;
   }
 }

@@ -24,12 +24,11 @@ void test_dest00(M monitor) {
   monitor.setResolution(50, 10);
 
   monitor.tile(S("."));
-  monitor.draw(M::resChange::ignore);
+  monitor.draw();
 
   for (int i=0; i<(500-116); i++) {
     monitor(i/8+1, i%8+1) = M::Cell(S('#'), yell);
-    monitor.lazyDraw(M::resChange::ignore);
-    //monitor.draw(M::resChange::ignore);
+    monitor.draw();
     this_thread::sleep_for(chrono::milliseconds(3));
   }
 }
@@ -42,10 +41,8 @@ void test_dest01(M monitor) {
   char c;
   bool ex=false;
 
-  monitor.hardOptimization(true);
-
   monitor.tile(S(" "));
-  monitor.draw(M::resChange::ignore);
+  monitor.draw();
 
   for (int t=0;t<300;t++) {
     rewind(in);
@@ -76,7 +73,7 @@ void test_dest01(M monitor) {
 
     if (ex) break;
 
-    monitor.lazyDraw(M::resChange::ignore);
+    monitor.draw();
     this_thread::sleep_for(chrono::milliseconds(50));
   }
 
@@ -97,7 +94,7 @@ void test_dest02(M monitor) {
 		P col(ColorANSI(i%6+1));
 
 		monitor.tile(S("@"), col, x1, y1, x2, y2);
-		monitor.lazyDraw();
+		monitor.draw();
 		this_thread::sleep_for(chrono::milliseconds(300));
 	}
 }
@@ -105,14 +102,12 @@ void test_dest02(M monitor) {
 void test_melon00(M monitor) {
   monitor.setResolution(50, 10);
 
-  monitor.hardOptimization(true);
-
   monitor.tile(S("."));
   monitor(0,0)=SymbolUTF8("a");
   monitor(0,1)=M::Cell(SymbolUTF8("a"), PropertyANSI::highlight);
   monitor(0,2)=SymbolUTF8("a");
 
-  monitor.draw(M::resChange::ignore);
+  monitor.draw();
 
   this_thread::sleep_for(chrono::milliseconds(1000));
 }

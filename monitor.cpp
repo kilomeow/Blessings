@@ -5,7 +5,7 @@
 
 namespace blessings {
   template <typename InS, typename OutS, typename Prop>
-  bool MonitorTemplate<InS, OutS, Prop>::Cell::hardopt=false;
+  bool MonitorTemplate<InS, OutS, Prop>::Cell::hardopt=true;
   
   template class MonitorTemplate<SymbolUTF8, SymbolUTF8, PropertyANSI>;
 }

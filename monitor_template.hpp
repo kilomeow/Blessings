@@ -150,21 +150,36 @@ namespace blessings {
 
     void printSymbol(OutS, Prop);
     void printSymbol(OutS);
-
-    void hardOptimization(bool);
-    //void lazyDraw(bool);
-    //void lazyTile(bool);
-
-    enum resChange {
-      alarm,
-      ignore,
-      ignoreExtension
+    
+    enum class ResolutionChange {
+      Alarm,
+      Ignore,
+      IgnoreExtension
     };
+    
+    enum class CellBehaviour {
+      Primitive,
+      Compare
+    };
+    
+    enum class DrawBehaviour {
+      Primitive,
+      Lazy
+    };
+    
+    enum class TileBehaviour {
+      Primitive
+      //Lazy
+    };
+    
+    void setResolutionMode(ResolutionChange resm) {resmode = resm;}
+    void setCellMode(CellBehaviour cellm) {cellmode = cellm;}
+    void setDrawMode(DrawBehaviour drawm) {drawmode = drawm;}
+    void setTileMode(TileBehaviour tilem) {tilemode = tilem;}
 
     void clearScreen();
     void printPage();
-    void draw(resChange drawMode=alarm);
-    void lazyDraw(resChange drawMode=alarm); //will be removed
+    void draw();
 
     class Error {};
     class DrawError : public Error {};
@@ -178,27 +193,28 @@ namespace blessings {
     int maxSize;
     Resolution res;
 
-    //bool isEmpty = false;
-
     GridPos cursorPos;
 
-    bool isDrawn=false;
+    bool isPrinted=false;
+    ResolutionChange resmode = ResolutionChange::Ignore;
+    CellBehaviour cellmode = CellBehaviour::Compare;
+    DrawBehaviour drawmode = DrawBehaviour::Lazy;
+    TileBehaviour tilemode = TileBehaviour::Primitive;
+    
     bool cursorVisible=false;
     bool cursorVisibleSlot;
-
-    //bool lazydraw=false;
-    //bool lazytile=false;
+    
+    void overDraw();
+    void lazyDraw();
 
     void saveCursor();
     void restoreCursor();
 
     void checkMode();
-    void checkResolution(resChange);
+    void checkResolution();
     //void checkPos(GridPos);
     //void checkPos(int x, int y);
     //void checkPos(int p);
-
-    //void overPrint();
   };
 
 }
