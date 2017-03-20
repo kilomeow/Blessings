@@ -1,18 +1,18 @@
-## TODO List
+## To-Do List
 ### Monitor
 - [x] Add rectangle tiling
-- [ ] Change memory allocation behaviour
+- [ ] Change memory allocation behaviour (v1.0)
 - [ ] Add lazy tiling
 - [x] Monitor::Iterator operator->* overloading
 - [x] Input interface
 - [x] Add lazy interface
-- [ ] Make hardopt depended on instance of Monitor
+- [ ] Make hardopt depended on instance of Monitor (v1.0)
 
 ### TerminalIO
 - [x] Input interface
 - [ ] Write windows/mac implementation
 - [x] Write error ierarchy for abstract class
-- [ ] Code review
+- [ ] Code review (v1.1)
 
 ### TerminalOpenGL
 - [ ] Write
@@ -29,17 +29,17 @@
 - [ ] Add shortcuts (?)
 
 ### Other
-- [ ] Documentation (!)
-- [ ] Readme (!)
+- [ ] Documentation (v1.1)
+- [x] Readme (v1.0)
 - [ ] Unit testing
 - [ ] Python bindings
 - [ ] Errors structure
 - [ ] Change include ierarchy (every include should be full-path from root) (?)
-- [ ] Put headers/sources in special directories (!)
+- [ ] Put headers/sources in special directories (v1.0)
 
 ### StringUTF8
 - [x] Complete StringUTF8 operator= to stl
-- [ ] Add exception-safe constructors
+- [ ] Add exception-safe constructors (v1.1)
 
 ### UTF8
-- [ ] Code review
+- [ ] Code review (v1.1)
