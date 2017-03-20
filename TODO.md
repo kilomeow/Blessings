@@ -1,20 +1,22 @@
 ## TODO List
 ### Monitor
 - [x] Add rectangle tiling
-- [ ] Make Monitor more protected (empty constructor)
+- [ ] Change memory allocation behaviour
 - [ ] Add lazy tiling
 - [x] Monitor::Iterator operator->* overloading
-- [ ] Input interface
-- [ ] Add lazy interface
-- [ ] Add writing-line mode
+- [x] Input interface
+- [x] Add lazy interface
 - [ ] Make hardopt depended on instance of Monitor
 
 ### TerminalIO
-- [-] Rewrite linux terminal using terminfo
 - [x] Input interface
 - [ ] Write windows/mac implementation
 - [x] Write error ierarchy for abstract class
 - [ ] Code review
+
+### TerminalOpenGL
+- [ ] Write
+- [ ] Add tileset
 
 ### Widgets
 - [ ] Write core
@@ -22,16 +24,18 @@
 - - [ ] Write Layer
 - - [ ] Write Widget
 - [ ] Add buttons
+- [ ] Add switch box
 - [ ] Add text fields
-- [ ] Add shortcuts
+- [ ] Add shortcuts (?)
 
 ### Other
 - [ ] Documentation (!)
-- [ ] Readme
+- [ ] Readme (!)
 - [ ] Unit testing
 - [ ] Python bindings
 - [ ] Errors structure
-- [ ] Change include ierarchy (every include should be full-path from root)
+- [ ] Change include ierarchy (every include should be full-path from root) (?)
+- [ ] Put headers/sources in special directories (!)
 
 ### StringUTF8
 - [x] Complete StringUTF8 operator= to stl
