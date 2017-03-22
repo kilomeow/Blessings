@@ -1,13 +1,13 @@
 # Blessings
-Blessings is a C++ terminal control library (like curses) performed in a
+Blessings is a C++ terminal management library (like curses) performed in an
 object-oriented style. Blessings allows you to write fast, nice
 terminal-independent programs with text user interface. The name is a pun
 on the name of the other terminal library **curses**.
 
 ## Getting Started
 ### Linux
-For a start, you need a **gcc** *(or any other gcc-like compiler)* and
-**python3**. To run stadnard installation, clone repository to your
+For a start, you need **gcc** *(or any other gcc-like compiler)* and
+**python3**. To run standard installation, clone repository to your
 directory with:
 ```
 git clone https://github.com/FourthRome/Blessings.git --depth=1
