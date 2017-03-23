@@ -5,7 +5,9 @@
 
 namespace blessings {
   template <typename InS, typename OutS, typename Prop>
-  bool MonitorTemplate<InS, OutS, Prop>::Cell::hardopt=true;
+  size_t MonitorTemplate<InS, OutS, Prop>::CELL_MEMORY_START = 512;
+  template <typename InS, typename OutS, typename Prop>
+  size_t MonitorTemplate<InS, OutS, Prop>::CELL_MEMORY_STEP = 256;
   
   template class MonitorTemplate<SymbolUTF8, SymbolUTF8, PropertyANSI>;
 }

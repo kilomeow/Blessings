@@ -115,14 +115,14 @@ void test_melon00(M monitor) {
 
 int main() {
 	TL term;
-	M monitor(50000);
+	M monitor;
 
 	term.init();
 	monitor.connect(&term);
 
 	monitor.startWork();
 
-	test_dest01(monitor);
+	test_melon00(monitor);
 
 	monitor.endWork();
 

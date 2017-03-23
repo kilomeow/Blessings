@@ -9,11 +9,13 @@ namespace blessings {
   template <typename InS, typename OutS, typename Prop>
   class MonitorTemplate {
   public:
-    MonitorTemplate() {}
-    MonitorTemplate(int MaxSize);
+    MonitorTemplate();
     ~MonitorTemplate();
     MonitorTemplate(const MonitorTemplate&);
     MonitorTemplate& operator=(const MonitorTemplate&);
+    
+    static size_t CELL_MEMORY_START;
+    static size_t CELL_MEMORY_STEP;
     
     // Monitor::Cell
     
@@ -38,8 +40,6 @@ namespace blessings {
 
       OutS symbol() const {return newsymb;}
       Prop property() const {return newprop;}
-
-      static bool hardopt;
 
       bool isUnstaged();
 
@@ -140,6 +140,7 @@ namespace blessings {
     void setResolution(Resolution);
     void setResolution(int w, int h);
     void updateResolution();
+    size_t size() {return maxSize;}
 
     void moveCursor(int x, int y);
     void moveCursor(int p);
@@ -225,7 +226,7 @@ namespace blessings {
     Cell* grid;
     TerminalIO<InS, OutS, Prop>* termIO;
 
-    int maxSize;
+    size_t maxSize;
     Resolution res;
 
     GridPos cursorPos;
@@ -238,6 +239,8 @@ namespace blessings {
     
     bool cursorVisible=false;
     bool cursorVisibleSlot;
+    
+    void expand(int);
     
     void overDraw();
     void lazyDraw();

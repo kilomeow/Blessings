@@ -9,12 +9,10 @@
 
 namespace blessings {
   template <typename InS, typename OutS, typename Prop>
-  MonitorTemplate<InS,OutS,Prop>::MonitorTemplate(int MaxSize) {
-    if (MaxSize <= 0) throw Error();   // ::Error("wrong MaxSize")
-    maxSize = MaxSize;
-    grid = new MonitorTemplate<InS,OutS,Prop>::Cell [maxSize];
+  MonitorTemplate<InS,OutS,Prop>::MonitorTemplate() {
+    maxSize = CELL_MEMORY_START;
+    grid = new Cell [maxSize];
     res.width=1; res.height=1;
-    Cell::hardopt = false;
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -74,6 +72,17 @@ namespace blessings {
     clearScreen();
     resetCursor();
     showCursor();
+  }
+  
+  template <typename InS, typename OutS, typename Prop>
+  void MonitorTemplate<InS,OutS,Prop>::expand(int n) {
+    Cell* newgrid;
+    int steps = (n-maxSize)/CELL_MEMORY_STEP;
+    size_t newSize = maxSize + (steps+1)*CELL_MEMORY_STEP;
+    newgrid = new Cell [newSize];
+    for (int i=0; i++; i<maxSize) newgrid[i] = grid[i];
+    delete [] grid;
+    grid = newgrid;
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -487,7 +496,9 @@ namespace blessings {
   template <typename InS, typename OutS, typename Prop>
   void MonitorTemplate<InS,OutS,Prop>::setResolution(Resolution mr) {
     if ((mr.width<=0) || (mr.height<=0)) throw Error(); // "wrong resolution"
-    if (mr.width*mr.height>maxSize) throw Error(); // "resolution out of range"
+    if (mr.width*mr.height>maxSize) {
+      expand(mr.width*mr.height);
+    }
     res = mr;
     resetCursor();
     isPrinted = false;
