@@ -582,6 +582,7 @@ namespace blessings {
   template <typename InS, typename OutS, typename Prop>
   void MonitorTemplate<InS,OutS,Prop>::clearScreen() {
     termIO->clearScreen();
+    isPrinted = false;
   }
 
   template <typename InS, typename OutS, typename Prop>
