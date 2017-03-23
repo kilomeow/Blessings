@@ -1,13 +1,13 @@
 ## To-Do List
 ### Monitor
 - [x] Add rectangle tiling
-- [ ] Change memory allocation behaviour (0.1b)
+- [x] Change memory allocation behaviour (0.1b)
 - [ ] Add lazy tiling
 - [x] Monitor::Iterator operator->* overloading
 - [x] Input interface
 - [x] Add lazy interface
 - [x] Add curses-like API (0.1b)
-- [ ] Make hardopt depended on instance of Monitor (0.1b)
+- [x] Make hardopt depended on instance of Monitor (0.1b)
 
 ### TerminalIO
 - [x] Input interface
@@ -31,8 +31,8 @@
 - [ ] Add shortcuts (?)
 
 ### Other
-- [ ] Documentation (v1.1)
-- [x] Readme (v1.0)
+- [ ] Documentation (0.2+)
+- [x] Readme (0.1b)
 - [ ] Unit testing
 - [ ] Python bindings
 - [ ] Errors structure
