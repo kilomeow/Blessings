@@ -23,7 +23,8 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  MonitorTemplate<InS,OutS,Prop>::MonitorTemplate(const MonitorTemplate& monitor) {
+  MonitorTemplate<InS,OutS,Prop>::MonitorTemplate(\
+  const MonitorTemplate& monitor) {
     termIO = monitor.termIO;
     maxSize = monitor.maxSize;
     res = monitor.res;
@@ -33,7 +34,9 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  MonitorTemplate<InS,OutS,Prop>& MonitorTemplate<InS,OutS,Prop>::operator=(const MonitorTemplate& monitor) {
+  MonitorTemplate<InS,OutS,Prop>& \
+  MonitorTemplate<InS,OutS,Prop>::operator=(\
+  const MonitorTemplate& monitor) {
     termIO = monitor.termIO;
     maxSize = monitor.maxSize;
     res = monitor.res;
@@ -46,7 +49,8 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void MonitorTemplate<InS,OutS,Prop>::connect(TerminalIO<InS,OutS,Prop>* Term) {
+  void MonitorTemplate<InS,OutS,Prop>::connect(\
+  TerminalIO<InS,OutS,Prop>* Term) {
     termIO = Term;
   }
 
@@ -91,108 +95,117 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Cell& MonitorTemplate<InS,OutS,Prop>::operator[] (int p) {
+  typename MonitorTemplate<InS,OutS,Prop>::Cell& \
+  MonitorTemplate<InS,OutS,Prop>::operator[] (int p) {
     if ((p<0) || (p>=bound())) throw MonitorTemplate::Error();
     //MonitorTemplate::Error("p out of range");
     return grid[p];
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Cell MonitorTemplate<InS,OutS,Prop>::operator[] (int p) const {
+  typename MonitorTemplate<InS,OutS,Prop>::Cell \
+  MonitorTemplate<InS,OutS,Prop>::operator[] (int p) const {
     if ((p<0) || (p>=bound())) throw MonitorTemplate::Error();
     //MonitorTemplate::Error("p out of range");
     return grid[p];
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Cell& MonitorTemplate<InS,OutS,Prop>::operator() (int x, int y) {
+  typename MonitorTemplate<InS,OutS,Prop>::Cell& \
+  MonitorTemplate<InS,OutS,Prop>::operator() (int x, int y) {
     if ((x<0) || (x>res.width) || (y<0) || (y>res.height)) throw Error();
     //MonitorTemplate::Error("(x,y) out of range");
     return grid[x+y*res.width];
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Cell MonitorTemplate<InS,OutS,Prop>::operator() (int x, int y) const {
+  typename MonitorTemplate<InS,OutS,Prop>::Cell \
+  MonitorTemplate<InS,OutS,Prop>::operator() (int x, int y) const {
     if ((x<0) || (x>res.width) || (y<0) || (y>res.height)) throw Error();
     //MonitorTemplate::Error("(x,y) out of range");
     return grid[x+y*res.width];
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Cell& MonitorTemplate<InS,OutS,Prop>::operator() (GridPos p) {
+  typename MonitorTemplate<InS,OutS,Prop>::Cell& \
+  MonitorTemplate<InS,OutS,Prop>::operator() (GridPos p) {
     return this->at(p.x, p.y);
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Cell MonitorTemplate<InS,OutS,Prop>::operator() (GridPos p) const {
+  typename MonitorTemplate<InS,OutS,Prop>::Cell \
+  MonitorTemplate<InS,OutS,Prop>::operator() (GridPos p) const {
     return this->at(p.x, p.y);
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Cell& MonitorTemplate<InS,OutS,Prop>::at (int p) {
+  typename MonitorTemplate<InS,OutS,Prop>::Cell& \
+  MonitorTemplate<InS,OutS,Prop>::at (int p) {
     return (*this)[p];
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Cell MonitorTemplate<InS,OutS,Prop>::at (int p) const {
+  typename MonitorTemplate<InS,OutS,Prop>::Cell \
+  MonitorTemplate<InS,OutS,Prop>::at (int p) const {
     return (*this)[p];
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Cell& MonitorTemplate<InS,OutS,Prop>::at (int x, int y) {
+  typename MonitorTemplate<InS,OutS,Prop>::Cell& \
+  MonitorTemplate<InS,OutS,Prop>::at (int x, int y) {
     return (*this)(x, y);
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Cell MonitorTemplate<InS,OutS,Prop>::at (int x, int y) const {
+  typename MonitorTemplate<InS,OutS,Prop>::Cell \
+  MonitorTemplate<InS,OutS,Prop>::at (int x, int y) const {
     return (*this)(x, y);
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Cell& MonitorTemplate<InS,OutS,Prop>::at (GridPos p) {
+  typename MonitorTemplate<InS,OutS,Prop>::Cell& \
+  MonitorTemplate<InS,OutS,Prop>::at (GridPos p) {
     return this->at(p.x, p.y);
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Cell MonitorTemplate<InS,OutS,Prop>::at (GridPos p) const {
+  typename MonitorTemplate<InS,OutS,Prop>::Cell \
+  MonitorTemplate<InS,OutS,Prop>::at (GridPos p) const {
     return this->at(p.x, p.y);
   }
 
   template <typename InS, typename OutS, typename Prop>
-  MonitorTemplate<InS,OutS,Prop>::Cell::Cell(const MonitorTemplate<InS,OutS,Prop>::Cell& cell) {
+  MonitorTemplate<InS,OutS,Prop>::Cell::Cell( \
+  const MonitorTemplate<InS,OutS,Prop>::Cell& cell) {
     symb = cell.symb;
     prop = cell.prop;
+    newsymb = symb;
+    newprop = prop;
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Cell& MonitorTemplate<InS,OutS,Prop>::Cell::operator=(const MonitorTemplate<InS,OutS,Prop>::Cell& cell) {
-    if (hardopt && (symb==cell.symb) && (prop==cell.prop)) {
-      // do nothing
-    } else {
-      symb = cell.symb;
-      prop = cell.prop;
-      unstaged = true;
-    }
+  typename MonitorTemplate<InS,OutS,Prop>::Cell& \
+  MonitorTemplate<InS,OutS,Prop>::Cell::operator=( \
+  const MonitorTemplate<InS,OutS,Prop>::Cell& cell) {
+    newsymb = cell.symb;
+    newprop = cell.prop;
     return (*this);
   }
 
   template <typename InS, typename OutS, typename Prop>
   bool MonitorTemplate<InS,OutS,Prop>::Cell::isUnstaged() {
-    return unstaged;
+    return !((symb==newsymb) && (prop==newprop));
   }
-
+  
   template <typename InS, typename OutS, typename Prop>
   void MonitorTemplate<InS,OutS,Prop>::Cell::setStaged() {
-    unstaged = false;
+    symb = newsymb;
+    prop = newprop;
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void MonitorTemplate<InS,OutS,Prop>::Cell::setUnstaged() {
-    unstaged = true;
-  }
-
-  template <typename InS, typename OutS, typename Prop>
-  MonitorTemplate<InS,OutS,Prop>::Iterator::Iterator(MonitorTemplate<InS,OutS,Prop>::Cell* Grid, int ptr, int bound) {
+  MonitorTemplate<InS,OutS,Prop>::Iterator::Iterator( \
+  MonitorTemplate<InS,OutS,Prop>::Cell* Grid, int ptr, int bound) {
     if ((ptr<0) || (ptr>bound)) throw MonitorTemplate::Iterator::Error();
     //MonitorTemplate::Iterator::Error("pointer out of range");
     grid = Grid;
@@ -201,14 +214,17 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  MonitorTemplate<InS,OutS,Prop>::Iterator::Iterator(const Iterator& it) {
+  MonitorTemplate<InS,OutS,Prop>::Iterator::Iterator( \
+  const Iterator& it) {
     grid = it.grid;
     pointer = it.pointer;
     stopPos = it.stopPos;
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Iterator& MonitorTemplate<InS,OutS,Prop>::Iterator::operator=(const Iterator& it) {
+  typename MonitorTemplate<InS,OutS,Prop>::Iterator& \
+  MonitorTemplate<InS,OutS,Prop>::Iterator::operator=( \
+  const Iterator& it) {
     grid = it.grid;
     pointer = it.pointer;
     stopPos = it.stopPos;
@@ -216,21 +232,24 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Cell& MonitorTemplate<InS,OutS,Prop>::Iterator::operator*() {
+  typename MonitorTemplate<InS,OutS,Prop>::Cell& \
+  MonitorTemplate<InS,OutS,Prop>::Iterator::operator*() {
     if (pointer==stopPos) throw MonitorTemplate::Iterator::EndError();
     //MonitorTemplate::Iterator::EndError("pointer is at end");
     return grid[pointer];
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Cell* MonitorTemplate<InS,OutS,Prop>::Iterator::operator->() {
+  typename MonitorTemplate<InS,OutS,Prop>::Cell* \
+  MonitorTemplate<InS,OutS,Prop>::Iterator::operator->() {
     if (pointer==stopPos) throw MonitorTemplate::Iterator::EndError();
     //MonitorTemplate::Iterator::EndError("pointer is at end");
     return &grid[pointer];
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Iterator& MonitorTemplate<InS,OutS,Prop>::Iterator::operator++() {
+  typename MonitorTemplate<InS,OutS,Prop>::Iterator& \
+  MonitorTemplate<InS,OutS,Prop>::Iterator::operator++() {
     if (pointer==stopPos) throw MonitorTemplate::Iterator::EndError();
     //MonitorTemplate::Iterator::EndError("pointer is at end");
     pointer++;
@@ -238,7 +257,8 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Iterator MonitorTemplate<InS,OutS,Prop>::Iterator::operator++(int a) {
+  typename MonitorTemplate<InS,OutS,Prop>::Iterator \
+  MonitorTemplate<InS,OutS,Prop>::Iterator::operator++(int a) {
     if (pointer==stopPos) throw MonitorTemplate::Iterator::EndError();
     //MonitorTemplate::Iterator::EndError("pointer is at end");
     MonitorTemplate::Iterator i = (*this);
@@ -247,7 +267,8 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Iterator& MonitorTemplate<InS,OutS,Prop>::Iterator::operator--() {
+  typename MonitorTemplate<InS,OutS,Prop>::Iterator& \
+  MonitorTemplate<InS,OutS,Prop>::Iterator::operator--() {
     if (pointer==0) throw MonitorTemplate::Iterator::EndError();
     //MonitorTemplate::Iterator::EndError("pointer is at end");
     pointer--;
@@ -255,7 +276,8 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Iterator MonitorTemplate<InS,OutS,Prop>::Iterator::operator--(int a) {
+  typename MonitorTemplate<InS,OutS,Prop>::Iterator \
+  MonitorTemplate<InS,OutS,Prop>::Iterator::operator--(int a) {
     if (pointer==0) throw MonitorTemplate::Iterator::EndError();
     //MonitorTemplate::Iterator::EndError("pointer is at end");
     MonitorTemplate::Iterator i = (*this);
@@ -264,7 +286,8 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Iterator MonitorTemplate<InS,OutS,Prop>::Iterator::operator+(int k) {
+  typename MonitorTemplate<InS,OutS,Prop>::Iterator \
+  MonitorTemplate<InS,OutS,Prop>::Iterator::operator+(int k) {
     int newptr = pointer+k;
     if ((newptr < 0) || (newptr > stopPos)) throw MonitorTemplate::Iterator::Error();
     Iterator it(grid, newptr, stopPos);
@@ -272,7 +295,8 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Iterator MonitorTemplate<InS,OutS,Prop>::Iterator::operator-(int k) {
+  typename MonitorTemplate<InS,OutS,Prop>::Iterator \
+  MonitorTemplate<InS,OutS,Prop>::Iterator::operator-(int k) {
     return this->operator+(-k);
   }
 
@@ -307,51 +331,60 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  bool MonitorTemplate<InS,OutS,Prop>::Iterator::operator==(const Iterator& it) {
+  bool MonitorTemplate<InS,OutS,Prop>::Iterator::operator==( \
+  const Iterator& it) {
     if (!comparable(it)) throw MonitorTemplate::Iterator::Error();
     return (pointer == it.pointer);
   }
 
   template <typename InS, typename OutS, typename Prop>
-  bool MonitorTemplate<InS,OutS,Prop>::Iterator::operator!=(const Iterator& it) {
+  bool MonitorTemplate<InS,OutS,Prop>::Iterator::operator!=( \
+  const Iterator& it) {
     return !((*this) == it);
   }
 
   template <typename InS, typename OutS, typename Prop>
-  bool MonitorTemplate<InS,OutS,Prop>::Iterator::operator>=(const Iterator& it) {
+  bool MonitorTemplate<InS,OutS,Prop>::Iterator::operator>=( \
+  const Iterator& it) {
     if (!comparable(it)) throw MonitorTemplate::Iterator::Error();
     return (pointer >= it.pointer);
   }
 
   template <typename InS, typename OutS, typename Prop>
-  bool MonitorTemplate<InS,OutS,Prop>::Iterator::operator<=(const Iterator& it) {
+  bool MonitorTemplate<InS,OutS,Prop>::Iterator::operator<=( \
+  const Iterator& it) {
     if (!comparable(it)) throw MonitorTemplate::Iterator::Error();
     return (pointer <= it.pointer);
   }
 
   template <typename InS, typename OutS, typename Prop>
-  bool MonitorTemplate<InS,OutS,Prop>::Iterator::operator>(const Iterator& it) {
+  bool MonitorTemplate<InS,OutS,Prop>::Iterator::operator>( \
+  const Iterator& it) {
     return (((*this)!=it) && ((*this)>=it));
   }
 
   template <typename InS, typename OutS, typename Prop>
-  bool MonitorTemplate<InS,OutS,Prop>::Iterator::operator<(const Iterator& it) {
+  bool MonitorTemplate<InS,OutS,Prop>::Iterator::operator<( \
+  const Iterator& it) {
     return (((*this)!=it) && ((*this)<=it));
   }
 
   template <typename InS, typename OutS, typename Prop>
-  bool MonitorTemplate<InS,OutS,Prop>::Iterator::comparable(const Iterator& it) {
+  bool MonitorTemplate<InS,OutS,Prop>::Iterator::comparable( \
+  const Iterator& it) {
     return ((grid==it.grid) && (stopPos==it.stopPos));
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Iterator MonitorTemplate<InS,OutS,Prop>::begin() {
+  typename MonitorTemplate<InS,OutS,Prop>::Iterator \
+  MonitorTemplate<InS,OutS,Prop>::begin() {
     MonitorTemplate::Iterator i(grid, 0, bound());
     return i;
   }
 
   template <typename InS, typename OutS, typename Prop>
-  typename MonitorTemplate<InS,OutS,Prop>::Iterator MonitorTemplate<InS,OutS,Prop>::end() {
+  typename MonitorTemplate<InS,OutS,Prop>::Iterator \
+  MonitorTemplate<InS,OutS,Prop>::end() {
     MonitorTemplate::Iterator i(grid, bound(), bound());
     return i;
   }
@@ -378,7 +411,8 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void MonitorTemplate<InS,OutS,Prop>::tile(OutS s, Prop p, int x1, int y1, int x2, int y2) {
+  void MonitorTemplate<InS,OutS,Prop>::tile(OutS s, Prop p, \
+  int x1, int y1, int x2, int y2) {
     int l = std::min(x1, x2); //left
     int r = std::max(x1, x2); //right
     int u = std::min(y1, y2); //up
@@ -395,22 +429,26 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void MonitorTemplate<InS,OutS,Prop>::tile(OutS s, int x1, int y1, int x2, int y2) {
+  void MonitorTemplate<InS,OutS,Prop>::tile(OutS s, int x1, int y1, \
+                                                    int x2, int y2) {
     tile(s, Prop::empty, x1, y1, x2, y2);
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void MonitorTemplate<InS,OutS,Prop>::tile(int x1, int y1, int x2, int y2) {
+  void MonitorTemplate<InS,OutS,Prop>::tile(int x1, int y1, \
+                                            int x2, int y2) {
     tile(OutS::space, Prop::empty, x1, y1, x2, y2);
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void MonitorTemplate<InS,OutS,Prop>::tile(OutS s, Prop p, GridPos p1, GridPos p2) {
+  void MonitorTemplate<InS,OutS,Prop>::tile(OutS s, Prop p, GridPos p1, \
+                                                            GridPos p2) {
     tile(s, p, p1.x, p1.y, p2.x, p2.y);
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void MonitorTemplate<InS,OutS,Prop>::tile(OutS s, GridPos p1, GridPos p2) {
+  void MonitorTemplate<InS,OutS,Prop>::tile(OutS s, GridPos p1, \
+                                                    GridPos p2) {
     tile(s, Prop::empty, p1.x, p1.y, p2.x, p2.y);
   }
 
@@ -420,12 +458,14 @@ namespace blessings {
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void MonitorTemplate<InS,OutS,Prop>::tile(OutS s, Prop p, GridPos p1, Resolution r) {
+  void MonitorTemplate<InS,OutS,Prop>::tile(OutS s, Prop p, GridPos p1, \
+  Resolution r) {
     tile(s, p, p1.x, p1.y, p1.x+r.width, p1.y+r.height);
   }
 
   template <typename InS, typename OutS, typename Prop>
-  void MonitorTemplate<InS,OutS,Prop>::tile(OutS s, GridPos p1, Resolution r) {
+  void MonitorTemplate<InS,OutS,Prop>::tile(OutS s, GridPos p1, \
+  Resolution r) {
     tile(s, Prop::empty, p1.x, p1.y, p1.x+r.width, p1.y+r.height);
   }
 
@@ -472,8 +512,8 @@ namespace blessings {
   template <typename InS, typename OutS, typename Prop>
   void MonitorTemplate<InS,OutS,Prop>::moveCursorTo(int x, int y) {
     if ((x<0) || (x>res.width) || (y<0) || (y>res.height)) throw Error();
-    termIO->moveCursorTo(x+1, y+1);
     GridPos cursorPos(x, y);
+    if (cursormode == CursorBehaviour::Primitive) updateCursor();
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -485,11 +525,16 @@ namespace blessings {
   void MonitorTemplate<InS,OutS,Prop>::moveCursorTo(GridPos pos) {
     moveCursorTo(pos.x, pos.y);
   }
+  
+  template <typename InS, typename OutS, typename Prop>
+  void MonitorTemplate<InS,OutS,Prop>::updateCursor() {
+    termIO->moveCursorTo(cursorPos.x+1, cursorPos.y+1);
+  }
 
   template <typename InS, typename OutS, typename Prop>
   void MonitorTemplate<InS,OutS,Prop>::resetCursor() {
     hideCursor();
-    moveCursorTo(0, 0);
+    forceMove(0);
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -534,7 +579,17 @@ namespace blessings {
       hideCursor();
     }
   }
-
+  
+  template <typename InS, typename OutS, typename Prop>
+  void MonitorTemplate<InS,OutS,Prop>::forceMove(int p) {
+    termIO->moveCursorTo(positionOf(p).x+1, positionOf(p).y+1);
+  }
+  
+  template <typename InS, typename OutS, typename Prop>
+  InS MonitorTemplate<InS,OutS,Prop>::getSymbol() {
+    return termIO->getSymbol();
+  }
+  
   template <typename InS, typename OutS, typename Prop>
   std::queue<InS> MonitorTemplate<InS,OutS,Prop>::getSymbol(int n) {
     return termIO->getSymbol(n);
@@ -603,7 +658,7 @@ namespace blessings {
       termIO->print(i->symbol(), i->property());
       i->setStaged();
       i++;
-      if (i.index()%res.width==0) moveCursorTo(i.index());
+      if (i.index()%res.width==0) forceMove(i.index());
     }
   }
 
@@ -612,7 +667,7 @@ namespace blessings {
     MonitorTemplate::Iterator i = begin();
     while (!i.isEnd()) {
       if (i->isUnstaged()) {
-        moveCursorTo(i.index());
+        forceMove(i.index());
         termIO->print(i->symbol(), i->property());
         i->setStaged();
       }
@@ -624,8 +679,7 @@ namespace blessings {
   void MonitorTemplate<InS,OutS,Prop>::draw() {
     checkMode();
     checkResolution();
-
-    saveCursor();
+    
     resetCursor();
 
     if (!isPrinted) {
@@ -642,6 +696,6 @@ namespace blessings {
       }
     }
 
-    restoreCursor();
+    updateCursor();
   }
 }

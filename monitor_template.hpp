@@ -21,6 +21,10 @@ namespace blessings {
     private:
       OutS symb;
       Prop prop;
+      
+      OutS newsymb;
+      Prop newprop;
+      
       bool unstaged = false;
 
     public:
@@ -32,15 +36,14 @@ namespace blessings {
       Cell(const Cell&);
       Cell& operator=(const Cell&);
 
-      OutS symbol() {return symb;}
-      Prop property() {return prop;}
+      OutS symbol() const {return newsymb;}
+      Prop property() const {return newprop;}
 
       static bool hardopt;
 
       bool isUnstaged();
 
       void setStaged();
-      void setUnstaged();
     };
     
     // Monitor::Iterator
@@ -143,7 +146,8 @@ namespace blessings {
     void moveCursorTo(int x, int y);
     void moveCursorTo(int p);
     void moveCursorTo(GridPos);
-
+    
+    void updateCursor();
     void resetCursor();
     void hideCursor();
     void showCursor();
@@ -164,11 +168,6 @@ namespace blessings {
       IgnoreExtension
     };
     
-    enum class CellBehaviour {
-      Primitive,
-      Compare
-    };
-    
     enum class DrawBehaviour {
       Primitive,
       Lazy
@@ -185,7 +184,6 @@ namespace blessings {
     };
     
     void setResolutionMode(ResolutionChange resm) {resmode = resm;}
-    void setCellMode(CellBehaviour cellm) {cellmode = cellm;}
     void setDrawMode(DrawBehaviour drawm) {drawmode = drawm;}
     void setTileMode(TileBehaviour tilem) {tilemode = tilem;}
     void setMoveMode(CursorBehaviour curm) {cursormode = curm;}
@@ -231,11 +229,9 @@ namespace blessings {
     Resolution res;
 
     GridPos cursorPos;
-    //GridPos newCursorPos;
 
     bool isPrinted=false;
     ResolutionChange resmode = ResolutionChange::Ignore;
-    CellBehaviour cellmode = CellBehaviour::Compare;
     DrawBehaviour drawmode = DrawBehaviour::Lazy;
     TileBehaviour tilemode = TileBehaviour::Primitive;
     CursorBehaviour cursormode = CursorBehaviour::Lazy;
@@ -248,6 +244,8 @@ namespace blessings {
 
     void saveCursor();
     void restoreCursor();
+    
+    void forceMove(int p);
 
     void checkMode();
     void checkResolution();
