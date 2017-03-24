@@ -1,0 +1,11 @@
+{
+    "egg" : {
+        "logo.cpp" : {}
+    },
+    "example_hello_world" : {
+        "hello_world.cpp" : {}
+    },
+    "example_tile" : {
+        "tile.cpp" : {}
+    },
+}

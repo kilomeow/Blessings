@@ -2,8 +2,5 @@
     "blessings" : {
         "property.cpp" : {},
         "monitor.cpp" : {}
-    },
-    "test" : {
-        "test.cpp" : {}
     }
 }

@@ -11,7 +11,7 @@
 
 ### TerminalIO
 - [x] Input interface
-- [ ] Add blessings::Terminal typedef (0.1b)
+- [x] Add blessings::Terminal typedef (0.1b)
 - [ ] Write windows/mac implementation
 - [x] Write error ierarchy for abstract class
 - [ ] Code review (0.2+)
@@ -37,7 +37,13 @@
 - [ ] Python bindings
 - [ ] Errors structure
 - [ ] Change include ierarchy (every include should be full-path from root) (?)
-- [ ] Put headers/sources in special directories (0.1b)
+- [ ] Change filepath style (0.2+)
+
+### Examples
+- [x] Add basic examples (0.1b)
+- [ ] Add key using example (0.2+)
+- [ ] Add optimization example (0.2+)
+- [ ] Add tiny game example (0.2+)
 
 ### StringUTF8
 - [x] Complete StringUTF8 operator= to stl

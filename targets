@@ -119,9 +119,9 @@
             "gcc-like" : "-Wall -Wextra -std=c++14"
         }
     },
-    "test" : {
+    "example_hello_world" : {
         "target_type" : "executable",
-        "sources_dict" : "test",
+        "sources_dict" : "example_hello_world",
         "headers_dict" : None,
         "include_dirs" : [],
         "lib_dirs" : [],
@@ -129,7 +129,43 @@
         "link_with" : ["stdc++"],
         "link_with_target" : ["blessings_static_test", "blessings_utf8_static_test"],
         "in_all_target" : False,
-        "output_name" : "work",
+        "output_name" : "example",
+        "compiler_flags" : {
+            "gcc" : "-Wall -Wextra -std=c++14",
+            "clang" : "-Wall -Wextra -std=c++14",
+            "mingw" : "-Wall -Wextra -std=c++14",
+            "gcc-like" : "-Wall -Wextra -std=c++14"
+        }
+    },
+    "example_tile" : {
+        "target_type" : "executable",
+        "sources_dict" : "example_tile",
+        "headers_dict" : None,
+        "include_dirs" : [],
+        "lib_dirs" : [],
+        "preprocessor_directives" : [],
+        "link_with" : ["stdc++"],
+        "link_with_target" : ["blessings_static_test", "blessings_utf8_static_test"],
+        "in_all_target" : False,
+        "output_name" : "example",
+        "compiler_flags" : {
+            "gcc" : "-Wall -Wextra -std=c++14",
+            "clang" : "-Wall -Wextra -std=c++14",
+            "mingw" : "-Wall -Wextra -std=c++14",
+            "gcc-like" : "-Wall -Wextra -std=c++14"
+        }
+    },
+    "egg" : {
+        "target_type" : "executable",
+        "sources_dict" : "egg",
+        "headers_dict" : None,
+        "include_dirs" : [],
+        "lib_dirs" : [],
+        "preprocessor_directives" : [],
+        "link_with" : ["stdc++"],
+        "link_with_target" : ["blessings_static_test", "blessings_utf8_static_test"],
+        "in_all_target" : False,
+        "output_name" : "egg",
         "compiler_flags" : {
             "gcc" : "-Wall -Wextra -std=c++14",
             "clang" : "-Wall -Wextra -std=c++14",
