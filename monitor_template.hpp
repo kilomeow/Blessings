@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utility>
 #include <queue>
 
 #include "additional_structs.hpp"
@@ -38,6 +39,9 @@ namespace blessings {
       ~Cell() {}
       Cell(const Cell&);
       Cell& operator=(const Cell&);
+      Cell& operator=(std::pair<OutS, Prop>);
+      Cell& operator=(OutS);
+      Cell& operator=(Prop);
 
       OutS symbol() const {return newsymb;}
       Prop property() const {return newprop;}

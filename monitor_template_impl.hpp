@@ -70,6 +70,8 @@ namespace blessings {
     termIO->setEchoInhibition();
     clearScreen();
     resetCursor();
+    tile();
+    draw();
   }
 
   template <typename InS, typename OutS, typename Prop>
@@ -207,6 +209,24 @@ namespace blessings {
     newsymb = cell.symb;
     newprop = cell.prop;
     return (*this);
+  }
+  
+  template <typename InS, typename OutS, typename Prop>
+  typename MonitorTemplate<InS,OutS,Prop>::Cell& \
+  MonitorTemplate<InS,OutS,Prop>::Cell::operator=(std::pair<OutS, Prop> p) {
+    (*this) = Cell(p.first, p.second);
+  }
+  
+  template <typename InS, typename OutS, typename Prop>
+  typename MonitorTemplate<InS,OutS,Prop>::Cell& \
+  MonitorTemplate<InS,OutS,Prop>::Cell::operator=(OutS s) {
+    (*this) = Cell(s);
+  }
+  
+  template <typename InS, typename OutS, typename Prop>
+  typename MonitorTemplate<InS,OutS,Prop>::Cell& \
+  MonitorTemplate<InS,OutS,Prop>::Cell::operator=(Prop p) {
+    (*this) = Cell(p);
   }
 
   template <typename InS, typename OutS, typename Prop>

@@ -37,7 +37,7 @@ namespace blessings {
 
     SymbolUTF8() noexcept {arr_[0]=static_cast<char>(0x0);};
     SymbolUTF8(char c) noexcept;
-    explicit SymbolUTF8(const char* sym);
+    SymbolUTF8(const char* sym);
     explicit SymbolUTF8(const char* sym, int size);
     explicit SymbolUTF8(char32_t); //from char32_t utf-8 symbol
     explicit SymbolUTF8(uint32_t); //from Unicode number
