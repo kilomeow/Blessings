@@ -10,6 +10,7 @@ namespace blessings {
   class MonitorTemplate {
   public:
     MonitorTemplate();
+    MonitorTemplate(size_t);
     ~MonitorTemplate();
     MonitorTemplate(const MonitorTemplate&);
     MonitorTemplate& operator=(const MonitorTemplate&);

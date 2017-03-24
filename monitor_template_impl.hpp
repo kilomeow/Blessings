@@ -3,7 +3,7 @@
 #include <queue>
 #include <algorithm>
 
-#include "monitor.hpp"
+#include "monitor_template.hpp"
 #include "additional_structs.hpp"
 #include "terminal_io.hpp"
 
@@ -11,6 +11,13 @@ namespace blessings {
   template <typename InS, typename OutS, typename Prop>
   MonitorTemplate<InS,OutS,Prop>::MonitorTemplate() {
     maxSize = CELL_MEMORY_START;
+    grid = new Cell [maxSize];
+    res.width=1; res.height=1;
+  }
+  
+  template <typename InS, typename OutS, typename Prop>
+  MonitorTemplate<InS,OutS,Prop>::MonitorTemplate(size_t defsize) {
+    maxSize = defsize;
     grid = new Cell [maxSize];
     res.width=1; res.height=1;
   }
@@ -67,6 +74,7 @@ namespace blessings {
 
   template <typename InS, typename OutS, typename Prop>
   void MonitorTemplate<InS,OutS,Prop>::endWork() {
+    clearInputBuffer();
     termIO->setCanonicalMode();
     termIO->setEchoForward();
     clearScreen();
