@@ -6,6 +6,7 @@
         "monitor_template_impl.hpp",
         "monitor.hpp",
         "property.hpp",
-        "terminal_io.hpp"        
+        "terminal_io.hpp",
+        "terminal.hpp"
     ]
 }

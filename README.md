@@ -44,7 +44,7 @@ int main() {
   monitor.tile(".");
   monitor(4, 4) = "@";
   
-  monitor.refresh();
+  monitor.draw();
   monitor.endwin();
   
   return 0;
@@ -57,7 +57,7 @@ If you want to contribute or just have some ideas, please
 
 ## Authors
 This library created by MelonDev team:
-  * [Danya Ishakov](https://github.com/KernelOps) — The lead developer
+  * [Danya Iskhakov](https://github.com/KernelOps) — The lead developer
   * [Ram Usov](https://github.com/destabilizer) — API usurper
   * [Roma Krivonogov](https://github.com/FourthRome) — The inspirer
 
