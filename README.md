@@ -58,7 +58,7 @@ If you want to contribute or just have some ideas, please
 ## Authors
 This library created by MelonDev team:
   * [Danya Iskhakov](https://github.com/KernelOps) — The lead developer
-  * [Ram Usov](https://github.com/destabilizer) — API usurper
+  * [Balaram](https://github.com/destabilizer) — API creator
   * [Roma Krivonogov](https://github.com/FourthRome) — The inspirer
 
 ## License
