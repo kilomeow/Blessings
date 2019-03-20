@@ -10,7 +10,7 @@ You'll need **gcc** *(or any other gcc-like compiler)* and
 **python3** to start with. To install the library, clone the repository to your
 working directory with:
 ```
-% git clone https://github.com/FourthRome/Blessings.git --depth=1
+% git clone https://github.com/destabilizer/Blessings.git --depth=1
 ```
 
 Then enter your project directory and install blessings:
@@ -53,14 +53,13 @@ int main() {
 
 ## Contributing
 If you want to contribute or just have some ideas, please
-[write to us](mailto:destabilizer@opmbx.org).
+[write to us](mailto:dest@disr.it).
 
 ## Authors
 This library created by MelonDev team:
   * [Danya Iskhakov](https://github.com/KernelOps) — The lead developer
-  * [Ram Adyan](https://github.com/destabilizer) — API creator
+  * [Ram Usov](https://github.com/destabilizer) — API creator
   * [Roma Krivonogov](https://github.com/FourthRome) — The inspirer
 
 ## License
 This project is licensed under the MIT License — see LICENSE for details.
-
