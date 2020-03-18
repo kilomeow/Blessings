@@ -334,7 +334,7 @@ def linux_install(target_name, targets, files_given, prefix):
 
             dest_path=os.path.join(prefix, target["static_libs_path"])
             makefile.append("\tmkdir -p "+dest_path)
-            makefile.append("\tcp lib"+targets[needed_target]["output_name"]+".a "+\
+            makefile.append("\t-cp lib"+targets[needed_target]["output_name"]+".a "+\
                 dest_path)
 
             makefile.append("")
@@ -343,7 +343,7 @@ def linux_install(target_name, targets, files_given, prefix):
 
             dest_path=os.path.join(prefix, target["shared_libs_path"])
             makefile.append("\tmkdir -p "+dest_path)
-            makefile.append("\tcp lib"+targets[needed_target]["output_name"]+".so "+\
+            makefile.append("\t-cp lib"+targets[needed_target]["output_name"]+".so "+\
                 dest_path)
 
             makefile.append("")
@@ -378,7 +378,7 @@ def linux_uninstall(target_name, targets, files_given, prefix):
             makefile.append("\t#Static lib "+needed_target)
 
             lib_path=os.path.join(prefix, target["static_libs_path"])
-            makefile.append("\trm -f "+os.path.join(lib_path,\
+            makefile.append("\t-rm -f "+os.path.join(lib_path,\
                 "lib"+targets[needed_target]["output_name"]+".a"))
 
             makefile.append("")
@@ -386,7 +386,7 @@ def linux_uninstall(target_name, targets, files_given, prefix):
             makefile.append("\t#Shared lib "+needed_target)
 
             lib_path=os.path.join(prefix, target["shared_libs_path"])
-            makefile.append("\trm -f "+os.path.join(lib_path,\
+            makefile.append("\t-rm -f "+os.path.join(lib_path,\
                 "lib"+targets[needed_target]["output_name"]+".so"))
 
             makefile.append("")
