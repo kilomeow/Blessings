@@ -9,7 +9,7 @@ def main():
     target_file="targets"
     compiler_type="gcc"
     compiler_executable="gcc"
-    prefix=""
+    prefix="/usr"
 
     i=0
     while i<len(args):

@@ -11,7 +11,7 @@ def scan_args():
     target_file=""
     compiler_type=""
     compiler_executable=""
-    prefix=""
+    prefix="/usr"
 
     target_flie_given=False
     i=0
