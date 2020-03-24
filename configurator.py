@@ -11,6 +11,8 @@ def scan_args():
     target_file=""
     compiler_type=""
     compiler_executable=""
+    archiver_type=""
+    archiver_executable=""
     prefix="/usr"
 
     target_flie_given=False
@@ -29,6 +31,18 @@ def scan_args():
                 print("Error: --compiler_executable key given without arguments")
 
             compiler_executable=args[i+1]
+            i+=1
+        elif args[i]=="--archiver_type":
+            if i==len(args)-1:
+                print("Error: --archiver_type key given without arguments")
+
+            archiver_type=args[i+1]
+            i+=1
+        elif args[i]=="--archiver_executable":
+            if i==len(args)-1:
+                print("Error: --archiver_executable key given without arguments")
+
+            archiver_executable=args[i+1]
             i+=1
         elif args[i]=="--prefix":
             if i==len(args)-1:
@@ -49,6 +63,8 @@ def scan_args():
     return {"target_file" : target_file,\
         "compiler_type" : compiler_type,\
         "compiler_executable" : compiler_executable,\
+        "archiver_type" : archiver_type,\
+        "archiver_executable" : archiver_executable,\
         "prefix" : prefix}
 
 def add_dicts(dict1, dict2, f):
@@ -146,7 +162,7 @@ def linux_compile_objects(target_name, target, files_given, compiler_type,\
 
         source_target_name="build/"+target_name+"/"+source[:-4]+".o"
 
-        resCode=os.system("gcc -std=c++14 -MM -MF "+temp_file+" -MT "+\
+        resCode=os.system(compiler_executable+" -std=c++14 -MM -MF "+temp_file+" -MT "+\
             source_target_name+" "+source)
         if resCode!=0:
             print("Error: header scan finished unsuccesfull. Stopping configure")
@@ -191,7 +207,7 @@ def linux_compile_objects(target_name, target, files_given, compiler_type,\
     return makefile
 
 def linux_static_lib(target_name, target, files_given, compiler_type, compiler_executable,\
-    temp_file):
+    archiver_type, archiver_executable, temp_file):
 
     if not compiler_type in target["compiler_flags"].keys():
         print("Warning: no compiler_flags specified for compiler type ", compiler_type,\
@@ -204,7 +220,7 @@ def linux_static_lib(target_name, target, files_given, compiler_type, compiler_e
     for source in files_given["sources"][target["sources_dict"]]:
         first_str=first_str+" \\\n build/"+target_name+"/"+source[:-4]+".o"
 
-    second_str="\tar rsc lib"+target["output_name"]+".a $^"
+    second_str="\t"+archiver_executable+" rcs lib"+target["output_name"]+".a $^"
 
     makefile.append(first_str)
     makefile.append(second_str)
@@ -334,7 +350,7 @@ def linux_install(target_name, targets, files_given, prefix):
 
             dest_path=os.path.join(prefix, target["static_libs_path"])
             makefile.append("\tmkdir -p "+dest_path)
-            makefile.append("\tcp lib"+targets[needed_target]["output_name"]+".a "+\
+            makefile.append("\t-cp lib"+targets[needed_target]["output_name"]+".a "+\
                 dest_path)
 
             makefile.append("")
@@ -343,7 +359,7 @@ def linux_install(target_name, targets, files_given, prefix):
 
             dest_path=os.path.join(prefix, target["shared_libs_path"])
             makefile.append("\tmkdir -p "+dest_path)
-            makefile.append("\tcp lib"+targets[needed_target]["output_name"]+".so "+\
+            makefile.append("\t-cp lib"+targets[needed_target]["output_name"]+".so "+\
                 dest_path)
 
             makefile.append("")
@@ -378,7 +394,7 @@ def linux_uninstall(target_name, targets, files_given, prefix):
             makefile.append("\t#Static lib "+needed_target)
 
             lib_path=os.path.join(prefix, target["static_libs_path"])
-            makefile.append("\trm -f "+os.path.join(lib_path,\
+            makefile.append("\t-rm -f "+os.path.join(lib_path,\
                 "lib"+targets[needed_target]["output_name"]+".a"))
 
             makefile.append("")
@@ -386,7 +402,7 @@ def linux_uninstall(target_name, targets, files_given, prefix):
             makefile.append("\t#Shared lib "+needed_target)
 
             lib_path=os.path.join(prefix, target["shared_libs_path"])
-            makefile.append("\trm -f "+os.path.join(lib_path,\
+            makefile.append("\t-rm -f "+os.path.join(lib_path,\
                 "lib"+targets[needed_target]["output_name"]+".so"))
 
             makefile.append("")
@@ -401,7 +417,7 @@ def linux_uninstall(target_name, targets, files_given, prefix):
 
     return makefile
 
-def main_linux(targets, files_given, compiler_type, compiler_executable, prefix):
+def main_linux(targets, files_given, compiler_type, compiler_executable, archiver_type, archiver_executable, prefix):
     makefile=[]
 
     temp_file="temp.1224asda"
@@ -433,7 +449,7 @@ gcc-like syntax")
 
         if targets[target]["target_type"]=="static_lib":
             makefile=makefile+linux_static_lib(target, targets[target],\
-                files_given, compiler_type, compiler_executable, temp_file)
+                files_given, compiler_type, compiler_executable, archiver_type, archiver_executable, temp_file)
         elif targets[target]["target_type"]=="shared_lib":
             makefile=makefile+linux_shared_lib(target, targets[target],\
                 files_given, compiler_type, compiler_executable, temp_file)
@@ -481,6 +497,8 @@ def main():
     print("Input data")
     print("Compiler type:", args["compiler_type"])
     print("Compiler_executable:", args["compiler_executable"])
+    print("Archiver type:", args["archiver_type"])
+    print("Archiver_executable:", args["archiver_executable"])
     print("Prefix:", args["prefix"])
 
     f=open(args["target_file"])
@@ -499,7 +517,7 @@ def main():
         print()
         print("Detected linux")
         makefile=main_linux(targets, files_given, args["compiler_type"],\
-            args["compiler_executable"], args["prefix"])
+            args["compiler_executable"], args["archiver_type"], args["archiver_executable"], args["prefix"])
     else:
         print()
         print("Sorry, your operating system is unsupported now")

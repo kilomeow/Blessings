@@ -9,6 +9,8 @@ def main():
     target_file="targets"
     compiler_type="gcc"
     compiler_executable="gcc"
+    archiver_type="ar"
+    archiver_executable="ar"
     prefix="/usr"
 
     i=0
@@ -21,6 +23,7 @@ def main():
             print("--help - print this help")
             print("--prefix <dest> - set up installation prefix")
             print("CC variable - set non-default (default is gcc) compiler")
+            print("AR variable - set non-default (default is ar) archiver")
             exit(0)
         if args[i]=="--prefix":
             prefix=args[i+1]
@@ -33,14 +36,28 @@ def main():
                 compiler_executable=args[i][3:]
                 i+=1
                 continue
+            elif args[i][:3]=="AR=":
+                print("Warning: you spicified AR= option. Thinking, it is ar-like archiver")
+                archiver_type="ar-like"
+                archiver_executable=args[i][3:]
+                i+=1
+                continue
 
     if "CC" in os.environ.keys():
         print("Warning: you specified CC variable. Thinking, it is gcc-like compiler")
         compiler_type="gcc-like"
         compiler_executable=os.environ["CC"]
 
+    if "AR" in os.environ.keys():
+        print("Warning: you specified AR variable. Thinking, it is ar-like archiver")
+        compiler_type="ar-like"
+        compiler_executable=os.environ["AR"]
+
     os.system("./configurator.py --compiler_type "+compiler_type+\
-        " --compiler_executable "+compiler_executable+" --prefix \""+prefix+"\" "+
+        " --compiler_executable "+compiler_executable+\
+        " --archiver_type "+archiver_type+\
+        " --archiver_executable "+archiver_executable+\
+        " --prefix \""+prefix+"\" "+
         target_file)
 
 if __name__=="__main__":
