@@ -10,13 +10,13 @@
 using namespace std;
 
 namespace blessings {
-  SymbolUTF8* SymbolUTF8Traits::assign(SymbolUTF8* p, size_t count, SymbolUTF8 a) {
+  SymbolUTF8Traits::char_type* SymbolUTF8Traits::assign(SymbolUTF8Traits::char_type* p, size_t count, SymbolUTF8Traits::char_type a) {
     for (size_t i=0; i<count; ++i) p[i]=a;
     return p;
   }
 
-  SymbolUTF8* SymbolUTF8Traits::move(SymbolUTF8* dest, const SymbolUTF8* src, size_t count) {
-    auto temp=new SymbolUTF8[count];
+  SymbolUTF8Traits::char_type* SymbolUTF8Traits::move(SymbolUTF8Traits::char_type* dest, const SymbolUTF8Traits::char_type* src, size_t count) {
+    auto temp=new SymbolUTF8Traits::char_type[count];
     for (size_t i=0; i<count; ++i) temp[i]=src[i];
     for (size_t i=0; i<count; ++i) dest[i]=temp[i];
     delete [] temp;
@@ -24,42 +24,50 @@ namespace blessings {
     return dest;
   }
 
-  SymbolUTF8* SymbolUTF8Traits::copy(SymbolUTF8* dest, const SymbolUTF8* src, size_t count) {
+  SymbolUTF8Traits::char_type* SymbolUTF8Traits::copy(SymbolUTF8Traits::char_type* dest, const SymbolUTF8Traits::char_type* src, size_t count) {
     for (size_t i=0; i<count; ++i) dest[i]=src[i];
 
     return dest;
   }
 
-  int32_t SymbolUTF8Traits::compare(const SymbolUTF8* s1, const SymbolUTF8* s2, size_t count) {
+  int32_t SymbolUTF8Traits::compare(const SymbolUTF8Traits::char_type* s1, const SymbolUTF8Traits::char_type* s2, size_t count) {
     for (size_t i=0; i<count; ++i) {
-      if (s1[i].unicode()<s2[i].unicode()) return -1;
-      else if (s2[i].unicode()>s2[i].unicode()) return 1;
+      if (SymbolUTF8(s1[i]).unicode()<SymbolUTF8(s2[i]).unicode()) return -1;
+      else if (SymbolUTF8(s2[i]).unicode()>SymbolUTF8(s2[i]).unicode()) return 1;
     }
 
     return 0;
   }
 
-  size_t SymbolUTF8Traits::length(const SymbolUTF8* s) {
+  size_t SymbolUTF8Traits::length(const SymbolUTF8Traits::char_type* s) {
     size_t ret=0;
-    while (s[ret]!=SymbolUTF8()) ++ret;
+    while (SymbolUTF8(s[ret])!=SymbolUTF8()) ++ret;
     return ret;
   }
 
-  const SymbolUTF8* SymbolUTF8Traits::find(const SymbolUTF8* p, size_t count, const SymbolUTF8& ch) {
-    for (size_t i=0; i<count; ++i) if (p[i]==ch) return p+i;
+  const SymbolUTF8Traits::char_type* SymbolUTF8Traits::find(const SymbolUTF8Traits::char_type* p, size_t count, const SymbolUTF8Traits::char_type& ch) {
+    for (size_t i=0; i<count; ++i) if (SymbolUTF8(p[i])==SymbolUTF8(ch)) return p+i;
     return nullptr;
   }
 
-  SymbolUTF8 SymbolUTF8Traits::to_char_type(int32_t c) {
+  SymbolUTF8Traits::char_type SymbolUTF8Traits::to_char_type(int32_t c) {
     SymbolUTF8::Converter conv;
     conv.i=c;
     return SymbolUTF8(conv.ch);
   }
 
-  int32_t SymbolUTF8Traits::to_int_type(SymbolUTF8 c) {
+  int32_t SymbolUTF8Traits::to_int_type(SymbolUTF8Traits::char_type c) {
     SymbolUTF8::Converter conv;
     conv.ch=static_cast<char32_t>(c);
     return conv.i;
+  }
+
+  bool SymbolUTF8Traits::eq_int_type(int32_t c1, int32_t c2)
+  {
+    SymbolUTF8::Converter conv1, conv2;
+    conv1.i = c1;
+    conv2.i = c2;
+    return SymbolUTF8(conv1.ch) == SymbolUTF8(conv2.ch);
   }
 
   std::ostream& operator<<(std::ostream& stream, const StringUTF8& str) {
@@ -82,7 +90,7 @@ namespace blessings {
     try {
       while (stream) {
         stream >> sym;
-        if (!isspace(static_cast<char32_t>(sym), loc)) {
+        if (!isspace(static_cast<wchar_t>(static_cast<char32_t>(sym)), loc)) {
           for (int i=sym.size()-1; i>=0; --i) {
             stream.putback(sym(i));
           }
@@ -92,7 +100,7 @@ namespace blessings {
 
       while (stream) {
         stream >> sym;
-        if (!isspace(static_cast<char32_t>(sym), loc)) {
+        if (!isspace(static_cast<wchar_t>(static_cast<char32_t>(sym)), loc)) {
           for (int i=sym.size()-1; i>=0; --i) {
             stream.putback(sym(i));
           }
@@ -137,10 +145,13 @@ namespace blessings {
     string ret;
 
     size_t retSize=0;
-    for(auto it=begin(); it!=end(); ++it) retSize+=it->size();
+    for(auto it=begin(); it!=end(); ++it) retSize+=SymbolUTF8(*it).size();
 
     ret.reserve(retSize);
-    for(auto it=begin(); it!=end(); ++it) ret.append(it->data(), it->size());
+    for(auto it=begin(); it!=end(); ++it) {
+      SymbolUTF8 sym(*it);
+      ret.append(sym.data(), sym.size());
+    }
 
     return ret;
   }
@@ -149,7 +160,7 @@ namespace blessings {
     char* ret;
 
     size_t retSize=0;
-    for(auto it=begin(); it!=end(); ++it) retSize+=it->size();
+    for(auto it=begin(); it!=end(); ++it) retSize+=SymbolUTF8(*it).size();
 
     ret=new char [retSize+1];
     ret[retSize]='\0';
@@ -158,8 +169,9 @@ namespace blessings {
     const char* data;
     size_t size;
     for(auto it=begin(); it!=end(); ++it) {
-      data=it->data();
-      size=it->size();
+      SymbolUTF8 sym;
+      data=sym.data();
+      size=sym.size();
 
       for(size_t i=0; i<size; ++i) ret[currPos+i]=data[i];
       currPos+=size;
@@ -181,13 +193,13 @@ namespace blessings {
         throw NonUTF8StringGiven();
       }
 
-      basic_string<SymbolUTF8, SymbolUTF8Traits>::push_back(temp.first);
+      basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>::push_back(temp.first);
       p=temp.second;
     }
   }
 
   StringUTF8::StringUTF8(const string& str) :
-  basic_string<SymbolUTF8, SymbolUTF8Traits>() {
+  basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>() {
     auto it=str.begin();
     while (it!=str.end()) {
       pair<SymbolUTF8, decltype(it)> temp;
@@ -198,7 +210,7 @@ namespace blessings {
         throw NonUTF8StringGiven();
       }
 
-      basic_string<SymbolUTF8, SymbolUTF8Traits>::push_back(temp.first);
+      basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>::push_back(temp.first);
       it=temp.second;
     }
   }
@@ -206,7 +218,7 @@ namespace blessings {
   StringUTF8& StringUTF8::operator=(const StringUTF8& other) {
     if (this==&other) return *this;
 
-    basic_string<SymbolUTF8, SymbolUTF8Traits>& str=*this;
+    basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>& str=*this;
     str=other;
 
     return *this;
@@ -215,7 +227,7 @@ namespace blessings {
   StringUTF8& StringUTF8::operator=(StringUTF8&& other) {
     if (this==&other) return *this;
 
-    basic_string<SymbolUTF8, SymbolUTF8Traits>& str=*this;
+    basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>& str=*this;
     str=other;
 
     return *this;
@@ -233,7 +245,7 @@ namespace blessings {
     return *this;
   }
 
-  StringUTF8& StringUTF8::operator=(std::initializer_list<SymbolUTF8> initList) {
+  StringUTF8& StringUTF8::operator=(std::initializer_list<SymbolUTF8Traits::char_type> initList) {
     *this=StringUTF8(initList);
 
     return *this;

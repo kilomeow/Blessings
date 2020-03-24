@@ -5,30 +5,30 @@
 
 namespace blessings {
   struct SymbolUTF8Traits {
-    typedef SymbolUTF8 char_type;
+    typedef char32_t char_type;
     typedef int32_t int_type;
 
-    static void assign(SymbolUTF8& r, const SymbolUTF8& a) {r=a;};
-    static SymbolUTF8* assign(SymbolUTF8* p, size_t count, SymbolUTF8 a);
+    static void assign(char_type& r, const SymbolUTF8& a) {r=a;};
+    static char_type* assign(char_type* p, size_t count, char_type a);
 
-    static bool eq(SymbolUTF8 a, SymbolUTF8 b) {return a==b;}
-    static bool lt(SymbolUTF8 a, SymbolUTF8 b) {return a.unicode()<b.unicode();}
+    static bool eq(char_type a, char_type b) {return a==b;}
+    static bool lt(char_type a, char_type b) {return SymbolUTF8(a).unicode()<SymbolUTF8(b).unicode();}
 
-    static SymbolUTF8* move(SymbolUTF8* dest, const SymbolUTF8* src, size_t count);
+    static char_type* move(char_type* dest, const char_type* src, size_t count);
 
-    static SymbolUTF8* copy(SymbolUTF8* dest, const SymbolUTF8* src, size_t count);
+    static char_type* copy(char_type* dest, const char_type* src, size_t count);
 
-    static int32_t compare(const SymbolUTF8* s1, const SymbolUTF8* s2, size_t count);
+    static int32_t compare(const char_type* s1, const char_type* s2, size_t count);
 
-    static size_t length(const SymbolUTF8* s);
+    static size_t length(const char_type* s);
 
-    static const SymbolUTF8* find(const SymbolUTF8* p, size_t count, const SymbolUTF8& ch);
+    static const char_type* find(const char_type* p, size_t count, const char_type& ch);
 
-    static SymbolUTF8 to_char_type(int32_t c);
+    static char_type to_char_type(int32_t c);
 
-    static int32_t to_int_type(SymbolUTF8 c);
+    static int32_t to_int_type(char_type c);
 
-    static bool eq_int_type(int32_t c1, int32_t c2) {return c1==c2;};
+    static bool eq_int_type(int32_t c1, int32_t c2);
 
     static int32_t eof() {return 0b10000000;};
 
@@ -38,7 +38,7 @@ namespace blessings {
     }
   };
 
-  class StringUTF8 : public std::basic_string<SymbolUTF8, SymbolUTF8Traits> {
+  class StringUTF8 : public std::basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits> {
   public:
     class Error {};
     class NonUTF8StringGiven : public Error {};
@@ -48,51 +48,51 @@ namespace blessings {
     class InitError : public Error {};
 
     explicit StringUTF8(const allocator_type& alloc=allocator_type()) :
-    std::basic_string<SymbolUTF8, SymbolUTF8Traits>(alloc) {};
+    std::basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>(alloc) {};
 
     StringUTF8(size_t count, SymbolUTF8 sym,\
     const allocator_type& alloc=allocator_type()) :
-    std::basic_string<SymbolUTF8, SymbolUTF8Traits>(count, sym, alloc) {};
+    std::basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>(count, sym, alloc) {};
 
     StringUTF8(const StringUTF8& other, size_t pos,
-    size_t count=std::basic_string<SymbolUTF8, SymbolUTF8Traits>::npos,
+    size_t count=std::basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>::npos,
     const allocator_type& alloc = allocator_type()) :
-    std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other, pos, count, alloc) {};
+    std::basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>(other, pos, count, alloc) {};
 
     StringUTF8(const SymbolUTF8* s, size_t count,
     const allocator_type& alloc=allocator_type()) :
-    std::basic_string<SymbolUTF8, SymbolUTF8Traits>(s, count, alloc) {};
+    std::basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>((SymbolUTF8Traits::char_type*)s, count, alloc) {};
 
     StringUTF8(const SymbolUTF8* s, const allocator_type& alloc=allocator_type()) :
-    std::basic_string<SymbolUTF8, SymbolUTF8Traits>(s, alloc) {};
+    std::basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>((SymbolUTF8Traits::char_type*)s, alloc) {};
 
     template <class InputIt>
     StringUTF8(InputIt first, InputIt last,
     const allocator_type& alloc=allocator_type()) :
-    std::basic_string<SymbolUTF8, SymbolUTF8Traits>(first, last, alloc) {};
+    std::basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>(first, last, alloc) {};
 
     StringUTF8(const StringUTF8& other) :
-    std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other) {};
+    std::basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>(other) {};
 
     StringUTF8(const StringUTF8& other, const allocator_type& alloc) :
-    std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other, alloc) {};
+    std::basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>(other, alloc) {};
 
     StringUTF8(StringUTF8&& other) :
-    std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other) {};
+    std::basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>(other) {};
 
     StringUTF8(StringUTF8&& other, const allocator_type& alloc) :
-    std::basic_string<SymbolUTF8, SymbolUTF8Traits>(other, alloc) {};
+    std::basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>(other, alloc) {};
 
-    StringUTF8(std::initializer_list<SymbolUTF8> init,
+    StringUTF8(std::initializer_list<SymbolUTF8Traits::char_type> init,
     const allocator_type& alloc = allocator_type()) :
-    std::basic_string<SymbolUTF8, SymbolUTF8Traits>(init, alloc) {};
+    std::basic_string<SymbolUTF8Traits::char_type, SymbolUTF8Traits>(init, alloc) {};
 
 
     StringUTF8& operator=(const StringUTF8&);
     StringUTF8& operator=(StringUTF8&&);
     StringUTF8& operator=(const SymbolUTF8*);
     StringUTF8& operator=(SymbolUTF8);
-    StringUTF8& operator=(std::initializer_list<SymbolUTF8>);
+    StringUTF8& operator=(std::initializer_list<SymbolUTF8Traits::char_type>);
 
 
     StringUTF8(const char*);
