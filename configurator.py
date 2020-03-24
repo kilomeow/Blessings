@@ -13,7 +13,7 @@ def scan_args():
     compiler_executable=""
     archiver_type=""
     archiver_executable=""
-    prefix=""
+    prefix="/usr"
 
     target_flie_given=False
     i=0

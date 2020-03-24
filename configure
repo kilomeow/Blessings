@@ -11,7 +11,7 @@ def main():
     compiler_executable="gcc"
     archiver_type="ar"
     archiver_executable="ar"
-    prefix=""
+    prefix="/usr"
 
     i=0
     while i<len(args):

@@ -182,10 +182,10 @@
             "blessings_utf8_static",
             "blessings_utf8_shared"
         ],
-        "static_libs_path" : "usr/lib",
-        "shared_libs_path" : "usr/lib",
-        "executable_path" : "usr/bin",
-        "includes_path" : "usr/include/blessings"
+        "static_libs_path" : "lib",
+        "shared_libs_path" : "lib",
+        "executable_path" : "bin",
+        "includes_path" : "include/blessings"
     },
     "uninstall" : {
         "target_type" : "uninstall",
@@ -196,9 +196,9 @@
             "blessings_utf8_static",
             "blessings_utf8_shared"
         ],
-        "static_libs_path" : "usr/lib",
-        "shared_libs_path" : "usr/lib",
-        "executable_path" : "usr/bin",
-        "headers_pathes" : ["usr/include/blessings"]
+        "static_libs_path" : "lib",
+        "shared_libs_path" : "lib",
+        "executable_path" : "bin",
+        "headers_pathes" : ["include/blessings"]
     }
 }
